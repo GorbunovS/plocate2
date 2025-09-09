@@ -5,16 +5,19 @@
         <img :src="logoSrc" alt="logo">  <!-- Динамический :src -->
       </div>
     </div>
+    <div  v-if="currentPage==='newAd'" class="newAdWindow">
     
-    <NewAdWindow v-if="currentPage==='newAd'"/>
+    <NewAdWindow />
+    </div>
     <div class="views" v-if="currentPage === 'home'">
       Добро пожаловать в PetLocate<br>
       Мы поможем найти вашего питомца или возможного хозяина
     </div>
+    
     <div class="actions" >
       <Button v-if="currentPage === 'home'" label="Создать объявление" severity="success" variant="outlined" @click="currentPage='newAd'" />
       <Button v-if="currentPage === 'home'"label="Карта(скоро)" severity="secondary" variant="outlined" />
-      <Button  label="Назад" severity="success"  variant="outlined" />
+      <Button v-if="currentPage !== 'home'" label="Назад" severity="success" @click="currentPage='home'"  variant="outlined" />
 
     </div>
   </div>
@@ -54,8 +57,16 @@ const logoSrc = computed(() => {
   text-align: center;
 }
 
-.actions {
+.actions  {
   display: flex;
+  gap: 10px;
+  flex-direction: column;
+  width: 100%;
+  height: 100px;
+}
+
+.newAdWindow {
+  flex: 1;
   gap: 10px;
   flex-direction: column;
   width: 100%;
