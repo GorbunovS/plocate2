@@ -7,7 +7,9 @@
     </div>
   </div>
   <div class="views"></div>
+Добро пожаловать в PetLocate
 
+Мы поможем найти вашего питомца или возможного хозяина 
   <div class="actions">
     <Button label="Создать объявление" severity="success" variant="outlined" />
     <Button label="Карта(скоро)" severity="secondary" variant="outlined" />
