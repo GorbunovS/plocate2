@@ -1,20 +1,26 @@
 <template> 
+<div class="header">
+  <div class="logo">
+    <img :src="Pl_logo" alt="logo">
 
-  
+  </div>
+</div>
 
-  <button  @click="goPopApp"> Start </button>
+  <div class="body">
+
+    <Button label="Success" severity="success" variant="outlined" />
+  </div>
+
 </template>
 <script setup lang="ts">
 
-import { useRouter } from 'vue-router';
+
+import Pl_logo from '/src/assets/pl_logo.svg';
 
 
 
-const router = useRouter();
 
-const goPopApp = () => {
-  router.push('/popup');
-}
+
 </script>
 
 <style scoped>

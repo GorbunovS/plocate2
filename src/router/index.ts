@@ -5,13 +5,8 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../components/HelloWorld.vue'), // Lazy loading
-  },
-  {
-    path: '/popup',
-    name: 'Popup',
-    component: () => import('../components/PopupButton.vue'), // Lazy loading
-  },
+    component: () => import('../components/MainView.vue'), // Lazy loading
+  }
   // Добавьте другие маршруты здесь, например:
   // {
   //   path: '/about',
