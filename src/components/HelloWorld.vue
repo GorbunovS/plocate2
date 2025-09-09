@@ -1,5 +1,5 @@
 <template> 
-      <img src="./assets/pl_logo.svg" class="logo vue" alt="Vue logo" />
+
   
 
   <button  @click="goPopApp"> Start </button>
@@ -7,6 +7,8 @@
 <script setup lang="ts">
 
 import { useRouter } from 'vue-router';
+
+
 
 const router = useRouter();
 
