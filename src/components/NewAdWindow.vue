@@ -16,23 +16,27 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const src = ref(null);
+const src = ref<string | null>(null); // Явный тип: string (для Data URL) или null
 
-function onFileSelect(event) {
+function onFileSelect(event: { files: File[] }) { // Тип для event (из PrimeVue FileUpload)
     const file = event.files[0];
     const reader = new FileReader();
 
-    reader.onload = async (e) => {
-        src.value = e.target.result;
+    reader.onload = async (e: ProgressEvent<FileReader>) => { // Тип события для onload
+        // Проверка на null и тип результата (string для Data URL)
+        if (e.target && typeof e.target.result === 'string') {
+            src.value = e.target.result;
+        } else {
+            src.value = null;
+        }
     };
 
     reader.readAsDataURL(file);
 }
 
-const value = ref(null);
+const value = ref<number | null>(null); // Тип value на основе options (number или null)
 const options = ref([
-
     { name: 'Потерял', value: 3 },
-     { name: 'Нашёл', value: 3 },
+    { name: 'Нашёл', value: 3 },
 ]);
 </script>
