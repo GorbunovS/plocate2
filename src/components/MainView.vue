@@ -12,8 +12,7 @@
     <div class="actions">
       <Button label="Создать объявление" severity="success" variant="outlined" />
       <Button label="Карта(скоро)" severity="secondary" variant="outlined" />
-      <!-- Кнопка для теста переключения темы -->
-      <Button label="Переключить тему" @click="toggleTheme" />
+
     </div>
   </div>
 </template>
@@ -32,13 +31,7 @@ const logoSrc = computed(() => {
   return currentTheme.value === 'light' ? Pl_logo_dark : Pl_logo;
 });
 
-// Метод для переключения темы (с сохранением в localStorage)
-const toggleTheme = () => {
-  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
-  localStorage.setItem('theme', currentTheme.value);
-  // Опционально: обнови класс на body для глобальной темы
-  document.documentElement.className = currentTheme.value;
-};
+
 </script>
 
 <style scoped>
@@ -46,7 +39,7 @@ const toggleTheme = () => {
 .body {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 90vh;
 }
 
 .views {
