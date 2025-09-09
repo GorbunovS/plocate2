@@ -1,39 +1,42 @@
-<template> 
-<div class="header">
-  <div class="logo">
-    <img :src="Pl_logo" alt="logo">
+<template>
+  <div class="app">
+  <div class="header">
+    <div class="logo">
+      <img :src="Pl_logo" alt="logo">
 
+    </div>
   </div>
-</div>
+  <div class="views"></div>
 
-  <div class="body">
-
-    <Button label="Success" severity="success" variant="outlined" />
+  <div class="actions">
+    <Button label="Создать объявление" severity="success" variant="outlined" />
+    <Button label="Карта(скоро)" severity="secondary" variant="outlined" />
+  </div>
   </div>
 
 </template>
 <script setup lang="ts">
-
-
 import Pl_logo from '/src/assets/pl_logo.svg';
-
-
 
 
 
 </script>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.app {
+  display: flex;
+  flex-direction: column;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.views {
+  flex:1;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.actions {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  width: 100%;
+  height: 100px;
 }
 </style>
