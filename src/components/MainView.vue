@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import NewAdWindow from './NewAdWindow.vue';
+import NewAdWindow from '../components/NewAdWindow.vue'
 import Pl_logo from '/src/assets/pl_logo.svg';       // Для светлой темы
 import Pl_logo_dark from '/src/assets/pl_logo_dark.svg'; // Для тёмной темы
 import '../style.css';
