@@ -28,6 +28,7 @@ html, body, #app {
   overflow: hidden; /* Запрещает скролл/переполнение */
   margin: 0;
   padding: 0;
+  background-color: black;
 }
 
 /* Media queries для разных устройств (на основе viewport из Telegram) */
