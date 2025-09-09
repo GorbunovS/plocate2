@@ -1,21 +1,19 @@
 <script setup lang="ts">
-// import HelloWorld from './components/HelloWorld.vue'
+
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const goPopApp = () => {
-  router.push('/');
-}
+
 </script>
 
 <template>
   <div>
 
-      <img src="./assets/pl_logo.svg" class="logo vue" alt="Vue logo" />
+    <router-view></router-view>
   
   </div>
-  <button  @click="goPopApp"> Start </button>
+
   
 </template>
 
