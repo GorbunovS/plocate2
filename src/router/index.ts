@@ -1,21 +1,29 @@
-import { createApp } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 
-import HelloWorld from '../components/HelloWorld.vue';
-import Popup from '../components/PopupButton.vue';
-
-// Определите маршруты
-const routes = [
-  { path: '/', component: HelloWorld },
-  { path: '/popup', component: Popup }, 
-
+// Определите маршруты как массив RouteRecordRaw для TypeScript-типизации
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('../components/HelloWorld.vue'), // Lazy loading
+  },
+  {
+    path: '/popup',
+    name: 'Popup',
+    component: () => import('../components/PopupButton.vue'), // Lazy loading
+  },
+  // Добавьте другие маршруты здесь, например:
+  // {
+  //   path: '/about',
+  //   name: 'About',
+  //   component: () => import('../components/About.vue'),
+  // },
 ];
 
 const router = createRouter({
-  history: createWebHistory(), // Важно: HTML5 mode для совместимости с TG
+  history: createWebHistory(import.meta.env.BASE_URL), // Для Vite: использует BASE_URL из env
   routes,
 });
 
-const app = createApp(App);
-app.use(router);
-app.mount('#app');
+export default router;
+
