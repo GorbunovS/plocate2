@@ -10,11 +10,13 @@ import FileUpload from 'primevue/fileupload';
 
 
 
+
 const app = createApp(App);
 app.use(router); // Подключение роутера к приложению
 app.component('FileUpload',FileUpload)
 app.component('Button', Button);
 app.component('SelectButton', SelectButton);
+
 app.use(PrimeVue, {
     theme: {
         preset: Aura

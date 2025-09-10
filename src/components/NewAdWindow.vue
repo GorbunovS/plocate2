@@ -1,9 +1,13 @@
 <template>
 <div class="grid">
+    <div class="columns-2 gap-4 sm:columns-3 sm:gap-8 ...">
+
+</div>
       <div class="card flex justify-center">
         Фотография
+        <img v-if="src" :src="src" alt="Image" chooseLabel="RTR" class="shadow-md rounded-xl" style="width: 128px; height: auto; " />
         <FileUpload mode="basic" @select="onFileSelect" customUpload auto severity="secondary" class="p-button-outlined" />
-         <img v-if="src" :src="src" alt="Image"  chooseLabel="RTR" class="shadow-md rounded-xl w-full sm:w-64" style="filter: grayscale(100%)" />
+
     </div>
     Тип
      <div class="card flex justify-center">
@@ -11,10 +15,12 @@
     </div>
 </div>
 
+
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import "tailwindcss";
 
 const src = ref<string | null>(null); // Явный тип: string (для Data URL) или null
 
