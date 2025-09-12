@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
-    <Alert message="Hello!" />
+    <Alert message="!" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
     <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
     
@@ -25,7 +25,7 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
     
     <span class="text-sm text-gray-500 italic">Место</span>
-    <Button  icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
+    <Button @click="getLocation"  icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="address" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
@@ -41,6 +41,27 @@
 <script setup>
 import { ref, defineEmits } from 'vue';
 import { Alert } from 'vue-tg'
+import { useLocationManager } from 'vue-tg'
+
+const status = ref('')
+const locationManager = useLocationManager()
+
+const getLocation = async () =>{
+  if (!locationManager.isSupported()) {
+    status.value = 'Геолокация не поддерживается'
+    return
+  }
+
+  try {
+    status.value = 'Запрос геолокации…'
+    await locationManager.mount()               // Запрашивает разрешение
+    const loc = await locationManager.request() // Получает координаты
+    status.value = `Широта: ${loc.latitude}, Долгота: ${loc.longitude}`
+  } catch (err) {
+    console.error(err)
+    status.value = 'Ошибка получения геолокации'
+  }
+}
 
 
 const emit = defineEmits(['back']);
