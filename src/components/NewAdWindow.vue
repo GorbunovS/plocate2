@@ -1,38 +1,35 @@
 <template>
-    <div class="flex flex-col items-start gap-4 p-4">
-        Описание
-        <span class="text-sm text-gray-500 italic">Тип объявления</span>
-        <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
-        <span class="text-sm text-gray-500 italic">Тип животного</span>
-        <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name"
-            dataKey="value" aria-labelledby="custom">
-            <template #option="slotProps">
-                <i :class="slotProps.option.icon"></i>
-                <span class="ml-2">{{ slotProps.option.name }}</span>
-            </template>
-        </SelectButton>
-        <span class="text-sm text-gray-500 italic">Изображение (Добавьте несколько)</span>
-        <FileUpload mode="basic" @select="onFileSelect" customUpload auto severity="secondary"
-            chooseLabel="Выбрать фото" />
-        <div class="flex flex-row gap-4 m-5 h-50 w-full">
-            <div v-for="(img, index) in images" :key="index" class="relative flex-1">
-                <div v-if="!img" class="shadow-md rounded-xl w-full h-full bg-gray flex items-center justify-center">
-                    <i class="pi pi-image text-gray-500 text-4xl"></i>
-                </div>
-                <img v-else :src="img" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain"
-                    style="filter: grayscale(100%)" />
-                <Button v-if="img" icon="pi pi-trash" severity="danger" text @click="removeImage(index)"
-                    class="absolute top-0 right-0" />
-            </div>
+  <div class="flex flex-col items-start gap-4">
+    <span class="text-sm text-gray-500 italic">Тип объявления</span>
+    <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" class="w-full" />
+    
+    <span class="text-sm text-gray-500 italic">Тип животного</span>
+    <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name" dataKey="value" aria-labelledby="custom" class="w-full">
+      <template #option="slotProps">
+        <i :class="slotProps.option.icon"></i>
+        <span class="ml-2">{{ slotProps.option.name }}</span>
+      </template>
+    </SelectButton>
+    
+    <span class="text-sm text-gray-500 italic">Изображение (Добавьте до 3)</span>
+    <FileUpload mode="basic" @select="onFileSelect" customUpload auto severity="secondary" chooseLabel="Выбрать фото" class="w-full" />
+    <div class="flex flex-row gap-2 h-24 w-full overflow-x-auto">
+      <div v-for="(img, index) in images" :key="index" class="relative flex-shrink-0 w-24">
+        <div v-if="!img" class="shadow-md rounded-xl w-full h-full bg-gray-200 flex items-center justify-center">
+          <i class="pi pi-image text-gray-500 text-2xl"></i>
         </div>
-        <span class="text-sm text-gray-500 italic">Место</span>
-        <Button icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" />
-        <FloatLabel>
-            <AutoComplete v-model="address" :suggestions="filteredAddresses" @complete="searchAddresses"
-                optionLabel="name" />
-            <label for="username">Или введите адрес </label>
-        </FloatLabel>
+        <img v-else :src="img" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain" style="filter: grayscale(100%)" />
+        <Button v-if="img" icon="pi pi-trash" severity="danger" text @click="removeImage(index)" class="absolute top-0 right-0 text-xs" />
+      </div>
     </div>
+    
+    <span class="text-sm text-gray-500 italic">Место</span>
+    <Button icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
+    <FloatLabel>
+      <AutoComplete v-model="address" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
+      <label for="username">Или введите адрес</label>
+    </FloatLabel>
+  </div>
 </template>
 
 <script setup>

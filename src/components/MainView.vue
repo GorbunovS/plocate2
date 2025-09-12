@@ -1,28 +1,29 @@
 <template>
-  <div class="body">
-    <div class="header">
+  <div class="body flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div class="header p-4 flex justify-center">
       <div class="logo">
-        <img :src="logoSrc" alt="logo">  <!-- Динамический :src -->
+        <img :src="logoSrc" alt="logo" class="h-12 w-auto" />
       </div>
     </div>
-    <div  v-if="currentPage==='newAd'" class="newAdWindow">
-    <NewAdWindow />
-    </div>
-    <div class="views" v-if="currentPage === 'home'">
-      <img :src="Jook" alt="jook">
-      Добро пожаловать в PetLocate<br>
-      Мы поможем найти вашего питомца или возможного хозяина
+    
+    <div v-if="currentPage === 'newAd'" class="newAdWindow flex-1 overflow-y-auto p-4">
+      <NewAdWindow />
     </div>
     
-    <div class="actions" >
-      <Button v-if="currentPage === 'home'" label="Создать объявление" severity="success" variant="outlined" @click="currentPage='newAd'" />
-      <Button v-if="currentPage === 'newAd'" label="Далее" severity="success" variant="outlined" @click="currentPage='newAd'" />
-      <Button v-if="currentPage === 'home'"label="Карта(скоро)" severity="secondary" variant="outlined" />
-      <Button v-if="currentPage !== 'home'" label="Назад" severity="success" @click="currentPage='home'"  variant="outlined" />
+    <div v-if="currentPage === 'home'" class="views flex-1 flex flex-col items-center justify-center text-center p-4 gap-4">
+      <img :src="Jook" alt="jook" class="w-32 h-32 object-contain" />
+      <p class="text-lg font-semibold">Добро пожаловать в PetLocate</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400">Мы поможем найти вашего питомца или возможного хозяина</p>
+    </div>
+    
+    <div class="actions mt-auto p-4 flex flex-col gap-2 sm:flex-row sm:gap-4 justify-center ">
+      <Button v-if="currentPage === 'home'" label="Создать объявление" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
+      <Button v-if="currentPage === 'newAd'" label="Далее" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
+      <Button v-if="currentPage === 'home'" label="Карта(скоро)" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
+      <Button v-if="currentPage !== 'home'" label="Назад" severity="success" variant="outlined" @click="currentPage = 'home'" class="w-full sm:w-auto" />
     </div>
   </div>
 </template>
-
 <script setup >
 import { ref, computed } from 'vue';
 import NewAdWindow from '../components/NewAdWindow.vue'
