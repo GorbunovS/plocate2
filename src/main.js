@@ -10,6 +10,9 @@ import FileUpload from 'primevue/fileupload';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FloatLabel from 'primevue/floatlabel';
 import AutoComplete from 'primevue/autocomplete';
+import { init } from '@telegram-apps/sdk-vue';
+
+init();
 
 // import { library } from '@fortawesome/fontawesome-svg-core'
 

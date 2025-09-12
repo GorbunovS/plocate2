@@ -24,7 +24,7 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
     
     <span class="text-sm text-gray-500 italic">Место</span>
-    <Button @click="getUserLocation" icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
+    <Button @click="getLocation" icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="address" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
@@ -38,6 +38,7 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue';
+import { locationManager } from '@telegram-apps/sdk-vue';
 
 const emit = defineEmits(['back']);
 
@@ -49,22 +50,25 @@ const images = ref([]);
 const fileInput = ref(null);
 const location = ref(null);
 
-const getUserLocation = async () => {
-  try {
 
-    if (!isLocationManagerMounted()) {
-      await mountLocationManager();
+const getLocation = async () => {
+    if (locationManager.requestLocation.isAvailable()) {
+    try {
+      const location = await locationManager.requestLocation();
+      console.log('Геолокация:', location.latitude, location.longitude, location.speed);
+      // Здесь обработайте данные, например, покажите на карте
+    } catch (err) {
+      console.error('Ошибка запроса геолокации:', err);
     }
-
-    // Запрашиваем локацию (пользователь увидит запрос на разрешение)
-    const userLocation = await requestLocation();
-    location.value = userLocation;
-    console.log('Местоположение:', userLocation);
-  } catch (error) {
-    console.error('Ошибка при получении локации:', error);
-    alert('Не удалось получить местоположение. Проверьте разрешения.');
+  } else {
+    // Фallback: используйте браузерный Geolocation API, если Telegram не поддерживает
+    navigator.geolocation.getCurrentPosition((pos) => {
+      console.log('Браузерная геолокация:', pos.coords);
+    });
   }
-};
+    
+}
+
 
 
 function openFileInput() {
@@ -122,4 +126,6 @@ const searchAddresses = (event) => {
   })
   .catch(error => console.error('Error fetching addresses:', error));
 };
+
+
 </script>
