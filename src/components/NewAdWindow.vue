@@ -25,7 +25,7 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
     
     <span class="text-sm text-gray-500 italic">Место</span>
-    <Button @click="getLocation" icon="pi pi-map-marker" label="Поделиться гео" severity="success" variant="outlined" class="w-full" />
+    <Button @click="getUserLocation" icon="pi pi-map-marker" label="Поделиться гео" severity="success" variant="outlined" class="w-full" />
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
@@ -65,7 +65,7 @@ const showTemporaryAlert = (message) => {
   }, 3000); // Автозакрытие через 3 секунды
 };
 
-const getLocation = async () => {
+const getUserLocation = async () => {
   try {
     location.value = await locationManager.getLocation();
     showTemporaryAlert('Местоположение успешно получено');
@@ -74,12 +74,7 @@ const getLocation = async () => {
   }
 };
 
-// Если VUE-TG не работает, fallback на Telegram API:
-// const getLocation = () => {
-//   Telegram.WebApp.requestLocation((location) => {
-//     // Обработка
-//   });
-// };
+
 
 const openFileInput = () => {
   fileInput.value.click();
