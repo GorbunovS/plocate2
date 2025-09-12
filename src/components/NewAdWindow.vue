@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
-    <Alert message="!" />
+   <Alert v-if="showAlert" :message="alertMsg" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
     <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
     
@@ -43,7 +43,10 @@ import { ref, defineEmits } from 'vue';
 import { Alert } from 'vue-tg'
 import { useLocationManager } from 'vue-tg'
 
+
 const status = ref('')
+const alertMsg = ref('')
+const showAlert = ref(false)
 const locationManager = useLocationManager()
 
 const getLocation = async () => {
