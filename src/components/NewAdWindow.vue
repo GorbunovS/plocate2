@@ -24,7 +24,7 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
     
     <span class="text-sm text-gray-500 italic">Место</span>
-    <Button icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
+    <Button @click="getUserLocation" icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="address" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
@@ -47,6 +47,25 @@ const address = ref(null);
 const filteredAddresses = ref([]);
 const images = ref([]);
 const fileInput = ref(null);
+const location = ref(null);
+
+const getUserLocation = async () => {
+  try {
+
+    if (!isLocationManagerMounted()) {
+      await mountLocationManager();
+    }
+
+    // Запрашиваем локацию (пользователь увидит запрос на разрешение)
+    const userLocation = await requestLocation();
+    location.value = userLocation;
+    console.log('Местоположение:', userLocation);
+  } catch (error) {
+    console.error('Ошибка при получении локации:', error);
+    alert('Не удалось получить местоположение. Проверьте разрешения.');
+  }
+};
+
 
 function openFileInput() {
   fileInput.value.click();
@@ -60,8 +79,7 @@ function onFileSelect(event) {
   const reader = new FileReader();
   reader.onload = (e) => {
     images.value.push(e.target.result);
-    event.target.value = ''; // Очистка input для повторного использования
-    // Сброс скрытия элементов, если нужно
+    event.target.value = ''; 
   };
   reader.readAsDataURL(file);
 }
