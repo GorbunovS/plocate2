@@ -25,7 +25,7 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
     
     <span class="text-sm text-gray-500 italic">Место</span>
-    <Button @click="getLocation"  icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
+     <Button @click="getLocation" icon="pi pi-map-marker" label="Поделиться гео" severity="success" variant="outlined" class="w-full" />
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
@@ -46,19 +46,31 @@ import { useLocationManager } from 'vue-tg'
 const status = ref('')
 const locationManager = useLocationManager()
 
-const getLocation = async () =>{
+const getLocation = async () => {
+  // Проверка поддержки (внутри Telegram Mini App и с нужной версией клиента)
   if (!locationManager.isSupported()) {
+    alertMsg.value = 'Геолокация не поддерживается в текущем окружении Telegram'
+    showAlert.value = true
     status.value = 'Геолокация не поддерживается'
     return
   }
+
   try {
-    status.value = 'Запрос геолокации…'
-    await locationManager.mount()               // Запрашивает разрешение
-    const loc = await locationManager.request() // Получает координаты
-    status.value = `Широта: ${loc.latitude}, Долгота: ${loc.longitude}`
+    status.value = 'Запрашиваем разрешение…'
+    // Важно: mount перед первым запросом
+    await locationManager.mount() // Telegram откроет системный диалог и включит менеджер локации
+    status.value = 'Получаем координаты…'
+
+    const loc = await locationManager.request() // { latitude, longitude, altitude?, speed?, ... }
+    const text = `Широта: ${loc.latitude}, Долгота: ${loc.longitude}`
+    status.value = text
+    alertMsg.value = text
+    showAlert.value = true
   } catch (err) {
     console.error(err)
     status.value = 'Ошибка получения геолокации'
+    alertMsg.value = 'Не удалось получить геопозицию. Проверьте разрешение на доступ к гео в Telegram.'
+    showAlert.value = true
   }
 }
 
