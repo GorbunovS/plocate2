@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
+    <Alert message="Hello!" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
     <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
     
@@ -24,12 +25,13 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
     
     <span class="text-sm text-gray-500 italic">Место</span>
-    <Button @click="getLocation" icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
+    <Button  icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="address" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
     </FloatLabel>
   </div>
+  
       <div class="actions p-4 flex flex-col gap-2 sm:gap-4 justify-center ">
       <Button label="Далее" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
       <Button @click="emit('back')" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
@@ -38,7 +40,7 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue';
-
+import { Alert } from 'vue-tg'
 
 
 const emit = defineEmits(['back']);
@@ -50,35 +52,6 @@ const filteredAddresses = ref([]);
 const images = ref([]);
 const fileInput = ref(null);
 const location = ref(null);
-
-
-import { MainButton } from 'vue-tg';
-import { usePopup } from 'vue-tg';
-
-const popup = usePopup();
-
-const getLocation = () =>{
-  if (window.Telegram?.WebApp?.LocationManager) {
-    window.Telegram.WebApp.LocationManager.requestLocation()
-      .then(location => {
-        console.log('Геолокация:', location);
-        popup.showAlert(`Координаты: ${location.latitude}, ${location.longitude}`);
-      })
-      .catch(err => {
-        console.error('Ошибка геолокации:', err);
-        popup.showAlert('Ошибка получения геолокации');
-      });
-  } else {
-    // Fallback на HTML5 Geolocation
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        console.log('HTML5 геолокация:', position.coords);
-        popup.showAlert(`Координаты: ${position.coords.latitude}, ${position.coords.longitude}`);
-      },
-      error => popup.showAlert('Геолокация недоступна')
-    );
-  }
-}
 
 
 function openFileInput() {

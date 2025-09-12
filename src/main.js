@@ -10,9 +10,11 @@ import FileUpload from 'primevue/fileupload';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FloatLabel from 'primevue/floatlabel';
 import AutoComplete from 'primevue/autocomplete';
+import { VueTelegramPlugin } from 'vue-tg';
 
 const app = createApp(App);
 app.use(router); 
+app.use(VueTelegramPlugin);
 app.component('FileUpload',FileUpload)
 app.component('Button', Button);
 app.component('SelectButton', SelectButton);
