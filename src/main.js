@@ -7,7 +7,11 @@ import router from './router'; // Импорт роутера из router/index.
 import Aura from '@primeuix/themes/aura';
 import { Button, SelectButton } from 'primevue';
 import FileUpload from 'primevue/fileupload';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import FloatLabel from 'primevue/floatlabel';
+import AutoComplete from 'primevue/autocomplete';
 
+// import { library } from '@fortawesome/fontawesome-svg-core'
 
 
 
@@ -16,6 +20,9 @@ app.use(router); // Подключение роутера к приложени�
 app.component('FileUpload',FileUpload)
 app.component('Button', Button);
 app.component('SelectButton', SelectButton);
+app.component('font-awesome-icon', FontAwesomeIcon);
+app.component('AutoComplete', AutoComplete);
+app.component('FloatLabel', FloatLabel);
 
 app.use(PrimeVue, {
     theme: {

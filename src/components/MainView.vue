@@ -6,19 +6,19 @@
       </div>
     </div>
     <div  v-if="currentPage==='newAd'" class="newAdWindow">
-    
     <NewAdWindow />
     </div>
     <div class="views" v-if="currentPage === 'home'">
+      <img :src="Jook" alt="jook">
       Добро пожаловать в PetLocate<br>
       Мы поможем найти вашего питомца или возможного хозяина
     </div>
     
     <div class="actions" >
       <Button v-if="currentPage === 'home'" label="Создать объявление" severity="success" variant="outlined" @click="currentPage='newAd'" />
+      <Button v-if="currentPage === 'newAd'" label="Далее" severity="success" variant="outlined" @click="currentPage='newAd'" />
       <Button v-if="currentPage === 'home'"label="Карта(скоро)" severity="secondary" variant="outlined" />
       <Button v-if="currentPage !== 'home'" label="Назад" severity="success" @click="currentPage='home'"  variant="outlined" />
-
     </div>
   </div>
 </template>
@@ -28,6 +28,7 @@ import { ref, computed } from 'vue';
 import NewAdWindow from '../components/NewAdWindow.vue'
 import Pl_logo from '/src/assets/pl_logo.svg';       // Для светлой темы
 import Pl_logo_dark from '/src/assets/pl_logo_dark.svg'; // Для тёмной темы
+import Jook from '/src/assets/jook.png';
 import '../style.css';
 
  const currentPage = ref('home')
@@ -53,6 +54,7 @@ const logoSrc = computed(() => {
 .views {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;

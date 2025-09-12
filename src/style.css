@@ -1,5 +1,6 @@
 @import "tailwindcss";
-
+@import 'primeicons/primeicons.css';
+@import 'line-awesome/dist/line-awesome/css/line-awesome.css';
 
 :root {
 font-family: 'Martian Mono', monospace; 
@@ -31,6 +32,8 @@ html, body, #app {
   overflow: hidden; /* Запрещает скролл/переполнение */
   margin: 0;
   padding: 0;
+  padding-top: 5%;
+  padding-bottom: 5%;
 
 }
 
