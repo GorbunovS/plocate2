@@ -46,7 +46,7 @@ import {
   isLocationManagerSupported,
   mountLocationManager,
   isLocationManagerMounted,
-  getCurrentLocation,
+  requestLocation,
 } from '@telegram-apps/sdk'
 
 const emit = defineEmits(['back', 'next']);
