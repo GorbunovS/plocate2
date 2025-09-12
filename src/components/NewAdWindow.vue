@@ -66,31 +66,11 @@ const showTemporaryAlert = (message) => {
 };
 
 const getLocation = async () => {
-    if (!window.Telegram || !window.Telegram.WebApp.isVersionAtLeast('6.1')) {
-    showTemporaryAlert('WebApp не инициализирован или версия устарела');
-    return;
-  }
   try {
-    const geo = await locationManager.getLocation();
-    location.value = geo.coords; // Сохраняем координаты
-    showTemporaryAlert(`Широта: ${geo.coords.latitude}, Долгота: ${geo.coords.longitude}`);
-    
-    // Опционально: reverse geocoding для получения адреса из координат (через DaData)
-    const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
-    const response = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Token ${token}`,
-      },
-      body: JSON.stringify({ lat: geo.coords.latitude, lon: geo.coords.longitude, count: 1 }),
-    });
-    const data = await response.json();
-    if (data.suggestions && data.suggestions.length > 0) {
-      status.value = data.suggestions[0].value; // Устанавливаем адрес в AutoComplete
-    }
+    location.value = await locationManager.getLocation();
+    showTemporaryAlert('Местоположение успешно получено');
   } catch (error) {
-    showTemporaryAlert(error.message || 'Ошибка получения локации');
+    showTemporaryAlert('Не удалось получить местоположение');
   }
 };
 
