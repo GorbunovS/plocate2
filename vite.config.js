@@ -8,7 +8,7 @@ export default defineConfig({
     legalComments: 'none',
   },
   build: {
-    minify: 'terser',  
+    minify: false,  
     terserOptions: {
       compress: true,
       mangle: true,
