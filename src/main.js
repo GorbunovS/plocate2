@@ -11,10 +11,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FloatLabel from 'primevue/floatlabel';
 import AutoComplete from 'primevue/autocomplete';
 import { VueTelegramPlugin } from 'vue-tg';
+import { init } from '@telegram-apps/sdk-vue';
 
-if (window.Telegram && window.Telegram.WebApp) {
-  window.Telegram.WebApp.ready();  // Сообщаем Telegram, что app готов
-}
 
 const app = createApp(App);
 app.use(router); 
@@ -31,6 +29,7 @@ app.use(PrimeVue, {
         preset: Aura
     }
 });
+init();
 
 app.mount('#app');
 
