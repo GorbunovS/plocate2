@@ -25,15 +25,21 @@
     
     <span class="text-sm text-gray-500 italic">Место</span>
     <Button icon="pi pi-map-marker" label="Указать на карте" severity="success" variant="outlined" class="w-full" />
-    <FloatLabel>
+    <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="address" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
     </FloatLabel>
   </div>
+      <div class="actions flex flex-col gap-2 sm:gap-4 justify-center mt-15">
+      <Button label="Далее" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
+      <Button @click="emit('back')" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
+    </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
+
+const emit = defineEmits(['back']);
 
 const adType = ref(null);
 const petType = ref(null);
@@ -44,9 +50,7 @@ const fileInput = ref(null);
 
 function openFileInput() {
   fileInput.value.click();
-  // Скрываем все элементы (по вашему запросу) — здесь пример, адаптируйте под нужды
-  // Например, можно добавить состояние для скрытия
-  // hiddenElements.value = true; // И потом сбросить после загрузки
+
 }
 
 function onFileSelect(event) {
