@@ -38,7 +38,7 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue';
-import { locationManager } from '@telegram-apps/sdk-vue';
+
 
 
 const emit = defineEmits(['back']);
@@ -52,24 +52,33 @@ const fileInput = ref(null);
 const location = ref(null);
 
 
-const getLocation = async () => {
-    if (locationManager.requestLocation.isAvailable()) {
-    try {
-      const location = await locationManager.requestLocation();
-      console.log('Геолокация:', location.latitude, location.longitude, location.speed);
-      // Здесь обработайте данные, например, покажите на карте
-    } catch (err) {
-      console.error('Ошибка запроса геолокации:', err);
-    }
-  } else {
-    // Фallback: используйте браузерный Geolocation API, если Telegram не поддерживает
-    navigator.geolocation.getCurrentPosition((pos) => {
-      console.log('Браузерная геолокация:', pos.coords);
-    });
-  }
-    
-}
+import { MainButton } from 'vue-tg';
+import { usePopup } from 'vue-tg';
 
+const popup = usePopup();
+
+const getLocation = () =>{
+  if (window.Telegram?.WebApp?.LocationManager) {
+    window.Telegram.WebApp.LocationManager.requestLocation()
+      .then(location => {
+        console.log('Геолокация:', location);
+        popup.showAlert(`Координаты: ${location.latitude}, ${location.longitude}`);
+      })
+      .catch(err => {
+        console.error('Ошибка геолокации:', err);
+        popup.showAlert('Ошибка получения геолокации');
+      });
+  } else {
+    // Fallback на HTML5 Geolocation
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        console.log('HTML5 геолокация:', position.coords);
+        popup.showAlert(`Координаты: ${position.coords.latitude}, ${position.coords.longitude}`);
+      },
+      error => popup.showAlert('Геолокация недоступна')
+    );
+  }
+}
 
 
 function openFileInput() {

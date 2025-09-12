@@ -3,23 +3,16 @@
 import { createApp } from 'vue';
 import PrimeVue from 'primevue/config';
 import App from './App.vue';
-import router from './router'; // Импорт роутера из router/index.ts
+import router from './router'; 
 import Aura from '@primeuix/themes/aura';
 import { Button, SelectButton } from 'primevue';
 import FileUpload from 'primevue/fileupload';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FloatLabel from 'primevue/floatlabel';
 import AutoComplete from 'primevue/autocomplete';
-import { init } from '@telegram-apps/sdk-vue';
-
-init();
-
-// import { library } from '@fortawesome/fontawesome-svg-core'
-
-
 
 const app = createApp(App);
-app.use(router); // Подключение роутера к приложению
+app.use(router); 
 app.component('FileUpload',FileUpload)
 app.component('Button', Button);
 app.component('SelectButton', SelectButton);
