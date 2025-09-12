@@ -40,6 +40,7 @@
 import { ref, defineEmits } from 'vue';
 import { locationManager } from '@telegram-apps/sdk-vue';
 
+
 const emit = defineEmits(['back']);
 
 const adType = ref(null);

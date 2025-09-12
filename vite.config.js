@@ -1,19 +1,20 @@
-import { defineConfig } from 'vite'
-import tailwindcss from '@tailwindcss/vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import tailwindcss from '@tailwindcss/vite';
+import vue from '@vitejs/plugin-vue';
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(),  tailwindcss(),],
-esbuild: {
-    // Игнорировать определённые предупреждения или ошибки (если нужно)
+  plugins: [vue(), tailwindcss()],
+  esbuild: {
     legalComments: 'none',
-    // Или отключить минификацию для теста
-    minify: false,
   },
   build: {
+    minify: 'terser',  // Переход на Terser вместо esbuild
     commonjsOptions: {
-      transformMixedEsModules: true, // Это помогает с mixed ES/CJS модулями[5]
+      transformMixedEsModules: true,
+    },
+    terserOptions: {
+      compress: true,  // Включите сжатие, если нужно
+      mangle: true,    // Минификация имён
     },
   },
 });
