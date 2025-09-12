@@ -70,7 +70,7 @@ const getUserLocation = async () => {
     location.value = await locationManager.getLocation();
     showTemporaryAlert('Местоположение успешно получено');
   } catch (error) {
-    showTemporaryAlert('Не удалось получить местоположение');
+    showTemporaryAlert('Не удалось получить местоположение' + error.message);
   }
 };
 
