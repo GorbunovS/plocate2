@@ -1,11 +1,11 @@
 <template>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
-   <Alert v-if="showAlert" :message="alertMsg" />
+    <Alert v-if="showAlert" :message="alertMsg" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
     <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
     
     <span class="text-sm text-gray-500 italic">Тип животного</span>
-    <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name" dataKey="value" aria-labelledby="custom" >
+    <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name" dataKey="value" aria-labelledby="custom">
       <template #option="slotProps">
         <i :class="slotProps.option.icon"></i>
         <span class="ml-2">{{ slotProps.option.name }}</span>
@@ -15,7 +15,7 @@
     <span class="text-sm text-gray-500 italic">Изображение (Добавьте до 3)</span>
     <div class="flex flex-row gap-2 h-24 w-full overflow-x-auto">
       <div v-for="(img, index) in images" :key="`img-${index}`" class="relative flex-shrink-0 w-24">
-        <img :src="img" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain" style="filter: grayscale(100%)" />
+        <img :src="img" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain" />
         <Button icon="pi pi-trash" severity="danger" text @click="removeImage(index)" class="absolute top-0 right-0 text-xs" />
       </div>
       <div v-if="images.length < 3" class="shadow-md rounded-xl w-24 h-full bg-gray-800 flex items-center justify-center cursor-pointer" @click="openFileInput">
@@ -25,73 +25,95 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
     
     <span class="text-sm text-gray-500 italic">Место</span>
-     <Button @click="getLocation" icon="pi pi-map-marker" label="Поделиться гео" severity="success" variant="outlined" class="w-full" />
+    <Button @click="getLocation" icon="pi pi-map-marker" label="Поделиться гео" severity="success" variant="outlined" class="w-full" />
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
     </FloatLabel>
   </div>
   
-      <div class="actions p-4 flex flex-col gap-2 sm:gap-4 justify-center ">
-      <Button label="Далее" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
-      <Button @click="emit('back')" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
-    </div>
+  <div class="actions p-4 flex flex-col gap-2 sm:gap-4 justify-center">
+    <Button label="Далее" severity="success" variant="outlined" @click="emit('next', 'newAd')" class="w-full sm:w-auto" />
+    <Button @click="emit('back')" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
+  </div>
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
-import { Alert,useLocationManager} from 'vue-tg'
+import { ref } from 'vue';
+import { Alert, useLocationManager } from 'vue-tg';
 
+const emit = defineEmits(['back', 'next']);
 
-
-const status = ref('')
-const alertMsg = ref('Спера')
-const showAlert = ref(false)
-const locationManager = useLocationManager()
-
-const getLocation = async () => {
-  try {
-    const location = await locationManager.getLocation();
-    this.alertMsg = `Широта: ${location.coords.latitude}, Долгота: ${location.coords.longitude}`
-    this.showAlert = true
-  } catch (error) {
-   this.alertMsg = error.message
-    this.showAlert = true
-  }
-}
-
-
-const emit = defineEmits(['back']);
-
+const status = ref('');
+const alertMsg = ref('');
+const showAlert = ref(false);
+const locationManager = useLocationManager();
 const adType = ref(null);
 const petType = ref(null);
-const address = ref(null);
 const filteredAddresses = ref([]);
 const images = ref([]);
 const fileInput = ref(null);
-const location = ref(null);
+const location = ref(null); // Для хранения координат
 
+const showTemporaryAlert = (message) => {
+  alertMsg.value = message;
+  showAlert.value = true;
+  setTimeout(() => {
+    showAlert.value = false;
+  }, 3000); // Автозакрытие через 3 секунды
+};
 
-function openFileInput() {
+const getLocation = async () => {
+  try {
+    const geo = await locationManager.getLocation();
+    location.value = geo.coords; // Сохраняем координаты
+    showTemporaryAlert(`Широта: ${geo.coords.latitude}, Долгота: ${geo.coords.longitude}`);
+    
+    // Опционально: reverse geocoding для получения адреса из координат (через DaData)
+    const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
+    const response = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`,
+      },
+      body: JSON.stringify({ lat: geo.coords.latitude, lon: geo.coords.longitude, count: 1 }),
+    });
+    const data = await response.json();
+    if (data.suggestions && data.suggestions.length > 0) {
+      status.value = data.suggestions[0].value; // Устанавливаем адрес в AutoComplete
+    }
+  } catch (error) {
+    showTemporaryAlert(error.message || 'Ошибка получения локации');
+  }
+};
+
+// Если VUE-TG не работает, fallback на Telegram API:
+// const getLocation = () => {
+//   Telegram.WebApp.requestLocation((location) => {
+//     // Обработка
+//   });
+// };
+
+const openFileInput = () => {
   fileInput.value.click();
+};
 
-}
-
-function onFileSelect(event) {
+const onFileSelect = (event) => {
   const file = event.target.files[0];
   if (!file) return;
-  
+  if (images.value.length >= 3) return; // Лимит
   const reader = new FileReader();
   reader.onload = (e) => {
     images.value.push(e.target.result);
-    event.target.value = ''; 
+    event.target.value = '';
   };
   reader.readAsDataURL(file);
-}
+};
 
-function removeImage(index) {
+const removeImage = (index) => {
   images.value.splice(index, 1);
-}
+};
 
 const adTypes = ref([
   { name: 'Потерял', value: 1 },
@@ -116,17 +138,15 @@ const searchAddresses = (event) => {
       'Authorization': `Token ${token}`,
       'X-Secret': '2e0536c54e06461d2f12350d038bc234c69a3fcb'
     },
-    body: JSON.stringify({ query: query, count: 10, language: 'ru' })
+    body: JSON.stringify({ query, count: 10, language: 'ru' })
   })
   .then(response => response.json())
   .then(data => {
     filteredAddresses.value = data.suggestions.map(suggestion => ({
       name: suggestion.value,
-       dats:suggestion.data
+       data: suggestion.data // Исправлена опечатка "dats" -> "data"
     }));
   })
   .catch(error => console.error('Error fetching addresses:', error));
 };
-
-
 </script>
