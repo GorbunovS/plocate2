@@ -13,8 +13,8 @@
       <img :src="Jook" alt="jook" class="w-32 h-32 object-contain" />
       <p class="text-lg font-semibold">Добро пожаловать в PetLocate</p>
       <p class="text-sm text-gray-600 dark:text-gray-400">Мы поможем найти вашего питомца или возможного хозяина</p>
-          <div class="actions flex flex-1 flex-col gap-2 sm:gap-4 justify-center ">
-      <Button label="Создать объявление" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
+         <div class="actions p-4 flex flex-col gap-2 sm:gap-4 w-full justify-center mt-15">
+      <Button label="Создать объявление" severity="success" variant="outlined" @click="currentPage = 'newAd'" class=" sm:w-auto" />
       <Button  label="Карта(скоро)" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
     </div>
     </div>

@@ -30,7 +30,7 @@
       <label for="username">Или введите адрес</label>
     </FloatLabel>
   </div>
-      <div class="actions flex flex-col gap-2 sm:gap-4 justify-center mt-15">
+      <div class="actions p-4 flex flex-col gap-2 sm:gap-4 justify-center mt-15">
       <Button label="Далее" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
       <Button @click="emit('back')" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
     </div>
