@@ -46,34 +46,17 @@ import { Alert,useLocationManager} from 'vue-tg'
 
 const status = ref('')
 const alertMsg = ref('Спера')
-const showAlert = ref(true)
+const showAlert = ref(false)
 const locationManager = useLocationManager()
 
 const getLocation = async () => {
-  // Проверка поддержки (внутри Telegram Mini App и с нужной версией клиента)
-  if (!locationManager.isSupported()) {
-    alertMsg.value = 'Геолокация не поддерживается в текущем окружении Telegram'
-    showAlert.value = true
-    status.value = 'Геолокация не поддерживается'
-    return
-  }
-
   try {
-    status.value = 'Запрашиваем разрешение…'
-    // Важно: mount перед первым запросом
-    await locationManager.mount() // Telegram откроет системный диалог и включит менеджер локации
-    status.value = 'Получаем координаты…'
-
-    const loc = await locationManager.request() // { latitude, longitude, altitude?, speed?, ... }
-    const text = `Широта: ${loc.latitude}, Долгота: ${loc.longitude}`
-    status.value = text
-    alertMsg.value = text
-    showAlert.value = true
-  } catch (err) {
-    console.error(err)
-    status.value = 'Ошибка получения геолокации'
-    alertMsg.value = 'Не удалось получить геопозицию. Проверьте разрешение на доступ к гео в Telegram.'
-    showAlert.value = true
+    const location = await locationManager.getLocation();
+    this.alertMsg = `Широта: ${location.coords.latitude}, Долгота: ${location.coords.longitude}`
+    this.showAlert = true
+  } catch (error) {
+   this.alertMsg = error.message
+    this.showAlert = true
   }
 }
 
