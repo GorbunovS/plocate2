@@ -1,48 +1,44 @@
 <template>
-<div class="grid">
-    <div class="columns-2 gap-4 sm:columns-3 sm:gap-8 ...">
 
-</div>
-      <div class="card flex justify-center">
-        Фотография
-        <img v-if="src" :src="src" alt="Image" chooseLabel="RTR" class="shadow-md rounded-xl" style="width: 128px; height: auto; " />
-        <FileUpload mode="basic" @select="onFileSelect" customUpload auto severity="secondary" class="p-button-outlined" />
-
+    <div class="flex flex-col items-start gap-4 p-4">
+        Описание
+        <span class="text-sm text-gray-500 italic">Тип объявления</span>
+            <SelectButton :invalid="value === null" v-model="adType" :options="adTypes" optionLabel="name" />
+          <span class="text-sm text-gray-500 italic">Тип животного</span>  
+            <SelectButton :invalid="value === null"  v-model="petType" :options="petTypes" optionLabel="name" />
+                    <SelectButton v-model="value" :options="options" optionLabel="value" dataKey="value" aria-labelledby="custom">
+            <template #option="slotProps">
+                <i :class="slotProps.option.icon"></i>
+            </template>
+        </SelectButton>
     </div>
-    Тип
-     <div class="card flex justify-center">
-        <SelectButton v-model="value" :options="options" optionLabel="name"  />
-    </div>
-</div>
 
 
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue';
-import "tailwindcss";
 
-const src = ref<string | null>(null); // Явный тип: string (для Data URL) или null
 
-function onFileSelect(event: { files: File[] }) { // Тип для event (из PrimeVue FileUpload)
-    const file = event.files[0];
-    const reader = new FileReader();
+const src = ref(null); 
 
-    reader.onload = async (e: ProgressEvent<FileReader>) => { // Тип события для onload
-        // Проверка на null и тип результата (string для Data URL)
-        if (e.target && typeof e.target.result === 'string') {
-            src.value = e.target.result;
-        } else {
-            src.value = null;
-        }
-    };
 
-    reader.readAsDataURL(file);
-}
-
-const value = ref<number | null>(null); // Тип value на основе options (number или null)
+const adType = ref(null); 
+const petType = ref(null);
+const value = ref(null);
+const adTypes = ref([
+    { name: 'Потерял', value: 1 },
+    { name: 'Нашёл', value: 2 },
+]);
+const petTypes = ref([
+    { name: 'Пёс', value: 1 },
+    { name: 'Кот', value: 2 },
+    
+]);
 const options = ref([
-    { name: 'Потерял', value: 3 },
-    { name: 'Нашёл', value: 3 },
+    { icon: 'pi pi-align-left', value: 'Left' },
+    { icon: 'pi pi-align-right', value: 'Right' },
+    { icon: 'pi pi-align-center', value: 'Center' },
+    { icon: 'pi pi-align-justify', value: 'Justify' }
 ]);
 </script>

@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup >
 import { ref, computed } from 'vue';
 import NewAdWindow from '../components/NewAdWindow.vue'
 import Pl_logo from '/src/assets/pl_logo.svg';       // Для светлой темы
@@ -44,6 +44,7 @@ const logoSrc = computed(() => {
 <style scoped>
 /* Твои стили из предыдущих сообщений */
 .body {
+  pad: 50px;
   display: flex;
   flex-direction: column;
   height: 90vh;
