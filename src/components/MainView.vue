@@ -1,22 +1,22 @@
 <template>
-  <div class="body flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <div class="header p-4 flex justify-center">
+  <div class="body m-4 flex flex-col min-h-screen text-gray-900 dark:text-gray-100">
+    <div class="header p-4 flex h-50  justify-center">
       <div class="logo">
         <img :src="logoSrc" alt="logo" class="h-12 w-auto" />
       </div>
     </div>
     
-    <div v-if="currentPage === 'newAd'" class="newAdWindow flex-1 overflow-y-auto p-4">
+    <div v-if="currentPage === 'newAd'" class="newAdWindow mt-auto p-4 flex flex-1 flex-col gap-2 sm:flex-row sm:gap-4 justify-center">
       <NewAdWindow />
     </div>
     
-    <div v-if="currentPage === 'home'" class="views flex-1 flex flex-col items-center justify-center text-center p-4 gap-4">
+    <div v-if="currentPage === 'home'" class="views flex flex-col items-center justify-center text-center p-4 gap-4">
       <img :src="Jook" alt="jook" class="w-32 h-32 object-contain" />
       <p class="text-lg font-semibold">Добро пожаловать в PetLocate</p>
       <p class="text-sm text-gray-600 dark:text-gray-400">Мы поможем найти вашего питомца или возможного хозяина</p>
     </div>
     
-    <div class="actions mt-auto p-4 flex flex-col gap-2 sm:flex-row sm:gap-4 justify-center ">
+    <div class="actions mt-auto p-4 flex flex-1 flex-col gap-2 sm:flex-row sm:gap-4 justify-center ">
       <Button v-if="currentPage === 'home'" label="Создать объявление" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
       <Button v-if="currentPage === 'newAd'" label="Далее" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
       <Button v-if="currentPage === 'home'" label="Карта(скоро)" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
