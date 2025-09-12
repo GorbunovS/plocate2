@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col items-start gap-4">
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
-    <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" class="w-full" />
+    <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
     
     <span class="text-sm text-gray-500 italic">Тип животного</span>
-    <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name" dataKey="value" aria-labelledby="custom" class="w-full">
+    <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name" dataKey="value" aria-labelledby="custom" >
       <template #option="slotProps">
         <i :class="slotProps.option.icon"></i>
         <span class="ml-2">{{ slotProps.option.name }}</span>
@@ -69,9 +69,9 @@ const adTypes = ref([
 ]);
 
 const petTypes = ref([
-    { name: 'Собака', value: 1, icon: 'las la-dog' },
-    { name: 'Кот/кошка', value: 2, icon: 'las la-cat' },
-    { name: 'Другое', value: 3, icon: 'las la-paw' },
+    { name: '', value: 1, icon: 'las la-dog' },
+    { name: '', value: 2, icon: 'las la-cat' },
+
 ]);
 
 const searchAddresses = (event) => {
