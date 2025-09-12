@@ -15,7 +15,7 @@
     <FileUpload mode="basic" @select="onFileSelect" customUpload auto severity="secondary" chooseLabel="Выбрать фото" class="w-full" />
     <div class="flex flex-row gap-2 h-24 w-full overflow-x-auto">
       <div v-for="(img, index) in images" :key="index" class="relative flex-shrink-0 w-24">
-        <div v-if="!img" class="shadow-md rounded-xl w-full h-full bg-gray-200 flex items-center justify-center">
+        <div v-if="!img" class="shadow-md rounded-xl w-full h-full bg-gray-800 flex items-center justify-center">
           <i class="pi pi-image text-gray-500 text-2xl"></i>
         </div>
         <img v-else :src="img" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain" style="filter: grayscale(100%)" />
