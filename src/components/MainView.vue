@@ -1,8 +1,8 @@
 <template>
-  <div class="body mt-20 gap-10 flex flex-col min-h-screen text-gray-900 dark:text-gray-100">
-    <div class="header p-4 flex h-20  justify-center">
+      <div class="header p-4 flex h-20 z-10 mt-5 items-center justify-center">
         <img :src="logoSrc" alt="logo" class="h-12 w-auto" />
     </div>
+  <div class="body gap-5 flex flex-col min-h-screen text-gray-900 dark:text-gray-100">
     <div v-if="currentPage === 'newAd'">
       <NewAdWindow
       @back="currentPage = 'home'"
