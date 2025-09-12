@@ -39,8 +39,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import {useMiniApp, Alert, useLocationManager } from 'vue-tg';
+import {
+  locationManager,
+  isLocationManagerSupported,
+  mountLocationManager,
+  isLocationManagerMounted,
+  getCurrentLocation,
+} from '@telegram-apps/sdk'
 
 const emit = defineEmits(['back', 'next']);
 
@@ -49,13 +56,18 @@ const alertMsg = ref('');
 const showAlert = ref(false);
 
 const miniApp = useMiniApp();
-const locationManager = useLocationManager();
+const locationManagerVueTg = useLocationManager();
 const adType = ref(null);
 const petType = ref(null);
 const filteredAddresses = ref([]);
 const images = ref([]);
 const fileInput = ref(null);
 const location = ref(null); // Для хранения координат
+
+const supported = isLocationManagerSupported()
+if (!supported) {
+  console.warn('LocationManager не поддерживается в этой версии Telegram')
+}
 
 const showTemporaryAlert = (message) => {
   alertMsg.value = message;
@@ -67,7 +79,7 @@ const showTemporaryAlert = (message) => {
 
 const getUserLocation = async () => {
   try {
-    location.value = await locationManager.getLocation();
+    location.value = await locationManagerVueTg.getLocation();
     showTemporaryAlert('Местоположение успешно получено');
   } catch (error) {
     showTemporaryAlert('Не удалось получить местоположение' + error.message);
@@ -130,4 +142,26 @@ const searchAddresses = (event) => {
   })
   .catch(error => console.error('Error fetching addresses:', error));
 };
+
+onMounted(async () => {
+  // Монтируем менеджер (запрос разрешений у пользователя)
+  if (mountLocationManager.isAvailable()) {
+    try {
+      await mountLocationManager()
+    } catch (err) {
+      console.error('Не удалось смонтировать LocationManager:', err)
+      return
+    }
+  }
+
+  // Дождались успешного монтирования
+  if (isLocationManagerMounted()) {
+    try {
+      const { latitude, longitude } = await getCurrentLocation({ timeout: 10000 })
+      console.log('Координаты:', latitude, longitude)
+    } catch (err) {
+      console.error('Ошибка получения геолокации:', err)
+    }
+  }
+})
 </script>
