@@ -40,13 +40,13 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue';
-import { Alert } from 'vue-tg'
-import { useLocationManager } from 'vue-tg'
+import { Alert,useLocationManager} from 'vue-tg'
+
 
 
 const status = ref('')
-const alertMsg = ref('')
-const showAlert = ref(false)
+const alertMsg = ref('Спера')
+const showAlert = ref(true)
 const locationManager = useLocationManager()
 
 const getLocation = async () => {
