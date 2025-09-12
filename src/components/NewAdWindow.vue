@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-start gap-4">
+  <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
     <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
     

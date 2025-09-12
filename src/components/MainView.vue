@@ -1,9 +1,8 @@
 <template>
-  <div class="body m-4 gap-10 flex flex-col min-h-screen text-gray-900 dark:text-gray-100">
+  <div class="body mt-20 gap-10 flex flex-col min-h-screen text-gray-900 dark:text-gray-100">
     <div class="header p-4 flex h-20  justify-center">
         <img :src="logoSrc" alt="logo" class="h-12 w-auto" />
     </div>
-    
     <div v-if="currentPage === 'newAd'">
       <NewAdWindow
       @back="currentPage = 'home'"
@@ -24,8 +23,8 @@
 <script setup >
 import { ref, computed } from 'vue';
 import NewAdWindow from '../components/NewAdWindow.vue'
-import Pl_logo from '/src/assets/pl_logo.svg';       // Для светлой темы
-import Pl_logo_dark from '/src/assets/pl_logo_dark.svg'; // Для тёмной темы
+import Pl_logo from '../assets/pl_logo.svg';       // Для светлой темы
+import Pl_logo_dark from '../assets/pl_logo_dark.svg'; // Для тёмной темы
 import Jook from '/src/assets/jook.png';
 import '../style.css';
 
