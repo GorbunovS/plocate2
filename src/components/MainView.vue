@@ -6,7 +6,7 @@
       </div>
     </div>
     
-    <div v-if="currentPage === 'newAd'" class="newAdWindow mt-auto p-4 flex flex-1 flex-col gap-2 sm:flex-row sm:gap-4 justify-center">
+    <div v-if="currentPage === 'newAd'" class="newAdWindow flex flex-col items-center justify-center text-center p-4 gap-4">
       <NewAdWindow />
     </div>
     
@@ -16,7 +16,7 @@
       <p class="text-sm text-gray-600 dark:text-gray-400">Мы поможем найти вашего питомца или возможного хозяина</p>
     </div>
     
-    <div class="actions mt-auto p-4 flex flex-1 flex-col gap-2 sm:flex-row sm:gap-4 justify-center ">
+    <div class="actions p-4 flex flex-1 flex-col gap-2 sm:flex-row sm:gap-4 justify-center mb-4 ">
       <Button v-if="currentPage === 'home'" label="Создать объявление" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
       <Button v-if="currentPage === 'newAd'" label="Далее" severity="success" variant="outlined" @click="currentPage = 'newAd'" class="w-full sm:w-auto" />
       <Button v-if="currentPage === 'home'" label="Карта(скоро)" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
@@ -61,13 +61,7 @@ const logoSrc = computed(() => {
   text-align: center;
 }
 
-.actions  {
-  display: flex;
-  gap: 10px;
-  flex-direction: column;
-  width: 100%;
-  height: 100px;
-}
+
 
 .newAdWindow {
   flex: 1;
