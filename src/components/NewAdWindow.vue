@@ -40,13 +40,15 @@
 
 <script setup>
 import { ref } from 'vue';
-import { Alert, useLocationManager } from 'vue-tg';
+import {useMiniApp, Alert, useLocationManager } from 'vue-tg';
 
 const emit = defineEmits(['back', 'next']);
 
 const status = ref('');
 const alertMsg = ref('');
 const showAlert = ref(false);
+
+const miniApp = useMiniApp();
 const locationManager = useLocationManager();
 const adType = ref(null);
 const petType = ref(null);
@@ -64,6 +66,10 @@ const showTemporaryAlert = (message) => {
 };
 
 const getLocation = async () => {
+    if (!window.Telegram || !window.Telegram.WebApp.isVersionAtLeast('6.1')) {
+    showTemporaryAlert('WebApp не инициализирован или версия устарела');
+    return;
+  }
   try {
     const geo = await locationManager.getLocation();
     location.value = geo.coords; // Сохраняем координаты

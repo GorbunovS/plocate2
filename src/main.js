@@ -12,6 +12,10 @@ import FloatLabel from 'primevue/floatlabel';
 import AutoComplete from 'primevue/autocomplete';
 import { VueTelegramPlugin } from 'vue-tg';
 
+if (window.Telegram && window.Telegram.WebApp) {
+  window.Telegram.WebApp.ready();  // Сообщаем Telegram, что app готов
+}
+
 const app = createApp(App);
 app.use(router); 
 app.use(VueTelegramPlugin);
