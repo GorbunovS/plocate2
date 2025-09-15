@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FloatLabel from 'primevue/floatlabel';
 import AutoComplete from 'primevue/autocomplete';
 import { VueTelegramPlugin } from 'vue-tg';
-import { init } from '@telegram-apps/sdk-vue';
+import { init } from '@telegram-apps/sdk';
 
 
 const app = createApp(App);
