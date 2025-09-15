@@ -95,7 +95,7 @@ const userLocation = async () => {
       await promise;
       const location = await requestLocation();
       ourLocation.value = location;
-      showTemporaryAlert('Location: ' + JSON.stringify(this.ourLocation.longitude) + ', ' + JSON.stringify(this.ourLocation.latitude));
+      showTemporaryAlert('Location: ' + JSON.stringify(ourLocation.longitude) + ', ' + JSON.stringify(ourLocation.latitude));
       isLocationManagerMounted(); // true
     } catch (err) {
       locationManagerMountError(); // equals "err"
