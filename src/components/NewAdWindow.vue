@@ -81,6 +81,7 @@ const ourLocation = ref({longitude: 37.618423, latitude: 55.751244});
 const openMap = () => {
   
   mapIsOpen.value = true;
+  userLocation();
   
 };
 
