@@ -42,6 +42,7 @@
 import { ref } from 'vue';
 import {useMiniApp, Alert, useLocationManager } from 'vue-tg';
 
+
 const emit = defineEmits(['back', 'next']);
 
 const status = ref('');
