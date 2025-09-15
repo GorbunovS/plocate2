@@ -63,7 +63,7 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import MapVew from './MapVew.vue';
 import {useMiniApp, Alert, useLocationManager } from 'vue-tg';
 import {
@@ -79,7 +79,6 @@ const ourLocation = ref({});
 
 // Функции для управления картой
 const openMap = () => {
-  userLocation();
   mapIsOpen.value = true;
 
 };
@@ -183,4 +182,11 @@ const searchAddresses = (event) => {
   })
   .catch(error => console.error('Error fetching addresses:', error));
 };
+
+onMounted(() => {
+  userLocation();
+  if (locationManager.isAvailable()) {
+    mountLocationManager();
+  }
+});
 </script>
