@@ -15,7 +15,6 @@ import { init } from '@telegram-apps/sdk';
 import { locationManager } from '@telegram-apps/sdk';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
-
  
 init();
 locationManager.isSupported(); 
