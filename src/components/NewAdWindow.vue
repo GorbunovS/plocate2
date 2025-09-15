@@ -55,10 +55,11 @@ const userLocation = async () => {
     const promise = mountLocationManager();
     isLocationManagerMounting(); // true
     await promise;
-    isLocationManagerMounting(); // false
-    isLocationManagerMounted(); // true
+    showTemporaryAlert('Location manager mounted');
+
   } catch (err) {
     locationManagerMountError(); // equals "err"
+    showTemporaryAlert('Location manager mount error'+ err.message);
     isLocationManagerMounting(); // false
     isLocationManagerMounted(); // false
   }
