@@ -1,12 +1,9 @@
 <template>
-  <l-map
-    :zoom="zoom"
-    :center="center"
-    @moveend="onMoveEnd"
-  >
-    <l-tile-layer :url="tileUrl" />
-    <l-marker :lat-lng="center" />
-  </l-map>
+  <LMap :zoom="zoom" :center="center" @moveend="onMoveEnd" style="height: 100%;
+     width: 100%;">
+    <LTileLayer :url="tileUrl" />
+
+  </LMap>
 </template>
 
 <script setup>
@@ -32,11 +29,9 @@ const emit = defineEmits(['update:center', 'center-changed']);
 function onMoveEnd(e) {
   const map = e.target;
   const newCenter = [map.getCenter().lat, map.getCenter().lng];
-  // Обновим v-model в родителе, если нужно
+
   emit('update:center', newCenter);
-  // Эмиттируем событие для геокодинга
+
   emit('center-changed', newCenter);
 }
 </script>
-
-
