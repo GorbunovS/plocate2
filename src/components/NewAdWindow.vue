@@ -48,23 +48,46 @@ import {
   locationManagerMountError,
 } from '@telegram-apps/sdk';
 
-const userLocation = async () => {
-  
-  if (mountLocationManager.isAvailable()) {
+const getUserLocation = async () => {
   try {
-    const promise = mountLocationManager();
-    isLocationManagerMounting(); // true
-    await promise;
-    showTemporaryAlert('Location manager mounted');
+    // Проверяем, что компонент смонтирован
+    if (!isLocationManagerMounted()) {
+      if (mountLocationManager.isAvailable()) {
+        const promise = mountLocationManager();
+        isLocationManagerMounting(); // true
+        await promise;
+      } else {
+        showTemporaryAlert('Геолокация не поддерживается');
+        return;
+      }
+    }
 
-  } catch (err) {
-    locationManagerMountError(); // equals "err"
-    showTemporaryAlert('Location manager mount error'+ err.message);
-    isLocationManagerMounting(); // false
-    isLocationManagerMounted(); // false
+    // Проверяем доступность запроса локации и запрашиваем её
+    if (locationManager.requestLocation && locationManager.requestLocation.isAvailable && locationManager.requestLocation.isAvailable()) {
+      const pos = await locationManager.requestLocation();
+      // pos: { latitude, longitude, altitude?, speed?, course?, ... }
+      location.value = pos;
+
+      const parts = [
+        `Широта: ${pos.latitude.toFixed(6)}`,
+        `Долгота: ${pos.longitude.toFixed(6)}`
+      ];
+      if (typeof pos.horizontal_accuracy === 'number') {
+        parts.push(`Точность: ±${Math.round(pos.horizontal_accuracy)} м`);
+      }
+      showTemporaryAlert(parts.join(' | '));
+    } else {
+      showTemporaryAlert('Запрос локации недоступен (requestLocation)');
+    }
+  } catch (error) {
+    // На некоторых платформах нужно сначала открыть настройки
+    if (locationManager.openSettings && locationManager.openSettings.isAvailable && locationManager.openSettings.isAvailable()) {
+      locationManager.openSettings();
+    }
+    showTemporaryAlert('Не удалось получить местоположение: ' + (error?.message || 'ошибка'));
   }
-}
-}
+};
+
 
 const emit = defineEmits(['back', 'next']);
 
@@ -89,14 +112,6 @@ const showTemporaryAlert = (message) => {
   }, 3000); // Автозакрытие через 3 секунды
 };
 
-const getUserLocation = async () => {
-  try {
-    location.value = await locationManager.getLocation();
-    showTemporaryAlert('Местоположение успешно получено');
-  } catch (error) {
-    showTemporaryAlert('Не удалось получить местоположение' + error.message);
-  }
-};
 
 
 
