@@ -27,6 +27,7 @@
     
     <span class="text-sm text-gray-500 italic">Место</span>
     <Button @click="userLocation" icon="pi pi-map-marker" label="Поделиться гео" severity="success" variant="outlined" class="w-full" />
+    <Button @click="mapIsOpen = !mapIsOpen" icon="pi pi-map-marker" label="Выбрать на карте" severity="success" variant="outlined" class="w-full" />
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
