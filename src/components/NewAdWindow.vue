@@ -79,8 +79,9 @@ const ourLocation = ref([33.3333, 44.4444]);
 
 // Функции для управления картой
 const openMap = () => {
-  mapIsOpen.value = true;
   userLocation();
+  mapIsOpen.value = true;
+  
 };
 
 const closeMap = () => {
