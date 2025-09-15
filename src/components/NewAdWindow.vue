@@ -11,7 +11,7 @@
       @click.stop
     >
       <MapVew 
-       :userLocation="[ourLocation.value.latitude, ourLocation.value.longitude] || [0, 0]"
+       :center="[ourLocation.longitude, ourLocation.latitude] "
       />
       <button
         @click="closeMap"
@@ -75,7 +75,7 @@ import {
 } from '@telegram-apps/sdk';
 
 const mapIsOpen = ref(false);
-const ourLocation = ref([]);
+const ourLocation = ref([33.3333, 44.4444]);
 
 // Функции для управления картой
 const openMap = () => {

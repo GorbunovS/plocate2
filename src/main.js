@@ -17,7 +17,7 @@ import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 
 
 
-init();
+// init();
 locationManager.isSupported(); 
 
 

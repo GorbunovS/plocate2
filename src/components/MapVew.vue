@@ -1,5 +1,5 @@
 <template>
-  <LMap  :attributionControl="false" :zoom="zoom" :center="userLocation" style="height: 100%; width: 100%">
+  <LMap  :attributionControl="false" :zoom="zoom" :center="center" style="height: 100%; width: 100%">
     <LTileLayer :url="url" :attribution="attribution" />
   </LMap>
 
@@ -27,13 +27,11 @@ L.Icon.Default.mergeOptions({
 })
 
 
-
 // props
 const props = defineProps({
   userLocation: {
     type: Array,
-    default: () => [55.751244, 37.618423],
-    required: true
+    default: () => [55.751244, 37.618423]
   }
 })
 
