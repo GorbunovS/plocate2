@@ -15,11 +15,9 @@
       </div>
     </div>
 
-    <!-- Контролы поверх всего (вынесены из контейнера карты) -->
-    
-    <!-- Кнопка закрыть -->
+
     <button @click="closeMap" 
-            class="absolute top-4 right-4 z- 
+            class="absolute top-4 right-4 z-1000 
                    bg-white/20 hover:bg-white/30 backdrop-blur-sm 
                    rounded-full w-10 h-10 flex items-center justify-center 
                    text-white text-lg font-bold transition-colors
@@ -28,10 +26,10 @@
     </button>
     
     <!-- Чип с информацией -->
-    <Chip class="absolute z- top-4 left-1/2 -translate-x-1/2" />
+    <Chip class="absolute z-900 top-4 left-1/2 -translate-x-1/2" />
     
     <!-- Кастомный маркер по центру -->
-    <div class="absolute z- top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+    <div class="absolute z-1000 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
       <img :src="Marker" class="scale-200 drop-shadow-lg" />
     </div>
   </div>
