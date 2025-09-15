@@ -14,16 +14,19 @@ import { VueTelegramPlugin } from 'vue-tg';
 import { init } from '@telegram-apps/sdk';
 import { locationManager } from '@telegram-apps/sdk';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
+import Chip from 'primevue/chip';
 
 
 
-init();
+
+// init();
 locationManager.isSupported(); 
 
 
 const app = createApp(App);
 app.use(router); 
 app.use(VueTelegramPlugin);
+app.component('Chip', Chip);
 app.component('LMap', LMap);
 app.component('LMarker', LMarker);
 app.component('l-tile-layer', LTileLayer);

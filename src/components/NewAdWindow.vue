@@ -1,27 +1,17 @@
 <template>
-  <div
-    v-if="mapIsOpen"
-    class="fixed inset-0 z-50 flex items-center justify-center"
-    @click="closeMap"
-  >
+  <div v-if="mapIsOpen" class="fixed inset-0 z-50 flex items-center justify-center" @click="closeMap">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"></div>
-    <div
-      class="relative w-[min(100vw,900px)] h-[min(100vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
-             transform transition-all duration-300 ease-out"
-      @click.stop
-    >
-          <button
-        @click="closeMap"
-        class="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full
-               bg-black/50 hover:bg-black/70 text-white transition-colors z-10"
-        aria-label="Закрыть карту"
-      >
+    <div class="relative w-[min(100vw,900px)] h-[min(100vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
+             transform transition-all duration-300 ease-out" @click.stop>
+      <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
+        :user-location="[ourLocation.latitude, ourLocation.longitude]" />
+      <button @click="closeMap" class="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full
+               bg-black/50 hover:bg-black/70 text-white transition-colors z-10" aria-label="Закрыть карту">
         ✕
       </button>
-      <MapVew 
-       :center="[ourLocation.latitude, ourLocation.longitude] "
-       :user-location="[ourLocation.latitude, ourLocation.longitude]"
-      />
+      <Chip icon="pi pi-map-marker" :label="[ourLocation.latitude, ourLocation.longitude]" class="absolute z-10 top-4 left-1/2 -translate-x-1/2" severity="warning" />
+      <img :src="Marker" alt="Marker"
+        class="absolute z-10 scale-200 top-1/2 left-1/2 w-10 h-10 -translate-x-1/2 -translate-y-1/2" />
 
     </div>
   </div>
@@ -29,44 +19,54 @@
     <Alert v-if="showAlert" :message="alertMsg" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
     <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
-    
+
     <span class="text-sm text-gray-500 italic">Тип животного</span>
-    <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name" dataKey="value" aria-labelledby="custom">
+    <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name" dataKey="value"
+      aria-labelledby="custom">
       <template #option="slotProps">
         <i :class="slotProps.option.icon"></i>
         <span class="ml-2">{{ slotProps.option.name }}</span>
       </template>
     </SelectButton>
-    
+
     <span class="text-sm text-gray-500 italic">Изображение (Добавьте до 3)</span>
     <div class="flex flex-row gap-2 h-24 w-full overflow-x-auto">
       <div v-for="(img, index) in images" :key="`img-${index}`" class="relative flex-shrink-0 w-24">
         <img :src="img" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain" />
-        <Button icon="pi pi-trash" severity="danger" text @click="removeImage(index)" class="absolute top-0 right-0 text-xs" />
+        <Button icon="pi pi-trash" severity="danger" text @click="removeImage(index)"
+          class="absolute top-0 right-0 text-xs" />
       </div>
-      <div v-if="images.length < 3" class="shadow-md rounded-xl w-24 h-full bg-gray-800 flex items-center justify-center cursor-pointer" @click="openFileInput">
+      <div v-if="images.length < 3"
+        class="shadow-md rounded-xl w-24 h-full bg-gray-800 flex items-center justify-center cursor-pointer"
+        @click="openFileInput">
         <i class="pi pi-plus text-gray-500 text-2xl"></i>
       </div>
     </div>
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
-    
+
     <span class="text-sm text-gray-500 italic">Место</span>
-    <Button @click="openMap" icon="pi pi-map" label="Выбрать на карте" severity="success" variant="outlined" class="w-full" />
+    <Button @click="openMap" icon="pi pi-map" label="Выбрать на карте" severity="success" variant="outlined"
+      class="w-full" />
     <FloatLabel class="w-full" variant="in">
-      <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
+      <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name"
+        class="w-full" />
       <label for="username">Или введите адрес</label>
     </FloatLabel>
   </div>
-  
+
   <div class="actions p-4 flex flex-col gap-2 sm:gap-4 justify-center">
-    <Button label="Далее" severity="success" variant="outlined" @click="emit('next', 'newAd')" class="w-full sm:w-auto" />
-    <Button @click="emit('back')" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
+    <Button label="Далее" severity="success" variant="outlined" @click="emit('next', 'newAd')"
+      class="w-full sm:w-auto" />
+    <Button @click="emit('back')" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined"
+      class="w-full sm:w-auto" />
   </div>
 </template>
 <script setup>
-import { ref,onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
+import { Chip } from 'primevue';
 import MapVew from './MapVew.vue';
-import {useMiniApp, Alert, useLocationManager } from 'vue-tg';
+import Marker from '../assets/marker.svg';
+import { useMiniApp, Alert, useLocationManager } from 'vue-tg';
 import {
   mountLocationManager,
   isLocationManagerMounting,
@@ -81,7 +81,6 @@ const ourLocation = ref({});
 // Функции для управления картой
 const openMap = () => {
   mapIsOpen.value = true;
-
 };
 
 const closeMap = () => {
@@ -99,7 +98,7 @@ const userLocation = async () => {
       isLocationManagerMounted(); // true
     } catch (err) {
       locationManagerMountError(); // equals "err"
-      showTemporaryAlert('Location manager mount error'+ err.message);
+      showTemporaryAlert('Location manager mount error' + err.message);
       isLocationManagerMounting(); // false
       isLocationManagerMounted(); // false
     }
@@ -162,7 +161,7 @@ const petTypes = ref([
 const searchAddresses = (event) => {
   const query = event.query;
   const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
-  
+
   fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
     method: 'POST',
     mode: 'cors',
@@ -174,14 +173,14 @@ const searchAddresses = (event) => {
     },
     body: JSON.stringify({ query, count: 10, language: 'ru' })
   })
-  .then(response => response.json())
-  .then(data => {
-    filteredAddresses.value = data.suggestions.map(suggestion => ({
-      name: suggestion.value,
-       data: suggestion.data // Исправлена опечатка "dats" -> "data"
-    }));
-  })
-  .catch(error => console.error('Error fetching addresses:', error));
+    .then(response => response.json())
+    .then(data => {
+      filteredAddresses.value = data.suggestions.map(suggestion => ({
+        name: suggestion.value,
+        data: suggestion.data // Исправлена опечатка "dats" -> "data"
+      }));
+    })
+    .catch(error => console.error('Error fetching addresses:', error));
 };
 
 onMounted(() => {

@@ -1,8 +1,6 @@
 <template>
   <LMap  :attributionControl="false" :zoom="zoom" :center="center" style="height: 100%; width: 100%">
     <LTileLayer :url="url" :attribution="attribution" />
-    <LMarker :lat-lng="userLocation" :icon="icon"></LMarker>
-    <LMarker  v-for="marker in userPetMarker" :key="marker.id" :lat-lng="marker" :icon="icon"></LMarker>
   </LMap>
 
 
