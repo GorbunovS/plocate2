@@ -83,7 +83,6 @@ const openMap = () => {
   userLocation();
   mapIsOpen.value = true;
 
-  
 };
 
 const closeMap = () => {
@@ -99,7 +98,8 @@ const userLocation = async () => {
       const location = await requestLocation();
       ourLocation.longitude = location.longitude;
       ourLocation.latitude = location.latitude;
-      showTemporaryAlert('Location: ' + JSON.stringify(ourLocation.value.longitude) + ', ' + JSON.stringify(ourLocation.value.latitude));
+      showTemporaryAlert('Location OUR:' + JSON.stringify(ourLocation.value.longitude) + ', ' + JSON.stringify(ourLocation.value.latitude));
+      showTemporaryAlert('location TG: ' + JSON.stringify(location.longitude) + ', ' + JSON.stringify(location.latitude));
       isLocationManagerMounted(); // true
     } catch (err) {
       locationManagerMountError(); // equals "err"
