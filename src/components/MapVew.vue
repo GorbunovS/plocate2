@@ -1,9 +1,7 @@
 <template>
-  <LMap  :attributionControl="false" :zoom="zoom" :center="center" style="height: 100%; width: 100%">
+  <LMap @moveend="onMoveEnd" :attributionControl="false" :zoom="zoom" :center="center" style="height: 100%; width: 100%">
     <LTileLayer :url="url" :attribution="attribution" />
   </LMap>
-
-
 </template>
 
 <script setup>
@@ -20,7 +18,7 @@ const onMoveEnd= (e) => {
   const newCenter = [map.getCenter().lat, map.getCenter().lng];
   emit('update:center', newCenter);
   emit('center-changed', newCenter);
-  
+
 }
 
 // props
