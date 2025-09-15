@@ -22,8 +22,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet'
 
+import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet'
 
 
 // props
