@@ -13,7 +13,7 @@ import AutoComplete from 'primevue/autocomplete';
 import { VueTelegramPlugin } from 'vue-tg';
 import { init } from '@telegram-apps/sdk';
 import { locationManager } from '@telegram-apps/sdk';
-import 'leaflet/dist/leaflet.css';
+
 
 
 init();
