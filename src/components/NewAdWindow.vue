@@ -1,5 +1,4 @@
 <template>
-  <!-- Оверлей карты -->
   <div
     v-if="mapIsOpen"
     class="fixed inset-0 z-50 flex items-center justify-center"
@@ -11,7 +10,9 @@
              transform transition-all duration-300 ease-out"
       @click.stop
     >
-      <MapVew :userLocation ="userLocation"/>
+      <MapVew 
+      :user-location="userLocation.longitude + ',' + userLocation.latitude"
+      :userLocation ="userLocation"/>
       <button
         @click="closeMap"
         class="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full

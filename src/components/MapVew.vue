@@ -1,8 +1,7 @@
 <template>
-  <LMap  :attributionControl="false" :zoom="zoom" :center="center" style="height: 100%; width: 100%">
+  <LMap  :attributionControl="false" :zoom="zoom" :center="userLocation" style="height: 100%; width: 100%">
     <LTileLayer :url="url" :attribution="attribution" />
     <LMarker
-      v-for="m in markers"
       :key="m.id"
       :lat-lng="m.position"
     />
@@ -45,7 +44,7 @@ L.Icon.Default.mergeOptions({
 // props
 const props = defineProps({
   userLocation: {
-    type: Boolean,
+    type: Array,
     required: true
   }
 })
@@ -60,28 +59,7 @@ const attribution = ref('&copy; <a href="https://www.openstreetmap.org/copyright
 
 // маркеры и элементы
 const markers = ref([])
-const items = ref([
-  {
-    id: 1,
-    photo: 'https://via.placeholder.com/100',
-    status: 'Утерян',
-    type: 'dog',
-    time: 'Около часа назад',
-    location: 'г. Реутов Улица Октября',
-    comment: 'Отзывается на кличку Тесла. Любит есть какашки',
-    position: [55.760, 37.620]
-  },
-  {
-    id: 2,
-    photo: 'https://via.placeholder.com/100',
-    status: 'Найден',
-    type: 'dog',
-    time: 'Только что',
-    location: 'г. Реутов Улица Октября',
-    comment: 'Найден пёс около торгового центра Экватор. Похоже домашний',
-    position: [55.765, 37.625]
-  }
-])
+
 
 // методы
 const updateMarker = (item) => {
