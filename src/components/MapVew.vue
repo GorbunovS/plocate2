@@ -1,14 +1,12 @@
 <template>
-  <LMap  :attributionControl="false" :zoom="zoom" :center="center" style="height: 100%; width: 100%">
+  <LMap ref="map" :attributionControl="false" :zoom="zoom" :center="center" style="height: 100%; width: 100%">
     <LTileLayer :url="url" :attribution="attribution" />
-    <LMarker :lat-lng="userLocation" :icon="icon"></LMarker>
+    <LMarker ref="centerMarker" :lat-lng="markerPosition" :icon="icon"></LMarker>
   </LMap>
-
-
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
 // где-нибудь один раз при инициализации карты/компонента
@@ -26,7 +24,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 })
-
 
 // props
 const props = defineProps({
@@ -47,16 +44,28 @@ const attribution = ref('&copy; <a href="https://www.openstreetmap.org/copyright
 // маркеры и элементы
 const markers = ref([])
 
+// позиция маркера (инициализируем из пропса, но делаем реактивной для обновлений)
+const markerPosition = ref(props.userLocation)
 
-// методы
-const updateMarker = (item) => {
-  markers.value = [{ id: item.id, position: item.position }]
-  center.value = item.position
-}
+// доступ к карте и маркеру
+const map = ref(null)
+const centerMarker = ref(null)
+
+onMounted(() => {
+  const leafletMap = map.value.leafletObject // Получаем объект Leaflet карты
+
+  // Фиксируем маркер в центре при перемещении карты
+  leafletMap.on('move', () => {
+    const newCenter = leafletMap.getCenter()
+    centerMarker.value.leafletObject.setLatLng(newCenter) // Обновляем позицию маркера
+    markerPosition.value = [newCenter.lat, newCenter.lng] // Сохраняем для дальнейшего использования (чтобы потом записать центр)
+  })
+})
 </script>
+
 <style scoped>
 .leaflet-control-attribution leaflet-control {
-visibility: hidden;
-display: none;
+  visibility: hidden;
+  display: none;
 }
 </style>

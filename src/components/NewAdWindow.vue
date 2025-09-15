@@ -10,11 +10,7 @@
              transform transition-all duration-300 ease-out"
       @click.stop
     >
-      <MapVew 
-       :center="[ourLocation.latitude, ourLocation.longitude] "
-       :user-location="[ourLocation.latitude, ourLocation.longitude]"
-      />
-      <button
+          <button
         @click="closeMap"
         class="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full
                bg-black/50 hover:bg-black/70 text-white transition-colors z-10"
@@ -22,6 +18,11 @@
       >
         ✕
       </button>
+      <MapVew 
+       :center="[ourLocation.latitude, ourLocation.longitude] "
+       :user-location="[ourLocation.latitude, ourLocation.longitude]"
+      />
+
     </div>
   </div>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
@@ -154,8 +155,8 @@ const adTypes = ref([
 ]);
 
 const petTypes = ref([
-  { name: 'Собака', value: 1, icon: 'las la-dog' },
-  { name: 'Кошка', value: 2, icon: 'las la-cat' },
+  { name: 'Собаку', value: 1, icon: 'las la-dog' },
+  { name: 'Кошку', value: 2, icon: 'las la-cat' },
 ]);
 
 const searchAddresses = (event) => {
