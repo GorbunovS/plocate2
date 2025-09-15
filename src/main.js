@@ -12,8 +12,10 @@ import FloatLabel from 'primevue/floatlabel';
 import AutoComplete from 'primevue/autocomplete';
 import { VueTelegramPlugin } from 'vue-tg';
 import { init } from '@telegram-apps/sdk';
+import { locationManager } from '@telegram-apps/sdk';
  
 init();
+locationManager.isSupported(); 
 
 
 const app = createApp(App);
