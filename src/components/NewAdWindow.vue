@@ -12,6 +12,7 @@
     >
       <MapVew 
        :center="[ourLocation.latitude,ourLocation.longitude] "
+       :user-location="[ourLocation.latitude,ourLocation.longitude]"
       />
       <button
         @click="closeMap"
@@ -79,9 +80,9 @@ const ourLocation = ref({longitude: 37.618423, latitude: 55.751244});
 
 // Функции для управления картой
 const openMap = () => {
-  
-  mapIsOpen.value = true;
   userLocation();
+  mapIsOpen.value = true;
+
   
 };
 
