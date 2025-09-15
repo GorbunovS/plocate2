@@ -1,22 +1,10 @@
 <template>
-  <LMap  :attributionControl="false" :zoom="zoom" :center="userLocation" style="height: 100%; width: 100%">
+  <LMap  :attributionControl="false" :zoom="zoom" :center="center" style="height: 100%; width: 100%">
     <LTileLayer :url="url" :attribution="attribution" />
-    <LMarker
-      :key="m.id"
-      :lat-lng="m.position"
-    />
+
   </LMap>
 
-  <!-- Пример списка, который выбирает элемент и двигает маркер -->
-  <div v-if="items.length" class="mt-2">
-    <button
-      v-for="it in items"
-      :key="it.id"
-      @click="updateMarker(it)"
-    >
-      {{ it.status }} — {{ it.location }}
-    </button>
-  </div>
+
 </template>
 
 <script setup>
