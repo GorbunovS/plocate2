@@ -57,7 +57,7 @@ const userLocation = async () => {
     const promise = mountLocationManager();
     isLocationManagerMounting(); // true
     await promise;
-    showTemporaryAlert('Location manager mounted');
+    
     const location = await requestLocation();
     showTemporaryAlert('Location: ' + JSON.stringify(location));
     isLocationManagerMounted(); // true
