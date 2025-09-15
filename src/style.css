@@ -1,0 +1,83 @@
+@import "tailwindcss";
+@import 'primeicons/primeicons.css';
+@import 'line-awesome/dist/line-awesome/css/line-awesome.css';
+
+:root {
+font-family: 'Martian Mono', monospace; 
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme:dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+html, body, #app {
+  height: 100vh; /* Фиксирует высоту на весь viewport */
+  width: 100vw;
+  overflow: hidden; /* Запрещает скролл/переполнение */
+  margin: 0;
+  padding: 0;
+
+
+}
+
+/* Media queries для разных устройств (на основе viewport из Telegram) */
+@media (max-width: 375px) { /* Для iPhone 11, например */
+  #app { /* Адаптируй стили, если нужно */ }
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.vue:hover {
+  filter: drop-shadow(0 0 2em #42b883aa);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+
+}
