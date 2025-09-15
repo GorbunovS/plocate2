@@ -1,15 +1,17 @@
 <template>
   <div v-if="mapIsOpen" class="fixed inset-0 z-50 flex items-center justify-center" @click="closeMap">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"></div>
-    <div class="relative w-[min(100vw,900px)] h-[min(100vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
+    <div class="relative w-[min(90vw,900px)] h-[min(80vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
              transform transition-all duration-300 ease-out" @click.stop>
       <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
-        :user-location="[ourLocation.latitude, ourLocation.longitude]" />
+        :user-location="[ourLocation.latitude, ourLocation.longitude]" @center-changed="onCenterChanged" />
       <button @click="closeMap" class="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full
                bg-black/50 hover:bg-black/70 text-white transition-colors z-10" aria-label="Закрыть карту">
         ✕
       </button>
-      <Chip icon="pi pi-map-marker" :label="adressByCoordinates([ourLocation.latitude, ourLocation.longitude])" class="absolute z-10 top-4 left-1/2 -translate-x-1/2" severity="warning" />
+      <Chip icon="pi pi-map-marker" :label="filteredAddresses[0]?.name || 'Определение адреса...'"
+        class="absolute z-10 top-4 left-1/2 -translate-x-1/2" severity="warning" />
+
       <img :src="Marker" alt="Marker"
         class="absolute z-10 scale-200 top-1/2 left-1/2 w-10 h-10 -translate-x-1/2 -translate-y-1/2" />
 
@@ -77,6 +79,15 @@ import {
 
 const mapIsOpen = ref(false);
 const ourLocation = ref({});
+
+const ourLocationCoords = ref([null, null]);
+
+// Функция, вызываемая при изменении центра
+const onCenterChanged = (coords) => {
+  ourLocationCoords.value = coords;
+  // Вызываем ваш геокодер
+  adressByCoordinates(coords);
+};
 
 // Функции для управления картой
 const openMap = () => {
@@ -178,7 +189,7 @@ const adressByCoordinates = (coordinate) => {
     .then(data => {
       filteredAddresses.value = data.suggestions.map(suggestion => ({
         name: suggestion.value,
-        data: suggestion.data 
+        data: suggestion.data
       }));
     })
     .catch(error => console.error('Error fetching addresses:', error));
@@ -203,7 +214,7 @@ const searchAddresses = (event) => {
     .then(data => {
       filteredAddresses.value = data.suggestions.map(suggestion => ({
         name: suggestion.value,
-        data: suggestion.data 
+        data: suggestion.data
       }));
     })
     .catch(error => console.error('Error fetching addresses:', error));
