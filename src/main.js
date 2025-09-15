@@ -13,9 +13,9 @@ import AutoComplete from 'primevue/autocomplete';
 import { VueTelegramPlugin } from 'vue-tg';
 import { init } from '@telegram-apps/sdk';
 import { locationManager } from '@telegram-apps/sdk';
-import 'element-plus/dist/index.css';
+import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
-import './assets/styles/global.css'; 
+
  
 init();
 locationManager.isSupported(); 
@@ -24,6 +24,9 @@ locationManager.isSupported();
 const app = createApp(App);
 app.use(router); 
 app.use(VueTelegramPlugin);
+app.component('LMap', LMap);
+app._component('LTileLayer', LTileLayer);
+app.component('LMarker', LMarker);
 app.component('FileUpload',FileUpload)
 app.component('Button', Button);
 app.component('SelectButton', SelectButton);
