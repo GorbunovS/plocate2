@@ -1,21 +1,37 @@
 <template>
-  <div v-if="mapIsOpen" class="fixed inset-0 z-50 flex items-center justify-center" @click="closeMap">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"></div>
-    <div class="relative w-[min(100vw,900px)] h-[min(100vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
-             transform transition-all duration-300 ease-out" @click.stop>
-      <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
-      
-        :user-location="[ourLocation.latitude, ourLocation.longitude]" />
-      <button @click="closeMap" class="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full
-               bg-black/50 hover:bg-black/70 text-white transition-colors z-10" aria-label="Закрыть карту">
+<div v-if="mapIsOpen" class="fixed inset-0 z-50 flex items-center justify-center" @click="closeMap">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"></div>
+  <div class="relative w-[min(100vw,900px)] h-[min(100vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
+           transform transition-all duration-300 ease-out flex flex-col" @click.stop>
+    
+    <!-- Верхняя панель: кнопка закрытия и чип -->
+    <div class="relative flex items-center justify-between p-4 bg-neutral-800 z-20">
+      <Chip icon="pi pi-map-marker" :label="[ourLocation.latitude, ourLocation.longitude]" severity="warning" />
+      <button @click="closeMap" class="inline-flex items-center justify-center h-10 w-10 rounded-full
+               bg-black/50 hover:bg-black/70 text-white transition-colors" aria-label="Закрыть карту">
         ✕
       </button>
-      <Chip icon="pi pi-map-marker" :label="[ourLocation.latitude, ourLocation.longitude]" class="absolute z-10 top-4 left-1/2 -translate-x-1/2" severity="warning" />
-      <img :src="Marker" alt="Marker"
-        class="absolute z-10 scale-200 top-1/2 left-1/2 w-10 h-10 -translate-x-1/2 -translate-y-1/2" />
-
     </div>
+    
+    <!-- Область карты с маркером поверх -->
+    <div class="relative flex-grow">
+      <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
+              :user-location="[ourLocation.latitude, ourLocation.longitude]" 
+              class="w-full h-full" />
+      <img :src="Marker" alt="Marker"
+           class="absolute z-30 scale-200 top-1/2 left-1/2 w-10 h-10 -translate-x-1/2 -translate-y-1/2" />
+    </div>
+    
+    <!-- Нижняя панель: кнопка "Сохранить" -->
+    <div class="p-4 bg-neutral-800 flex justify-center z-20">
+      <button @click="saveLocation" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+        Сохранить
+      </button>
+    </div>
+    
   </div>
+</div>
+
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
     <Alert v-if="showAlert" :message="alertMsg" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
