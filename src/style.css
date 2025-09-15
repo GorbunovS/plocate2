@@ -32,9 +32,11 @@ html, body, #app {
   overflow: hidden; /* Запрещает скролл/переполнение */
   margin: 0;
   padding: 0;
+  
 
 
 }
+
 
 /* Media queries для разных устройств (на основе viewport из Telegram) */
 @media (max-width: 375px) { /* Для iPhone 11, например */

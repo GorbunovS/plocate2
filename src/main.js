@@ -16,6 +16,7 @@ import { locationManager } from '@telegram-apps/sdk';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 
 
+
 init();
 locationManager.isSupported(); 
 
@@ -24,8 +25,8 @@ const app = createApp(App);
 app.use(router); 
 app.use(VueTelegramPlugin);
 app.component('LMap', LMap);
-app._component('LTileLayer', LTileLayer);
 app.component('LMarker', LMarker);
+app.component('l-tile-layer', LTileLayer);
 app.component('FileUpload',FileUpload)
 app.component('Button', Button);
 app.component('SelectButton', SelectButton);

@@ -1,5 +1,27 @@
 <template>
-  <MapVew v-if="mapIsOpen" ></MapVew>
+  <!-- Оверлей карты -->
+  <div
+    v-if="mapIsOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center"
+    @click="closeMap"
+  >
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"></div>
+    <div
+      class="relative w-[min(100vw,900px)] h-[min(100vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
+             transform transition-all duration-300 ease-out"
+      @click.stop
+    >
+      <MapVew :userLocation ="userLocation"/>
+      <button
+        @click="closeMap"
+        class="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full
+               bg-black/50 hover:bg-black/70 text-white transition-colors z-10"
+        aria-label="Закрыть карту"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
     <Alert v-if="showAlert" :message="alertMsg" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
@@ -26,8 +48,7 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
     
     <span class="text-sm text-gray-500 italic">Место</span>
-    <Button @click="userLocation" icon="pi pi-map-marker" label="Поделиться гео" severity="success" variant="outlined" class="w-full" />
-    <Button @click="mapIsOpen = !mapIsOpen" icon="pi pi-map-marker" label="Выбрать на карте" severity="success" variant="outlined" class="w-full" />
+    <Button @click="openMap" icon="pi pi-map" label="Выбрать на карте" severity="success" variant="outlined" class="w-full" />
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
@@ -38,9 +59,9 @@
     <Button label="Далее" severity="success" variant="outlined" @click="emit('next', 'newAd')" class="w-full sm:w-auto" />
     <Button @click="emit('back')" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
   </div>
-</template>
+</template>'''
 
-<script setup>
+vue_script = '''<script setup>
 import { ref } from 'vue';
 import MapVew from './MapVew.vue';
 import {useMiniApp, Alert, useLocationManager } from 'vue-tg';
@@ -53,24 +74,35 @@ import {
 } from '@telegram-apps/sdk';
 
 const mapIsOpen = ref(false);
+const ourLocation = ref(null);
+
+// Функции для управления картой
+const openMap = () => {
+  mapIsOpen.value = true;
+  userLocation();
+};
+
+const closeMap = () => {
+  mapIsOpen.value = false;
+};
 
 const userLocation = async () => {
   if (mountLocationManager.isAvailable()) {
-  try {
-    const promise = mountLocationManager();
-    isLocationManagerMounting(); // true
-    await promise;
-    const location = await requestLocation();
-    showTemporaryAlert('Location: ' + JSON.stringify(location));
-    isLocationManagerMounted(); // true
-
-  } catch (err) {
-    locationManagerMountError(); // equals "err"
-    showTemporaryAlert('Location manager mount error'+ err.message);
-    isLocationManagerMounting(); // false
-    isLocationManagerMounted(); // false
+    try {
+      const promise = mountLocationManager();
+      isLocationManagerMounting(); // true
+      await promise;
+      const location = await requestLocation();
+      ourLocation.value = location;
+      showTemporaryAlert('Location: ' + JSON.stringify(location));
+      isLocationManagerMounted(); // true
+    } catch (err) {
+      locationManagerMountError(); // equals "err"
+      showTemporaryAlert('Location manager mount error'+ err.message);
+      isLocationManagerMounting(); // false
+      isLocationManagerMounted(); // false
+    }
   }
-}
 }
 
 const emit = defineEmits(['back', 'next']);
@@ -95,9 +127,6 @@ const showTemporaryAlert = (message) => {
     showAlert.value = false;
   }, 3000); // Автозакрытие через 3 секунды
 };
-
-
-
 
 const openFileInput = () => {
   fileInput.value.click();
