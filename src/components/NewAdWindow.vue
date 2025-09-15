@@ -4,6 +4,7 @@
     <div class="relative w-[min(100vw,900px)] h-[min(100vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
              transform transition-all duration-300 ease-out" @click.stop>
       <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
+      
         :user-location="[ourLocation.latitude, ourLocation.longitude]" />
       <button @click="closeMap" class="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full
                bg-black/50 hover:bg-black/70 text-white transition-colors z-10" aria-label="Закрыть карту">

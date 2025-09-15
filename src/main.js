@@ -19,7 +19,7 @@ import Chip from 'primevue/chip';
 
 
 
-// init();
+init();
 locationManager.isSupported(); 
 
 
