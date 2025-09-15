@@ -1,14 +1,16 @@
 <template>
   <div v-if="mapIsOpen" class="fixed inset-0 z-50 flex items-center justify-center" @click="closeMap">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"></div>
-    <div class="relative w-[min(90vw,900px)] h-[min(80vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
+    <div class="relative w-[min(90vw,900px)] h-[min(70vh,70vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
              transform transition-all duration-300 ease-out" @click.stop>
       <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
         :user-location="[ourLocation.latitude, ourLocation.longitude]" @center-changed="onCenterChanged" />
      <button @click="closeMap" class="absolute top-4 right-4  z-1000">✕</button>
-<Chip  class="absolute z-1200 top-4 left-1/2 -translate-x-1/2"  />
+<Chip :label="ourLocation" class="absolute z-1200 top-4 left-1/2 -translate-x-1/2"  />
 <img :src="Marker"  class="absolute z-1000 scale-100 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-
+    </div>
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2">
+    <Button @click="closeMap" icon="pi pi-map" label="Сохранить" severity="success" variant="outlined" class="w-full" />
     </div>
   </div>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
