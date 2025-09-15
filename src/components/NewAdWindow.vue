@@ -75,11 +75,11 @@ import {
 } from '@telegram-apps/sdk';
 
 const mapIsOpen = ref(false);
-const ourLocation = ref([33.3333, 44.4444]);
+const ourLocation = ref({longitude: 37.618423, latitude: 55.751244});
 
 // Функции для управления картой
 const openMap = () => {
-  userLocation();
+  
   mapIsOpen.value = true;
   
 };
@@ -95,7 +95,8 @@ const userLocation = async () => {
       isLocationManagerMounting(); // true
       await promise;
       const location = await requestLocation();
-      ourLocation.value = location;
+      ourLocation.longitude = location.longitude;
+      ourLocation.latitude = location.latitude;
       showTemporaryAlert('Location: ' + JSON.stringify(ourLocation.value.longitude) + ', ' + JSON.stringify(ourLocation.value.latitude));
       isLocationManagerMounted(); // true
     } catch (err) {
