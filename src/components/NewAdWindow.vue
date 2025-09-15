@@ -1,7 +1,7 @@
 <template>
   <div v-if="mapIsOpen" class="fixed inset-0 z-50 flex items-center justify-center" @click="closeMap">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"></div>
-    <div class="relative w-[min(90vw,900px)] h-[min(70vh,70vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
+    <div class="relative w-[min(90vw,900px)] h-[min(90vh,70vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
              transform transition-all duration-300 ease-out" @click.stop>
       <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
         :user-location="[ourLocation.latitude, ourLocation.longitude]" @center-changed="onCenterChanged" />
