@@ -1,36 +1,14 @@
 <template>
   <div v-if="mapIsOpen" class="fixed inset-0 z-50 flex items-center justify-center" @click="closeMap">
-    <!-- Фон overlay -->
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"></div>
-    
-    <!-- Контейнер карты -->
     <div class="relative w-[min(90vw,900px)] h-[min(80vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
              transform transition-all duration-300 ease-out" @click.stop>
-      
-      <!-- Только карта без дополнительных элементов -->
-      <div class="w-full h-full">
-        <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
-          :user-location="[ourLocation.latitude, ourLocation.longitude]" 
-          @center-changed="onCenterChanged" />
-      </div>
-    </div>
+      <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
+        :user-location="[ourLocation.latitude, ourLocation.longitude]" @center-changed="onCenterChanged" />
+     <button @click="closeMap" class="absolute top-4 right-4  z-1000">✕</button>
+<Chip  class="absolute z-1200 top-4 left-1/2 -translate-x-1/2"  />
+<img :src="Marker"  class="absolute z-1000 scale-100 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
-
-    <button @click="closeMap" 
-            class="absolute top-4 right-4 z-1000 
-                   bg-white/20 hover:bg-white/30 backdrop-blur-sm 
-                   rounded-full w-10 h-10 flex items-center justify-center 
-                   text-white text-lg font-bold transition-colors
-                   border border-white/20 hover:border-white/40">
-      ✕
-    </button>
-    
-    <!-- Чип с информацией -->
-    <Chip class="absolute z-900 top-4 left-1/2 -translate-x-1/2" />
-    
-    <!-- Кастомный маркер по центру -->
-    <div class="absolute z-1000 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-      <img :src="Marker" class="scale-200 drop-shadow-lg" />
     </div>
   </div>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
