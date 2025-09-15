@@ -61,9 +61,8 @@
     <Button label="Далее" severity="success" variant="outlined" @click="emit('next', 'newAd')" class="w-full sm:w-auto" />
     <Button @click="emit('back')" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined" class="w-full sm:w-auto" />
   </div>
-</template>'''
-
-vue_script = '''<script setup>
+</template>
+<script setup>
 import { ref } from 'vue';
 import MapVew from './MapVew.vue';
 import {useMiniApp, Alert, useLocationManager } from 'vue-tg';
@@ -76,7 +75,7 @@ import {
 } from '@telegram-apps/sdk';
 
 const mapIsOpen = ref(false);
-const ourLocation = ref({longitude: 37.618423, latitude: 55.751244});
+const ourLocation = ref({});
 
 // Функции для управления картой
 const openMap = () => {
@@ -96,10 +95,7 @@ const userLocation = async () => {
       isLocationManagerMounting(); // true
       await promise;
       const location = await requestLocation();
-      ourLocation.longitude = location.longitude;
-      ourLocation.latitude = location.latitude;
-      showTemporaryAlert('Location OUR:' + JSON.stringify(ourLocation.value.longitude) + ', ' + JSON.stringify(ourLocation.value.latitude));
-      showTemporaryAlert('location TG: ' + JSON.stringify(location.longitude) + ', ' + JSON.stringify(location.latitude));
+      ourLocation = location;
       isLocationManagerMounted(); // true
     } catch (err) {
       locationManagerMountError(); // equals "err"
