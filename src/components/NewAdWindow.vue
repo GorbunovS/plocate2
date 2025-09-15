@@ -46,48 +46,30 @@ import {
   isLocationManagerMounting,
   isLocationManagerMounted,
   locationManagerMountError,
+  requestLocation
 } from '@telegram-apps/sdk';
 
-const getUserLocation = async () => {
+
+
+const userLocation = async () => {
+  if (mountLocationManager.isAvailable()) {
   try {
-    // Проверяем, что компонент смонтирован
-    if (!isLocationManagerMounted()) {
-      if (mountLocationManager.isAvailable()) {
-        const promise = mountLocationManager();
-        isLocationManagerMounting(); // true
-        await promise;
-      } else {
-        showTemporaryAlert('Геолокация не поддерживается');
-        return;
-      }
-    }
+    const promise = mountLocationManager();
+    isLocationManagerMounting(); // true
+    await promise;
+    showTemporaryAlert('Location manager mounted');
+    const location = await requestLocation();
+    showTemporaryAlert('Location: ' + JSON.stringify(location));
+    isLocationManagerMounted(); // true
 
-    // Проверяем доступность запроса локации и запрашиваем её
-    if (locationManager.requestLocation && locationManager.requestLocation.isAvailable && locationManager.requestLocation.isAvailable()) {
-      const pos = await locationManager.requestLocation();
-      // pos: { latitude, longitude, altitude?, speed?, course?, ... }
-      location.value = pos;
-
-      const parts = [
-        `Широта: ${pos.latitude.toFixed(6)}`,
-        `Долгота: ${pos.longitude.toFixed(6)}`
-      ];
-      if (typeof pos.horizontal_accuracy === 'number') {
-        parts.push(`Точность: ±${Math.round(pos.horizontal_accuracy)} м`);
-      }
-      showTemporaryAlert(parts.join(' | '));
-    } else {
-      showTemporaryAlert('Запрос локации недоступен (requestLocation)');
-    }
-  } catch (error) {
-    // На некоторых платформах нужно сначала открыть настройки
-    if (locationManager.openSettings && locationManager.openSettings.isAvailable && locationManager.openSettings.isAvailable()) {
-      locationManager.openSettings();
-    }
-    showTemporaryAlert('Не удалось получить местоположение: ' + (error?.message || 'ошибка'));
+  } catch (err) {
+    locationManagerMountError(); // equals "err"
+    showTemporaryAlert('Location manager mount error'+ err.message);
+    isLocationManagerMounting(); // false
+    isLocationManagerMounted(); // false
   }
-};
-
+}
+}
 
 const emit = defineEmits(['back', 'next']);
 
