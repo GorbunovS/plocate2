@@ -186,8 +186,6 @@ const searchAddresses = (event) => {
 
 onMounted(() => {
   userLocation();
-  if (locationManager.isAvailable()) {
-    mountLocationManager();
-  }
+
 });
 </script>
