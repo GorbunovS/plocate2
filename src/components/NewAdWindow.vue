@@ -85,7 +85,6 @@ const ourLocationCoords = ref([null, null]);
 // Функция, вызываемая при изменении центра
 const onCenterChanged = (coords) => {
   ourLocationCoords.value = coords;
-  
   adressByCoordinates(coords);
 };
 
@@ -191,6 +190,7 @@ const adressByCoordinates = (coordinate) => {
         name: suggestion.value,
         data: suggestion.data
       }));
+       showTemporaryAlert(data.suggestions[0].value);
     })
     .catch(error => console.error('Error fetching addresses:', error));
 }

@@ -1,13 +1,12 @@
 <template>
-  <LMap
+  <l-map
     :zoom="zoom"
     :center="center"
     @moveend="onMoveEnd"
-    style="height: 100%; width: 100%;"
   >
-    <LTileLayer :url="tileUrl" />
+    <l-tile-layer :url="tileUrl" />
     <l-marker :lat-lng="center" />
-  </LMap>
+  </l-map>
 </template>
 
 <script setup>
