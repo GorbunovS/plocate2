@@ -9,7 +9,7 @@
                bg-black/50 hover:bg-black/70 text-white transition-colors z-10" aria-label="Закрыть карту">
         ✕
       </button>
-      <Chip icon="pi pi-map-marker" :label="filteredAddresses[0]?.name || 'Определение адреса...'"
+      <Chip icon="pi pi-map-marker" :label="ourLocationCoords || 'Определение адреса...'"
         class="absolute z-10 top-4 left-1/2 -translate-x-1/2" severity="warning" />
 
       <img :src="Marker" alt="Marker"
@@ -85,7 +85,7 @@ const ourLocationCoords = ref([null, null]);
 // Функция, вызываемая при изменении центра
 const onCenterChanged = (coords) => {
   ourLocationCoords.value = coords;
-  // Вызываем ваш геокодер
+  
   adressByCoordinates(coords);
 };
 
