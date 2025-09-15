@@ -1,23 +1,19 @@
 <template>
   <div v-if="mapIsOpen" class="fixed inset-0 z-50 flex items-center justify-center" @click="closeMap">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"></div>
-    <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
-      :user-location="[ourLocation.latitude, ourLocation.longitude]" />
-  
-  <div class="fixed inset-0 z-50 flex items-center justify-center">
     <div class="relative w-[min(100vw,900px)] h-[min(100vh,80vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
              transform transition-all duration-300 ease-out" @click.stop>
+      <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
+        :user-location="[ourLocation.latitude, ourLocation.longitude]" />
       <button @click="closeMap" class="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full
                bg-black/50 hover:bg-black/70 text-white transition-colors z-10" aria-label="Закрыть карту">
         ✕
       </button>
-      <Chip icon="pi pi-map-marker" :label="[ourLocation.latitude, ourLocation.longitude]"
-        class="absolute z-10 top-4 left-1/2 -translate-x-1/2" severity="warning" />
+      <Chip icon="pi pi-map-marker" :label="adressByCoordinates([ourLocation.latitude, ourLocation.longitude])" class="absolute z-10 top-4 left-1/2 -translate-x-1/2" severity="warning" />
       <img :src="Marker" alt="Marker"
         class="absolute z-10 scale-200 top-1/2 left-1/2 w-10 h-10 -translate-x-1/2 -translate-y-1/2" />
-    </div>
-    </div>
 
+    </div>
   </div>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
     <Alert v-if="showAlert" :message="alertMsg" />
@@ -162,6 +158,32 @@ const petTypes = ref([
   { name: 'Кошку', value: 2, icon: 'las la-cat' },
 ]);
 
+const adressByCoordinates = (coordinate) => {
+  const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
+  const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address";
+  const query = coordinate;
+
+  fetch(url, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Token ${token}`,
+      'X-Secret': '2e0536c54e06461d2f12350d038bc234c69a3fcb'
+    },
+    body: JSON.stringify({ query, count: 1, language: 'ru' })
+  })
+    .then(response => response.json())
+    .then(data => {
+      filteredAddresses.value = data.suggestions.map(suggestion => ({
+        name: suggestion.value,
+        data: suggestion.data 
+      }));
+    })
+    .catch(error => console.error('Error fetching addresses:', error));
+}
+
 const searchAddresses = (event) => {
   const query = event.query;
   const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
@@ -181,7 +203,7 @@ const searchAddresses = (event) => {
     .then(data => {
       filteredAddresses.value = data.suggestions.map(suggestion => ({
         name: suggestion.value,
-        data: suggestion.data // Исправлена опечатка "dats" -> "data"
+        data: suggestion.data 
       }));
     })
     .catch(error => console.error('Error fetching addresses:', error));
