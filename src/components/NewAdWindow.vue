@@ -6,7 +6,7 @@
       <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
         :user-location="[ourLocation.latitude, ourLocation.longitude]" @center-changed="onCenterChanged" />
      <button @click="closeMap" class="absolute top-4 right-4  z-1000">✕</button>
-<Chip :label="ourLocation" class="absolute z-1200 top-4 left-1/2 -translate-x-1/2"  />
+<Chip :label="ourLocationCoords" class="absolute z-1200 top-4 left-1/2 -translate-x-1/2"  />
 <img :src="Marker"  class="absolute z-1000 scale-100 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
     </div>
     <div class="absolute bottom-4 left-1/2 -translate-x-1/2">
