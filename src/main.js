@@ -29,7 +29,7 @@ app.use(PrimeVue, {
         preset: Aura
     }
 });
-init();
 
+init()
 app.mount('#app');
 
