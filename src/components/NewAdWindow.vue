@@ -5,15 +5,9 @@
              transform transition-all duration-300 ease-out" @click.stop>
       <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
         :user-location="[ourLocation.latitude, ourLocation.longitude]" @center-changed="onCenterChanged" />
-      <button @click="closeMap" class="absolute top-4 right-4 inline-flex items-center justify-center h-10 w-10 rounded-full
-               bg-black/50 hover:bg-black/70 text-white transition-colors z-10" aria-label="Закрыть карту">
-        ✕
-      </button>
-      <Chip icon="pi pi-map-marker" :label="ourLocationCoords || 'Определение адреса...'"
-        class="absolute z-10 top-4 left-1/2 -translate-x-1/2" severity="warning" />
-
-      <img :src="Marker" alt="Marker"
-        class="absolute z-10 scale-200 top-1/2 left-1/2 w-10 h-10 -translate-x-1/2 -translate-y-1/2" />
+     <button @click="closeMap" class="absolute top-4 right-4 ... z-[800]">✕</button>
+<Chip ... class="absolute z-[800] top-4 left-1/2 -translate-x-1/2" ... />
+<img :src="Marker" ... class="absolute z-[800] scale-200 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
     </div>
   </div>
@@ -105,6 +99,7 @@ const userLocation = async () => {
       await promise;
       const location = await requestLocation();
       ourLocation.value = location;
+      await adressByCoordinates(ourLocationCoords.value);
       isLocationManagerMounted(); // true
     } catch (err) {
       locationManagerMountError(); // equals "err"
@@ -168,7 +163,7 @@ const petTypes = ref([
   { name: 'Кошку', value: 2, icon: 'las la-cat' },
 ]);
 
-const adressByCoordinates = (coordinate) => {
+const adressByCoordinates =async (coordinate) => {
   const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
   const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address";
   const query = coordinate;
@@ -186,6 +181,10 @@ const adressByCoordinates = (coordinate) => {
   })
     .then(response => response.json())
     .then(data => {
+      if (data.suggestions.length > 0) {
+      selectedAddress.value = data.suggestions[0].value; // Add this
+      status.value = selectedAddress.value; // Add this
+    }
       filteredAddresses.value = data.suggestions.map(suggestion => ({
         name: suggestion.value,
         data: suggestion.data
