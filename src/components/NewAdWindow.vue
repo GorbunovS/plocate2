@@ -11,7 +11,7 @@
       @click.stop
     >
       <MapVew 
-      :center = "ourLocation.longitude + ',' + ourLocation.latitude"
+       :userLocation="[ourLocation.latitude, ourLocation.longitude]"
       />
       <button
         @click="closeMap"
