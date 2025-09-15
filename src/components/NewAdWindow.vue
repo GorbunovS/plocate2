@@ -11,7 +11,7 @@
       @click.stop
     >
       <MapVew 
-      
+      :center = "ourLocation.longitude + ',' + ourLocation.latitude"
       />
       <button
         @click="closeMap"
@@ -95,7 +95,7 @@ const userLocation = async () => {
       await promise;
       const location = await requestLocation();
       ourLocation.value = location;
-      showTemporaryAlert('Location: ' + JSON.stringify(ourLocation.value));
+      showTemporaryAlert('Location: ' + JSON.stringify(ourLocation.value.longitude) + ', ' + JSON.stringify(ourLocation.value.latitude));
       isLocationManagerMounted(); // true
     } catch (err) {
       locationManagerMountError(); // equals "err"
