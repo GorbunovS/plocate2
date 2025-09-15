@@ -1,4 +1,5 @@
 <template>
+  <MapVew v-if="mapIsOpen" ></MapVew>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
     <Alert v-if="showAlert" :message="alertMsg" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
@@ -40,6 +41,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import MapVew from './MapVew.vue';
 import {useMiniApp, Alert, useLocationManager } from 'vue-tg';
 import {
   mountLocationManager,
@@ -49,7 +51,7 @@ import {
   requestLocation
 } from '@telegram-apps/sdk';
 
-
+const mapIsOpen = ref(false);
 
 const userLocation = async () => {
   if (mountLocationManager.isAvailable()) {
@@ -57,7 +59,6 @@ const userLocation = async () => {
     const promise = mountLocationManager();
     isLocationManagerMounting(); // true
     await promise;
-    
     const location = await requestLocation();
     showTemporaryAlert('Location: ' + JSON.stringify(location));
     isLocationManagerMounted(); // true

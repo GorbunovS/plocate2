@@ -13,6 +13,9 @@ import AutoComplete from 'primevue/autocomplete';
 import { VueTelegramPlugin } from 'vue-tg';
 import { init } from '@telegram-apps/sdk';
 import { locationManager } from '@telegram-apps/sdk';
+import 'element-plus/dist/index.css';
+import 'leaflet/dist/leaflet.css';
+import './assets/styles/global.css'; 
  
 init();
 locationManager.isSupported(); 
