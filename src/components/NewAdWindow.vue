@@ -25,7 +25,7 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
     
     <span class="text-sm text-gray-500 italic">Место</span>
-    <Button @click="getUserLocation" icon="pi pi-map-marker" label="Поделиться гео" severity="success" variant="outlined" class="w-full" />
+    <Button @click="userLocation" icon="pi pi-map-marker" label="Поделиться гео" severity="success" variant="outlined" class="w-full" />
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name" class="w-full" />
       <label for="username">Или введите адрес</label>
@@ -41,7 +41,29 @@
 <script setup>
 import { ref } from 'vue';
 import {useMiniApp, Alert, useLocationManager } from 'vue-tg';
+import {
+  mountLocationManager,
+  isLocationManagerMounting,
+  isLocationManagerMounted,
+  locationManagerMountError,
+} from '@telegram-apps/sdk';
 
+const userLocation = async () => {
+  
+  if (mountLocationManager.isAvailable()) {
+  try {
+    const promise = mountLocationManager();
+    isLocationManagerMounting(); // true
+    await promise;
+    isLocationManagerMounting(); // false
+    isLocationManagerMounted(); // true
+  } catch (err) {
+    locationManagerMountError(); // equals "err"
+    isLocationManagerMounting(); // false
+    isLocationManagerMounted(); // false
+  }
+}
+}
 
 const emit = defineEmits(['back', 'next']);
 
