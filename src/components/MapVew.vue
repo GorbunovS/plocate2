@@ -4,7 +4,7 @@
       <AutoComplete v-model="status" 
         :suggestions="filteredAddresses" 
         @complete="userStore.searchAddresses($event)" 
-        @select="getCoordinatesByAddress(status.name)"
+        @select="onAddressSelect(status.name)"
         optionLabel="name"
         class="w-full" />
       <label for="username">Поиск</label>
@@ -80,7 +80,7 @@ const onMoveEnd = async (e) => {
   const newCenter = [map.getCenter().lat, map.getCenter().lng];
   currentCenter.value = newCenter;
   markerCoord.value = `${newCenter[0].toFixed(3)}, ${newCenter[1].toFixed(3)}`;
-  await userStore.addressByCoordinates({ lat: newCenter[0], lon: newCenter[1] }); /
+  await userStore.addressByCoordinates({ lat: newCenter[0], lon: newCenter[1] }); 
   emit('update:center', newCenter);
   emit('center-changed', newCenter);
 };
