@@ -4,7 +4,7 @@
     <div class="relative w-[min(90vw,900px)] h-[min(90vh,70vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
              transform transition-all duration-300 ease-out" @click.stop>
       <MapVew :center="[ourLocation.latitude, ourLocation.longitude]"
-        :user-location="[ourLocation.latitude, ourLocation.longitude]" @center-changed="onCenterChanged" />
+        :user-location="[ourLocation.latitude, ourLocation.longitude]" />
      <button @click="closeMap" class="absolute top-4 right-4  z-1000">✕</button>
     </div>
     <div class="absolute bottom-4 left-1/2 -translate-x-1/2">
@@ -76,10 +76,7 @@ const { filteredAddresses } = storeToRefs(userStore)
 
 const ourLocationCoords = ref([null, null]);
 
-// Функция, вызываемая при изменении центра
-const onCenterChanged = (coords) => {
-  ourLocationCoords.value = coords;
-};
+
 
 // Функции для управления картой
 const openMap = () => {

@@ -5,7 +5,8 @@ export const useUserStore = defineStore('user', {
   state: () => {
     return { 
         count: 0 ,
-        filteredAddresses :([])
+        filteredAddresses :([]),
+        selectedCoordinates: { lat: null, lon: null }
     }
   },
 
@@ -32,7 +33,15 @@ export const useUserStore = defineStore('user', {
         data: suggestion.data
       }));
     })
-    .catch(error => console.error('Error fetching addresses:', error));
+.catch(console.error)
+    },
+    setCoordinates(suggestion) {
+      const { geo_lat, geo_lon } = suggestion.data
+      this.selectedCoordinates = {
+        lat: parseFloat(geo_lat),
+        lon: parseFloat(geo_lon)
+      }
+    }
 },
 async adressByCoordinates(coordinate) {
   const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
@@ -65,6 +74,6 @@ async adressByCoordinates(coordinate) {
     .catch(error => console.error('Error fetching addresses:', error));
 }
   },
-})
+)
 
 
