@@ -1,19 +1,16 @@
 <template>
-      <Chip 
-      :label="markerCoord" 
-      class="absolute z-1100 top-20 left-1/2 -translate-x-1/2" 
-    />
-  <div class="relative h-full w-full">
+    <FloatLabel class="absolute z-100 scale-70" variant="in">
+      <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="userStore.searchAddresses($event)" optionLabel="name"
+        class="w-full" />
+      <label for="username">Поиск</label>
+    </FloatLabel>
+  <div class="relative h-8/10 w-full">
 
     <img 
       :src="Marker" 
       class="absolute z-1000 scale-100 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" 
     />
 
-    <!-- Кнопка снизу поверх карты -->
-
-
-    <!-- Карта Leaflet -->
     <LMap 
       @moveend="onMoveEnd" 
       :attributionControl="false" 
@@ -26,11 +23,11 @@
   </div>
       <Button 
       @click="closeMap" 
-      icon="pi pi-map" 
+      icon="pi pi-save"
       label="Сохранить" 
       severity="success" 
       variant="outlined" 
-      class="absolute z-1000 bottom-20 left-4 right-4" 
+      class="absolute mt-2 left-4 right-4" 
     />
 </template>
 
@@ -41,7 +38,12 @@ import Button from 'primevue/button'; // Добавьте импорт Button
 import Marker from '../assets/marker.svg';
 import { LMap, LTileLayer } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '../store';
 
+const userStore = useUserStore();
+const { filteredAddresses } = storeToRefs(userStore)
+const status = ref('');
 const emit = defineEmits(['update:center', 'center-changed']);
 
 const markerCoord = ref('55.751, 37.618') // Инициализируйте строкой

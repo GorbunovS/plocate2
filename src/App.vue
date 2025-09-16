@@ -15,7 +15,10 @@ import './style.css'
   
 </template>
 
-<style scoped>
+<style>
+.leaflet-bottom{
+  visibility: hidden;
+}
 
 
 </style>

@@ -15,7 +15,11 @@ import { init } from '@telegram-apps/sdk';
 import { locationManager } from '@telegram-apps/sdk';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 import Chip from 'primevue/chip';
+import { useUserStore } from './store'
+import { createPinia } from 'pinia'
 
+const pinia = createPinia()
+const userStore = useUserStore(pinia)
 
 
 
@@ -25,6 +29,7 @@ locationManager.isSupported();
 
 const app = createApp(App);
 app.use(router); 
+app.use(pinia)
 app.use(VueTelegramPlugin);
 app.component('Chip', Chip);
 app.component('LMap', LMap);

@@ -8,7 +8,6 @@
      <button @click="closeMap" class="absolute top-4 right-4  z-1000">✕</button>
     </div>
     <div class="absolute bottom-4 left-1/2 -translate-x-1/2">
-  
     </div>
   </div>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
@@ -24,7 +23,6 @@
         <span class="ml-2">{{ slotProps.option.name }}</span>
       </template>
     </SelectButton>
-
     <span class="text-sm text-gray-500 italic">Изображение (Добавьте до 3)</span>
     <div class="flex flex-row gap-2 h-24 w-full overflow-x-auto">
       <div v-for="(img, index) in images" :key="`img-${index}`" class="relative flex-shrink-0 w-24">
@@ -44,7 +42,7 @@
     <Button @click="openMap" icon="pi pi-map" label="Выбрать на карте" severity="success" variant="outlined"
       class="w-full" />
     <FloatLabel class="w-full" variant="in">
-      <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="searchAddresses" optionLabel="name"
+      <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="userStore.searchAddresses($event)" optionLabel="name"
         class="w-full" />
       <label for="username">Или введите адрес</label>
     </FloatLabel>
@@ -59,8 +57,9 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
+import { storeToRefs } from 'pinia'
 import MapVew from './MapVew.vue';
-
+import { useUserStore } from '../store';
 import { useMiniApp, Alert, useLocationManager } from 'vue-tg';
 import {
   mountLocationManager,
@@ -70,15 +69,16 @@ import {
   requestLocation
 } from '@telegram-apps/sdk';
 
+const userStore = useUserStore();
 const mapIsOpen = ref(false);
 const ourLocation = ref({});
+const { filteredAddresses } = storeToRefs(userStore)
 
 const ourLocationCoords = ref([null, null]);
 
 // Функция, вызываемая при изменении центра
 const onCenterChanged = (coords) => {
   ourLocationCoords.value = coords;
-  adressByCoordinates(coords);
 };
 
 // Функции для управления картой
@@ -98,7 +98,6 @@ const userLocation = async () => {
       await promise;
       const location = await requestLocation();
       ourLocation.value = location;
-      await adressByCoordinates(ourLocationCoords.value);
       isLocationManagerMounted(); // true
     } catch (err) {
       locationManagerMountError(); // equals "err"
@@ -119,7 +118,6 @@ const miniApp = useMiniApp();
 const locationManager = useLocationManager();
 const adType = ref(null);
 const petType = ref(null);
-const filteredAddresses = ref([]);
 const images = ref([]);
 const fileInput = ref(null);
 const location = ref(null); // Для хранения координат
@@ -162,61 +160,6 @@ const petTypes = ref([
   { name: 'Кошку', value: 2, icon: 'las la-cat' },
 ]);
 
-const adressByCoordinates =async (coordinate) => {
-  const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
-  const url = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address";
-  const query = coordinate;
-
-  fetch(url, {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': `Token ${token}`,
-      'X-Secret': '2e0536c54e06461d2f12350d038bc234c69a3fcb'
-    },
-    body: JSON.stringify({ query, count: 1, language: 'ru' })
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.suggestions.length > 0) {
-      selectedAddress.value = data.suggestions[0].value; // Add this
-      status.value = selectedAddress.value; // Add this
-    }
-      filteredAddresses.value = data.suggestions.map(suggestion => ({
-        name: suggestion.value,
-        data: suggestion.data
-      }));
-       showTemporaryAlert(data.suggestions[0].value);
-    })
-    .catch(error => console.error('Error fetching addresses:', error));
-}
-
-const searchAddresses = (event) => {
-  const query = event.query;
-  const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
-
-  fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': `Token ${token}`,
-      'X-Secret': '2e0536c54e06461d2f12350d038bc234c69a3fcb'
-    },
-    body: JSON.stringify({ query, count: 10, language: 'ru' })
-  })
-    .then(response => response.json())
-    .then(data => {
-      filteredAddresses.value = data.suggestions.map(suggestion => ({
-        name: suggestion.value,
-        data: suggestion.data
-      }));
-    })
-    .catch(error => console.error('Error fetching addresses:', error));
-};
 
 onMounted(() => {
   userLocation();
