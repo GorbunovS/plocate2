@@ -1,6 +1,6 @@
 <template>
       <div class="header p-4 flex h-20 z-10 mt-10 items-center justify-center">
-        <img :src="logoSrc" alt="logo" class="h-12 w-auto" />
+        <img :src="logoSrc" alt="logo" class="h-12 w-auto scale-90" />
     </div>
   <div class="body gap-5 flex flex-col min-h-screen text-gray-900 dark:text-gray-100">
     <div v-if="currentPage === 'newAd'">

@@ -15,7 +15,7 @@
       @moveend="onMoveEnd" 
       :attributionControl="false" 
       :zoom="zoom" 
-      :center="center" 
+      :center="userLocation" 
       style="height: 100%; width: 100%;"
     >
       <LTileLayer :url="url" :attribution="attribution" />
@@ -46,7 +46,7 @@ const { filteredAddresses } = storeToRefs(userStore)
 const status = ref('');
 const emit = defineEmits(['update:center', 'center-changed']);
 
-const markerCoord = ref('55.751, 37.618') // Инициализируйте строкой
+const markerCoord = ref('') // Инициализируйте строкой
 
 const onMoveEnd = (e) => {
   const map = e.target;
