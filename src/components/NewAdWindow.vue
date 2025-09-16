@@ -4,7 +4,7 @@
     <div class="relative w-[min(90vw,900px)] h-[min(90vh,70vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
              transform transition-all duration-300 ease-out" @click.stop>
       <MapVew 
-        :user-location="[ourLocationCoords.latitude, ourLocationCoords.longitude]"
+        :user-location="[ourLocation.latitude, ourLocation.longitude]"
         
         @save-location="saveLocation"
          />
