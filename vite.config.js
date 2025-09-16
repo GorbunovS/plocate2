@@ -3,6 +3,16 @@ import tailwindcss from '@tailwindcss/vite';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
+  server: {
+    proxy: {
+      '/dadata': {
+        target: 'https://suggestions.dadata.ru',
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/dadata/, '')
+      }
+    }
+  },
   plugins: [vue(), tailwindcss()],
   esbuild: {
     legalComments: 'none',

@@ -40,7 +40,7 @@ export const useUserStore = defineStore('user', {
     async getCoordinatesByAddress(address) {
       const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
       try {
-        const response = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
+        const response = await fetch('https://cleaner.dadata.ru/api/v1/clean/address', {
           method: 'POST',
           mode: 'cors',
           headers: {
@@ -49,7 +49,7 @@ export const useUserStore = defineStore('user', {
             'Authorization': `Token ${token}`,
             'X-Secret': '2e0536c54e06461d2f12350d038bc234c69a3fcb'
           },
-          body: JSON.stringify({ query: address, count: 1, language: 'ru' })
+          body: JSON.stringify([address])
         });
         const data = await response.json();
         console.log("Ответ сервера"+data)
@@ -74,7 +74,7 @@ export const useUserStore = defineStore('user', {
     async addressByCoordinates(coordinate) {
       const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
       try {
-        const response = await fetch('https://cleaner.dadata.ru/api/v1/clean/address', {
+        const response = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address', {
           method: 'POST',
           mode: 'cors',
           headers: {

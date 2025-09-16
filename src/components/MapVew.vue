@@ -5,11 +5,11 @@
         v-model="status" 
         :suggestions="filteredAddresses" 
         @complete="userStore.searchAddresses($event)" 
-        @item-select="userStore.addressByCoordinates(selectedAddress)"
+        @item-select="userStore.getCoordinatesByAddress(selectedAddress)"
         optionLabel="name"
         class="w-full" 
       />
-      <Button @click="userStore.addressByCoordinates(selectedAddress)" icon="pi pi-search" severity="success" variant="outlined" />
+      <!-- <Button @click="userStore.getCoordinatesByAddress(selectedAddress)" icon="pi pi-search" severity="success" variant="outlined" /> -->
       <label>Поиск</label>
     </FloatLabel>
     <div class="flex-1 relative w-full mt-12">
@@ -20,7 +20,7 @@
       />
       <img 
         :src="Marker" 
-        class="absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-100 pointer-events-none" 
+        class="absolute z-1100 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-100 pointer-events-none" 
       />
       <LMap 
         :zoom="zoom" 
