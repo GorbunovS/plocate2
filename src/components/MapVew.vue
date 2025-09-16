@@ -5,17 +5,17 @@
         v-model="status" 
         :suggestions="filteredAddresses" 
         @complete="userStore.searchAddresses($event)" 
-        @item-select="userStore.getCoordinatesByAddress(selectedAddress)"
+        @item-select="userStore.getCoordinatesByAddress(status.name)"
         optionLabel="name"
         class="w-full" 
       />
       <!-- <Button @click="userStore.getCoordinatesByAddress(selectedAddress)" icon="pi pi-search" severity="success" variant="outlined" /> -->
       <label>Поиск</label>
     </FloatLabel>
-    <div class="flex-1 relative w-full mt-12">
+    <div class="flex-1 relative w-full mt-3">
       <Chip 
         :label="chipLabel" 
-        class="absolute z-10 top-2 left-1/2 -translate-x-1/2 bg-white shadow-md" 
+        class="absolute z-1200 top-2 left-1/2 -translate-x-1/2 bg-white shadow-md" 
         icon="pi pi-map-marker" 
       />
       <img 
@@ -29,7 +29,7 @@
         :attribution-control="false"
         style="height: 100%; width: 100%;"
       >
-        <LTileLayer :url="url" :attribution="attribution" />
+        <LTileLayer :url="url"  />
       </LMap>
     </div>
     <Button 
@@ -74,17 +74,6 @@ const url = ref('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=g7
 
 const chipLabel = computed(() => status.value?.name || selectedAddress.value || 'Неизвестно');
 
-const onAddressSelect = async (selectedItem) => {
-  if (!selectedItem) return;
-  console.log("Выбран айтем"+selectedItem);
-  const fullAddress = selectedItem.name;
-  const coords = await userStore.getCoordinatesByAddress(fullAddress);
-  if (coords) {
-    currentCenter.value = [coords.lat, coords.lon];
-    emit('update:center', currentCenter.value);
-    emit('center-changed', currentCenter.value);
-  }
-};
 
 const onMoveEnd = async (e) => {
   const map = e.target;
@@ -93,6 +82,7 @@ const onMoveEnd = async (e) => {
   await userStore.addressByCoordinates({ lat: newCenter[0], lon: newCenter[1] });
   emit('update:center', newCenter);
   emit('center-changed', newCenter);
+
 };
 
 const saveLocation = () => {

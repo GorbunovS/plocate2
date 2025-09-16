@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/dadata': {
-        target: 'https://suggestions.dadata.ru',
+        target: 'https://cleaner.dadata.ru',
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/dadata/, '')

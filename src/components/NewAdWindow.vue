@@ -4,7 +4,9 @@
     <div class="relative w-[min(90vw,900px)] h-[min(90vh,70vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
              transform transition-all duration-300 ease-out" @click.stop>
       <MapVew 
-        :user-location="['33.456', '44.123']"
+        :user-location="[ourLocationCoords.latitude, ourLocationCoords.longitude]"
+        
+        @save-location="saveLocation"
          />
      <button @click="closeMap" class="absolute top-4 right-4  z-1000">✕</button>
     </div>
@@ -42,6 +44,7 @@
     <span class="text-sm text-gray-500 italic">Место</span>
     <Button @click="openMap" icon="pi pi-map" label="Выбрать на карте" severity="success" variant="outlined"
       class="w-full" />
+      <div class="w-full text-center text-sm text-gray-500">{{ adress }}</div>
     <FloatLabel class="w-full" variant="in">
       <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="userStore.searchAddresses($event)" optionLabel="name"
         class="w-full" />
@@ -71,6 +74,7 @@ import {
 } from '@telegram-apps/sdk';
 
 const userStore = useUserStore();
+const adress = ref('');
 const mapIsOpen = ref(false);
 const ourLocation = ref({});
 const { filteredAddresses } = storeToRefs(userStore)
@@ -78,7 +82,21 @@ const { filteredAddresses } = storeToRefs(userStore)
 const ourLocationCoords = ref([null, null]);
 
 
-
+const saveLocation = async ({ center }) => {
+  try {
+    const [lat, lon] = center;
+    const address = await userStore.addressByCoordinates({ lat, lon });
+    if (address) {
+      adress.value = address;
+      console.log('Сохранённый адрес:', adress.value);
+    } else {
+      console.warn('Адрес не найден');
+    }
+    closeMap();
+  } catch (error) {
+    console.error('Ошибка сохранения адреса:', error);
+  }
+};
 // Функции для управления картой
 const openMap = () => {
   mapIsOpen.value = true;
