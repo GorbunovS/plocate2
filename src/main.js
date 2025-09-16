@@ -23,7 +23,7 @@ const userStore = useUserStore(pinia)
 
 
 
-// init();
+init();
 locationManager.isSupported(); 
 
 
