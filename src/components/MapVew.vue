@@ -1,14 +1,14 @@
 <template>
+  <div class="relative h-full w-full">
     <FloatLabel class="absolute z-100 scale-70" variant="in">
       <AutoComplete v-model="status" 
       :suggestions="filteredAddresses" 
       @complete="userStore.searchAddresses($event)" 
-      @select="onAddressSelect"
+      @select="onAddressSelect()"
       optionLabel="name"
         class="w-full" />
       <label for="username">Поиск</label>
     </FloatLabel>
-    {{ center }}
   <div class="relative h-8/10 w-full">
 
     <img 
@@ -20,7 +20,7 @@
       @moveend="onMoveEnd" 
       :attributionControl="false" 
       :zoom="zoom" 
-      :center="userLocation" 
+      :center="currentCenter" 
       style="height: 100%; width: 100%;"
     >
       <LTileLayer :url="url" :attribution="attribution" />
@@ -34,10 +34,11 @@
       variant="outlined" 
       class="absolute mt-2 left-4 right-4" 
     />
+  </div>
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps } from 'vue'
+import { ref, defineEmits, defineProps, watch } from 'vue'
 import { Chip } from 'primevue';
 import Button from 'primevue/button'; // Добавьте импорт Button
 import Marker from '../assets/marker.svg';
@@ -47,23 +48,41 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from '../store';
 
 const userStore = useUserStore();
+const {selectedCoordinates} = storeToRefs(userStore)
 const { filteredAddresses } = storeToRefs(userStore)
-const status = ref('');
+const status = ref({});
 const emit = defineEmits(['update:center', 'center-changed']);
 
 const markerCoord = ref('') // Инициализируйте строкой
 
-const onAddressSelect = (event) => {
-  userStore.selectAddress(event.value);
-  status.value = event.value;
-  center.value = [event.value.latitude, event.value.longitude];
+const onAddressSelect = (event) =>{
+  // event — выбранный объект { name, data }
+  userStore.setCoordinates(event)
+
+
 }
+
+watch(
+  selectedCoordinates,
+  (coords) => {
+    if (coords.lat !== null && coords.lon !== null) {
+      currentCenter.value = [coords.lat, coords.lon]
+      emit('update:center', currentCenter.value)
+      emit('center-changed', currentCenter.value)
+      markerCoord.value = `${coords.lat.toFixed(5)}, ${coords.lon.toFixed(5)}`
+      console.log("Сработал Wath"+markerCoord.value)
+    }
+  },
+  { immediate: true }
+)
+
 const onMoveEnd = (e) => {
   const map = e.target;
   const newCenter = [map.getCenter().lat, map.getCenter().lng];
-  markerCoord.value = `${newCenter[0].toFixed(3)}, ${newCenter[1].toFixed(3)}`; // Исправлено
+  markerCoord.value = `${newCenter[0].toFixed(3)}, ${newCenter[1].toFixed(3)}`; 
   emit('update:center', newCenter);
   emit('center-changed', newCenter);
+  console.log("Сработал onMoveEnd")
 
 }
 
@@ -74,14 +93,13 @@ const closeMap = () => {
 }
 
 const props = defineProps({
-  userPetMarker: {
-    type: Array
-  },
   userLocation: {
     type: Array,
     default: () => [55.751244, 37.618423]
   }
 })
+
+const currentCenter = ref([...props.userLocation])
 
 const zoom = ref(13)
 const center = ref([55.751244, 37.618423])
