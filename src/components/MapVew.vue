@@ -1,26 +1,32 @@
 <template>
-  <div class="relative h-full w-full">
-    <FloatLabel class="absolute z-100 scale-70" variant="in">
-      <AutoComplete v-model="status" 
+  <div class="flex flex-col h-full w-full relative">
+    <FloatLabel class="absolute z-10 top-2 left-4 right-4 scale-75" variant="in">
+      <AutoComplete 
+        v-model="status" 
         :suggestions="filteredAddresses" 
         @complete="userStore.searchAddresses($event)" 
-        @select="onAddressSelect(status.name)"
+        @item-select="userStore.addressByCoordinates(selectedAddress)"
         optionLabel="name"
-        class="w-full" />
-      <label for="username">Поиск</label>
+        class="w-full" 
+      />
+      <Button @click="userStore.addressByCoordinates(selectedAddress)" icon="pi pi-search" severity="success" variant="outlined" />
+      <label>Поиск</label>
     </FloatLabel>
-    <div class="relative h-8/10 w-full">
-      <Chip icon="pi pi-map-marker" :label="status.name" class="absolute z-1000 top-2 left-1/2 -translate-x-1/2 bg-white shadow-md" />
-{{ selectedCoordinates }}
+    <div class="flex-1 relative w-full mt-12">
+      <Chip 
+        :label="chipLabel" 
+        class="absolute z-10 top-2 left-1/2 -translate-x-1/2 bg-white shadow-md" 
+        icon="pi pi-map-marker" 
+      />
       <img 
         :src="Marker" 
-        class="absolute z-1000 scale-100 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" 
+        class="absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-100 pointer-events-none" 
       />
       <LMap 
-        @moveend="onMoveEnd" 
-        :attributionControl="false" 
         :zoom="zoom" 
         :center="currentCenter" 
+        @moveend="onMoveEnd"
+        :attribution-control="false"
         style="height: 100%; width: 100%;"
       >
         <LTileLayer :url="url" :attribution="attribution" />
@@ -32,14 +38,17 @@
       label="Сохранить" 
       severity="success" 
       variant="outlined" 
-      class="absolute mt-2 left-4 right-4" 
+      class="mt-2 self-center w-32" 
     />
   </div>
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps, watch } from 'vue';
+import { ref, computed, defineEmits, defineProps, watch } from 'vue';
 import Button from 'primevue/button';
+import Chip from 'primevue/chip';
+import FloatLabel from 'primevue/floatlabel';
+import AutoComplete from 'primevue/autocomplete';
 import Marker from '../assets/marker.svg';
 import { LMap, LTileLayer } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -47,8 +56,8 @@ import { storeToRefs } from 'pinia';
 import { useUserStore } from '../store';
 
 const userStore = useUserStore();
-const { selectedCoordinates, filteredAddresses } = storeToRefs(userStore);
-const status = ref('');
+const { selectedCoordinates, filteredAddresses, selectedAddress } = storeToRefs(userStore);
+const status = ref(null);
 const emit = defineEmits(['save-location', 'update:center', 'center-changed']);
 
 const props = defineProps({
@@ -58,18 +67,20 @@ const props = defineProps({
   }
 });
 
-const markerCoord = ref('');
 const currentCenter = ref([...props.userLocation]);
 const zoom = ref(13);
 const url = ref('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=g7cM1vMR1viO2I3YInIA');
-const attribution = ref('&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors');
 
-const onAddressSelect = async (event) => {
-  const fullAddress = event.name; // Полный адрес из выбора
+
+const chipLabel = computed(() => status.value?.name || selectedAddress.value || 'Неизвестно');
+
+const onAddressSelect = async (selectedItem) => {
+  if (!selectedItem) return;
+  console.log("Выбран айтем"+selectedItem);
+  const fullAddress = selectedItem.name;
   const coords = await userStore.getCoordinatesByAddress(fullAddress);
   if (coords) {
     currentCenter.value = [coords.lat, coords.lon];
-    markerCoord.value = `${coords.lat.toFixed(5)}, ${coords.lon.toFixed(5)}`;
     emit('update:center', currentCenter.value);
     emit('center-changed', currentCenter.value);
   }
@@ -79,34 +90,26 @@ const onMoveEnd = async (e) => {
   const map = e.target;
   const newCenter = [map.getCenter().lat, map.getCenter().lng];
   currentCenter.value = newCenter;
-  markerCoord.value = `${newCenter[0].toFixed(3)}, ${newCenter[1].toFixed(3)}`;
-  await userStore.addressByCoordinates({ lat: newCenter[0], lon: newCenter[1] }); 
+  await userStore.addressByCoordinates({ lat: newCenter[0], lon: newCenter[1] });
   emit('update:center', newCenter);
   emit('center-changed', newCenter);
 };
 
 const saveLocation = () => {
-  emit('save-location', { center: currentCenter});
-  console.log('Сохранено:', { center: currentCenter });
+  emit('save-location', { center: currentCenter.value });
 };
 
-watch(
-  selectedCoordinates,
-  (coords) => {
-    if (coords.lat !== null && coords.lon !== null) {
-      currentCenter.value = [coords.lat, coords.lon];
-      markerCoord.value = `${coords.lat.toFixed(5)}, ${coords.lon.toFixed(5)}`;
-      emit('update:center', currentCenter.value);
-      emit('center-changed', currentCenter.value);
-    }
-  },
-  { immediate: true }
-);
+watch(selectedCoordinates, (coords) => {
+  if (coords?.lat !== null && coords?.lon !== null) {
+    currentCenter.value = [coords.lat, coords.lon];
+    emit('update:center', currentCenter.value);
+    emit('center-changed', currentCenter.value);
+  }
+}, { immediate: true, deep: true });
 </script>
 
 <style scoped>
 .leaflet-control-attribution {
-  visibility: hidden;
   display: none;
 }
 </style>

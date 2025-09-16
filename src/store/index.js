@@ -1,3 +1,4 @@
+// index.js (store)
 import { defineStore } from 'pinia';
 
 export const useUserStore = defineStore('user', {
@@ -26,7 +27,6 @@ export const useUserStore = defineStore('user', {
           body: JSON.stringify({ query, count: 10, language: 'ru' })
         });
         const data = await response.json();
-        console.log('Полный ответ от сервера:', data);
 
         this.filteredAddresses = data.suggestions.map(suggestion => ({
           name: suggestion.value,
@@ -52,7 +52,7 @@ export const useUserStore = defineStore('user', {
           body: JSON.stringify({ query: address, count: 1, language: 'ru' })
         });
         const data = await response.json();
-        console.log('Координаты по адресу:', data);
+        console.log("Ответ сервера"+data)
         if (data.suggestions && data.suggestions.length > 0) {
           const { geo_lat, geo_lon } = data.suggestions[0].data;
           this.selectedCoordinates = {
@@ -74,7 +74,7 @@ export const useUserStore = defineStore('user', {
     async addressByCoordinates(coordinate) {
       const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
       try {
-        const response = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/geolocate/address', {
+        const response = await fetch('https://cleaner.dadata.ru/api/v1/clean/address', {
           method: 'POST',
           mode: 'cors',
           headers: {
@@ -86,7 +86,6 @@ export const useUserStore = defineStore('user', {
           body: JSON.stringify({ lat: coordinate.lat, lon: coordinate.lon, count: 1, language: 'ru' })
         });
         const data = await response.json();
-        console.log('Адрес по координатам:', data);
 
         if (data.suggestions && data.suggestions.length > 0) {
           this.selectedAddress = data.suggestions[0].value;
