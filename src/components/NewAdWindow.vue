@@ -5,7 +5,7 @@
         @save-location="saveLocation"
          />
 </Dialog>
-  <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
+  <div v-if="currentStep === 1" class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
     <Alert v-if="showAlert" :message="alertMsg" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
     <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
@@ -45,9 +45,9 @@
   </div>
 
   <div class="actions p-4 flex flex-col gap-2 sm:gap-4 justify-center">
-    <Button label="Далее" severity="success" variant="outlined" @click="emit('next', 'newAd')"
+    <Button label="Далее" severity="success" @click="currentStep = 2" variant="outlined" 
       class="w-full sm:w-auto" />
-    <Button @click="emit('back')" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined"
+    <Button @click="back" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined"
       class="w-full sm:w-auto" />
   </div>
 </template>
@@ -66,6 +66,8 @@ import {
 } from '@telegram-apps/sdk';
 import { Dialog } from 'primevue';
 
+const currentStep = ref(1);
+
 const userStore = useUserStore();
 const adress = ref('');
 const mapIsOpen = ref(false);
@@ -74,7 +76,13 @@ const { filteredAddresses } = storeToRefs(userStore)
 
 const ourLocationCoords = ref([null, null]);
 
-
+const back = () => {
+  if (currentStep.value === 1) {
+    emit('back');
+  } else {
+    currentStep.value = 1;
+  }
+}
 const saveLocation = async ({ center }) => {
   try {
     const [lat, lon] = center;

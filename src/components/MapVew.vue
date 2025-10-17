@@ -1,20 +1,8 @@
 <template>
   <div class="flex flex-col h-full w-full relative">
-    <FloatLabel class="absolute z-10 top-2 left-4 right-4 scale-75" variant="in">
-      <AutoComplete 
-        v-model="status" 
-        :suggestions="filteredAddresses" 
-        @complete="userStore.searchAddresses($event)" 
-        @item-select="userStore.getCoordinatesByAddress(status.name)"
-        optionLabel="name"
-        class="w-full" 
-      />
-      <!-- <Button @click="userStore.getCoordinatesByAddress(selectedAddress)" icon="pi pi-search" severity="success" variant="outlined" /> -->
-      <label>Поиск</label>
-    </FloatLabel>
-    <div class="flex-1 relative w-full mt-3">
+    <div class="flex-1 h-full relative w-full">
       <Chip 
-        :label="chipLabel" 
+        :label="currentAddress" 
         class="absolute z-1200 top-2 left-1/2 -translate-x-1/2 bg-white shadow-md" 
         icon="pi pi-map-marker" 
       />
@@ -24,16 +12,16 @@
       />
       <LMap 
         :zoom="zoom" 
-        :center="currentCenter" 
-        @moveend="onMoveEnd"
+        :center="mapCenter" 
+        @moveend="handleMapMove"
         :attribution-control="false"
         style="height: 100%; width: 100%;"
       >
-        <LTileLayer :url="url"  />
+        <LTileLayer :url="tileUrl" />
       </LMap>
     </div>
     <Button 
-      @click="saveLocation" 
+      @click="handleSave" 
       icon="pi pi-save"
       label="Сохранить" 
       severity="success" 
@@ -44,11 +32,9 @@
 </template>
 
 <script setup>
-import { ref, computed, defineEmits, defineProps, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import Button from 'primevue/button';
 import Chip from 'primevue/chip';
-import FloatLabel from 'primevue/floatlabel';
-import AutoComplete from 'primevue/autocomplete';
 import Marker from '../assets/marker.svg';
 import { LMap, LTileLayer } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -56,46 +42,47 @@ import { storeToRefs } from 'pinia';
 import { useUserStore } from '../store';
 
 const userStore = useUserStore();
-const { selectedCoordinates, filteredAddresses, selectedAddress } = storeToRefs(userStore);
-const status = ref(null);
-const emit = defineEmits(['save-location', 'update:center', 'center-changed']);
+const { selectedAddress } = storeToRefs(userStore);
+
+const emit = defineEmits(['center-changed']);
 
 const props = defineProps({
   userLocation: {
-    type: Array,
-    default: () => [55.751244, 37.618423]
+    type: Array
   }
 });
 
-const currentCenter = ref([...props.userLocation]);
+const mapCenter = ref([...props.userLocation]);
 const zoom = ref(13);
-const url = ref('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=g7cM1vMR1viO2I3YInIA');
+const tileUrl = 'https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=g7cM1vMR1viO2I3YInIA';
 
+const currentAddress = computed(() => selectedAddress.value || 'Загрузка...');
 
-const chipLabel = computed(() => status.value?.name || selectedAddress.value || 'Неизвестно');
-
-
-const onMoveEnd = async (e) => {
-  const map = e.target;
-  const newCenter = [map.getCenter().lat, map.getCenter().lng];
-  currentCenter.value = newCenter;
-  await userStore.addressByCoordinates({ lat: newCenter[0], lon: newCenter[1] });
-  emit('update:center', newCenter);
-  emit('center-changed', newCenter);
-
+const handleMapMove = async (event) => {
+  const map = event.target;
+  const center = map.getCenter();
+  mapCenter.value = [center.lat, center.lng];
+  
+  await userStore.addressByCoordinates({ 
+    lat: center.lat, 
+    lon: center.lng 
+  });
 };
 
-const saveLocation = () => {
-  emit('save-location', { center: currentCenter.value });
+const handleSave = () => {
+  userStore.saveUserLocation({
+    coordinates: mapCenter.value,
+    address: selectedAddress.value
+  });
+  
+  emit('center-changed', mapCenter.value);
 };
 
-watch(selectedCoordinates, (coords) => {
-  if (coords?.lat !== null && coords?.lon !== null) {
-    currentCenter.value = [coords.lat, coords.lon];
-    emit('update:center', currentCenter.value);
-    emit('center-changed', currentCenter.value);
+watch(() => props.userLocation, (newLocation) => {
+  if (newLocation && newLocation.length === 2) {
+    mapCenter.value = [...newLocation];
   }
-}, { immediate: true, deep: true });
+}, { deep: true });
 </script>
 
 <style scoped>
