@@ -1,6 +1,6 @@
 <template>
 <Dialog :position="'bottom'" class="w-full h-full" v-model:visible="mapIsOpen">
-  <!-- {{ ourLocation }}  -->
+  {{ ourLocation }} 
       <MapVew  class="h-full w-full"
         :user-location="[ourLocation.latitude, ourLocation.longitude]"
         @save-location="saveLocation"
@@ -136,6 +136,7 @@ const userLocation = async () => {
       isLocationManagerMounting(); // true
       await promise;
       const location = await requestLocation();
+      showTemporaryAlert(location, );
       ourLocation.value = location;
       isLocationManagerMounted(); // true
     } catch (err) {
