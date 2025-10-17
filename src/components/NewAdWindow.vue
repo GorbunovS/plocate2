@@ -1,18 +1,10 @@
 <template>
-  <div v-if="mapIsOpen" class="fixed inset-0 z-50 flex items-center justify-center" @click="closeMap">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out"></div>
-    <div class="relative w-[min(90vw,900px)] h-[min(90vh,70vh)] bg-neutral-900 rounded-2xl shadow-2xl overflow-hidden
-             transform transition-all duration-300 ease-out" @click.stop>
+<Dialog :position="'bottom'" class="w-full h-full" v-model:visible="mapIsOpen">
       <MapVew 
         :user-location="[ourLocation.latitude, ourLocation.longitude]"
-        
         @save-location="saveLocation"
          />
-     <button @click="closeMap" class="absolute top-4 right-4  z-1000">✕</button>
-    </div>
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2">
-    </div>
-  </div>
+</Dialog>
   <div class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
     <Alert v-if="showAlert" :message="alertMsg" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
@@ -72,6 +64,7 @@ import {
   locationManagerMountError,
   requestLocation
 } from '@telegram-apps/sdk';
+import { Dialog } from 'primevue';
 
 const userStore = useUserStore();
 const adress = ref('');

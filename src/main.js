@@ -23,9 +23,8 @@ const userStore = useUserStore(pinia)
 
 
 
-init();
+// init();
 locationManager.isSupported(); 
-
 
 const app = createApp(App);
 app.use(router); 
