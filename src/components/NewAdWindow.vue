@@ -137,7 +137,10 @@ const userLocation = async () => {
       await promise;
       const location = await requestLocation();
       showTemporaryAlert(location, );
-      ourLocation.value = location;
+      ourLocation.value = { 
+        latitude: location.latitude,
+        longitude: location.longitude
+      }
       isLocationManagerMounted(); // true
     } catch (err) {
       locationManagerMountError(); // equals "err"
