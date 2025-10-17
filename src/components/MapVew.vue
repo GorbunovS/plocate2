@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-2 h-full w-full ">
-
+{{ props.mapCenter }}
       <Chip 
         :label="currentAddress" 
         class="absolute top-2 text-xs z-1000 left-1/2 -translate-x-1/2 " 
