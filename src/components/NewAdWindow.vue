@@ -129,7 +129,7 @@ const DEFAULT_CENTER = { latitude: '55.751244', longitude: '37.618423' }; // ÐœÐ
 
 const userLocation = async () => {
   if (mountLocationManager.isAvailable()) {
-    ourLocation.value = DEFAULT_CENTER
+    showTemporaryAlert('Location manager is available');
     try {
       const promise = mountLocationManager();
       isLocationManagerMounting(); // true
