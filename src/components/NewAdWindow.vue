@@ -2,7 +2,7 @@
 <Dialog :position="'bottom'" class="w-full h-full" v-model:visible="mapIsOpen">
   {{ ourLocation }} 
       <MapVew  class="h-full w-full"
-        :user-location="[ourLocation.latitude, ourLocation.longitude]"
+        :user-location="ourLocation"
         @save-location="saveLocation"
         @close-dialog="mapIsOpen = false"
          />
