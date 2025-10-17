@@ -1,9 +1,12 @@
 <template>
-  <Dialog :position="'bottom'" class="w-full h-full" v-model:visible="mapIsOpen">
-    {{ ourLocation }}
-    <MapVew class="h-full w-full" :user-location="[ourLocation.latitude, ourLocation.longitude]"
-      @save-location="saveLocation" @close-dialog="mapIsOpen = false" />
-  </Dialog>
+<Dialog :position="'bottom'" class="w-full h-full" v-model:visible="mapIsOpen">
+  {{ ourLocation }} 
+      <MapVew  class="h-full w-full"
+        :user-location="[ourLocation.latitude, ourLocation.longitude]"
+        @save-location="saveLocation"
+        @close-dialog="mapIsOpen = false"
+         />
+</Dialog>
   <div v-if="currentStep === 1" class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
     <Alert v-if="showAlert" :message="alertMsg" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
@@ -33,19 +36,22 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
 
     <span class="text-sm text-gray-500 italic">Место</span>
-    <Chip :label="selectedAddress || 'Адресс не выбран'" icon="pi pi-map-marker"></Chip>
+      <Chip  :label="selectedAddress || 'Адресс не выбран'" 
+   icon="pi pi-map-marker" 
+  ></Chip>
     <Button @click="openMap" icon="pi pi-map" label="Выбрать на карте" severity="success" variant="outlined"
       class="w-full" />
-    <div class="w-full text-center text-sm text-gray-500">{{ adress }}</div>
+      <div class="w-full text-center text-sm text-gray-500">{{ adress }}</div>
     <FloatLabel class="w-full" variant="in">
-      <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="userStore.searchAddresses($event)"
-        optionLabel="name" class="w-full" />
+      <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="userStore.searchAddresses($event)" optionLabel="name"
+        class="w-full" />
       <label for="username">Или введите адрес</label>
     </FloatLabel>
   </div>
 
   <div class="actions p-4 flex flex-col gap-2 sm:gap-4 justify-center">
-    <Button label="Далее" severity="success" @click="currentStep = 2" variant="outlined" class="w-full sm:w-auto" />
+    <Button label="Далее" severity="success" @click="currentStep = 2" variant="outlined" 
+      class="w-full sm:w-auto" />
     <Button @click="back" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined"
       class="w-full sm:w-auto" />
   </div>
@@ -119,7 +125,7 @@ const openMap = () => {
 const closeMap = () => {
   mapIsOpen.value = false;
 };
-const DEFAULT_CENTER = { latitude: '55.751244', longitude: '37.618423' }; // Москва
+const DEFAULT_CENTER = { latitude: 55.751244, longitude: 37.618423 }; // Москва
 
 const userLocation = async () => {
   if (mountLocationManager.isAvailable()) {
@@ -130,11 +136,11 @@ const userLocation = async () => {
       isLocationManagerMounting(); // true
       await promise;
       const location = await requestLocation();
-      showTemporaryAlert(location,);
-      // ourLocation.value = {
-      //   latitude: `${location.latitude}`,
-      //   longitude: `${location.longitude}`
-      // }
+      showTemporaryAlert(location, );
+      ourLocation.value = { 
+        latitude: location.latitude,
+        longitude: location.longitude
+      }
       isLocationManagerMounted(); // true
     } catch (err) {
       locationManagerMountError(); // equals "err"
@@ -146,7 +152,7 @@ const userLocation = async () => {
   else {
     showTemporaryAlert('Location manager is not available');
   }
-}
+}  
 
 
 const emit = defineEmits(['back', 'next']);
