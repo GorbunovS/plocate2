@@ -82,6 +82,19 @@ const { selectedAddress } = storeToRefs(userStore)
 
 
 
+const status = ref('');
+const alertMsg = ref('');
+const showAlert = ref(false);
+
+const miniApp = useMiniApp();
+const locationManager = useLocationManager();
+const adType = ref(null);
+const petType = ref(null);
+const images = ref([]);
+const fileInput = ref(null);
+const location = ref(null); // Для хранения координат
+
+
 const back = () => {
   if (currentStep.value === 1) {
     emit('back');
@@ -115,59 +128,26 @@ const closeMap = () => {
 const DEFAULT_CENTER = { latitude: '55.751244', longitude: '37.618423' }; // Москва
 
 const userLocation = async () => {
-  if (!mountLocationManager.isAvailable()) {
-    // Менеджер недоступен — сразу назначаем Москву
-    ourLocation.value = DEFAULT_CENTER;
-    return;
-  }
-
-  try {
-    // Запускаем и ждём монтирования менеджера
-    const mountPromise = mountLocationManager();
-    isLocationManagerMounting(); // true
-    await mountPromise;
-
-    // Запрашиваем координаты
-    const location = await requestLocation();
-    if (!location || !location.latitude || !location.longitude) {
-      // Если нет координат — назначаем Москву
-      ourLocation.value = DEFAULT_CENTER;
-    } else {
-      ourLocation.value = {
-        latitude: location.latitude,
-        longitude: location.longitude
-      };
+  if (mountLocationManager.isAvailable()) {
+    ourLocation.value = DEFAULT_CENTER
+    try {
+      const promise = mountLocationManager();
+      isLocationManagerMounting(); // true
+      await promise;
+      const location = await requestLocation();
+      ourLocation.value = location;
+      isLocationManagerMounted(); // true
+    } catch (err) {
+      locationManagerMountError(); // equals "err"
+      showTemporaryAlert('Location manager mount error' + err.message);
+      isLocationManagerMounting(); // false
+      isLocationManagerMounted(); // false
     }
-
-    isLocationManagerMounted(); // true
-  } catch (err) {
-    // На случай ошибок при монтировании или запросе
-    locationManagerMountError(err); 
-    showTemporaryAlert('Location manager mount error: ' + err.message);
-
-    isLocationManagerMounting(); // false
-    isLocationManagerMounted();  // false
-
-    // Также назначаем Москву по умолчанию
-    ourLocation.value = DEFAULT_CENTER;
   }
-};
+}  
 
 
 const emit = defineEmits(['back', 'next']);
-
-const status = ref('');
-const alertMsg = ref('');
-const showAlert = ref(false);
-
-const miniApp = useMiniApp();
-const locationManager = useLocationManager();
-const adType = ref(null);
-const petType = ref(null);
-const images = ref([]);
-const fileInput = ref(null);
-const location = ref(null); // Для хранения координат
-
 const showTemporaryAlert = (message) => {
   alertMsg.value = message;
   showAlert.value = true;
