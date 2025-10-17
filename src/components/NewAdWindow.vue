@@ -144,6 +144,9 @@ const userLocation = async () => {
       isLocationManagerMounted(); // false
     }
   }
+  else {
+    showTemporaryAlert('Location manager is not available');
+  }
 }  
 
 
