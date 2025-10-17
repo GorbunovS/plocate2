@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-col h-full w-full relative">
-    <div class="flex-1 h-full relative w-full">
+  <div class="flex flex-col gap-2 h-full w-full ">
+
       <Chip 
         :label="currentAddress" 
-        class="absolute z-1200 top-2 left-1/2 -translate-x-1/2 bg-white shadow-md" 
+        class="absolute top-2 text-xs z-1000 left-1/2 -translate-x-1/2 " 
         icon="pi pi-map-marker" 
       />
       <img 
@@ -15,18 +15,19 @@
         :center="mapCenter" 
         @moveend="handleMapMove"
         :attribution-control="false"
-        style="height: 100%; width: 100%;"
+        style="height: 65vh; width: 100%;"
+        
       >
         <LTileLayer :url="tileUrl" />
       </LMap>
-    </div>
+
     <Button 
       @click="handleSave" 
       icon="pi pi-save"
       label="Сохранить" 
       severity="success" 
       variant="outlined" 
-      class="mt-2 self-center w-32" 
+
     />
   </div>
 </template>
@@ -44,7 +45,7 @@ import { useUserStore } from '../store';
 const userStore = useUserStore();
 const { selectedAddress } = storeToRefs(userStore);
 
-const emit = defineEmits(['center-changed']);
+const emit = defineEmits(['center-changed','close-dialog']);
 
 const props = defineProps({
   userLocation: {
@@ -76,6 +77,7 @@ const handleSave = () => {
   });
   
   emit('center-changed', mapCenter.value);
+  emit('close-dialog');
 };
 
 watch(() => props.userLocation, (newLocation) => {

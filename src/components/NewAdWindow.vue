@@ -1,8 +1,10 @@
 <template>
 <Dialog :position="'bottom'" class="w-full h-full" v-model:visible="mapIsOpen">
-      <MapVew 
+  <!-- {{ ourLocation }}  -->
+      <MapVew  class="h-full w-full"
         :user-location="[ourLocation.latitude, ourLocation.longitude]"
         @save-location="saveLocation"
+        @close-dialog="mapIsOpen = false"
          />
 </Dialog>
   <div v-if="currentStep === 1" class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
@@ -34,6 +36,9 @@
     <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
 
     <span class="text-sm text-gray-500 italic">Место</span>
+      <Chip  :label="selectedAddress || 'Адресс не выбран'" 
+   icon="pi pi-map-marker" 
+  ></Chip>
     <Button @click="openMap" icon="pi pi-map" label="Выбрать на карте" severity="success" variant="outlined"
       class="w-full" />
       <div class="w-full text-center text-sm text-gray-500">{{ adress }}</div>
@@ -73,8 +78,9 @@ const adress = ref('');
 const mapIsOpen = ref(false);
 const ourLocation = ref({});
 const { filteredAddresses } = storeToRefs(userStore)
+const { selectedAddress } = storeToRefs(userStore)
 
-const ourLocationCoords = ref([null, null]);
+
 
 const back = () => {
   if (currentStep.value === 1) {
@@ -106,24 +112,47 @@ const openMap = () => {
 const closeMap = () => {
   mapIsOpen.value = false;
 };
+const DEFAULT_CENTER = { latitude: '55.751244', longitude: '37.618423' }; // Москва
 
 const userLocation = async () => {
-  if (mountLocationManager.isAvailable()) {
-    try {
-      const promise = mountLocationManager();
-      isLocationManagerMounting(); // true
-      await promise;
-      const location = await requestLocation();
-      ourLocation.value = location;
-      isLocationManagerMounted(); // true
-    } catch (err) {
-      locationManagerMountError(); // equals "err"
-      showTemporaryAlert('Location manager mount error' + err.message);
-      isLocationManagerMounting(); // false
-      isLocationManagerMounted(); // false
-    }
+  if (!mountLocationManager.isAvailable()) {
+    // Менеджер недоступен — сразу назначаем Москву
+    ourLocation.value = DEFAULT_CENTER;
+    return;
   }
-}
+
+  try {
+    // Запускаем и ждём монтирования менеджера
+    const mountPromise = mountLocationManager();
+    isLocationManagerMounting(); // true
+    await mountPromise;
+
+    // Запрашиваем координаты
+    const location = await requestLocation();
+    if (!location || !location.latitude || !location.longitude) {
+      // Если нет координат — назначаем Москву
+      ourLocation.value = DEFAULT_CENTER;
+    } else {
+      ourLocation.value = {
+        latitude: location.latitude,
+        longitude: location.longitude
+      };
+    }
+
+    isLocationManagerMounted(); // true
+  } catch (err) {
+    // На случай ошибок при монтировании или запросе
+    locationManagerMountError(err); 
+    showTemporaryAlert('Location manager mount error: ' + err.message);
+
+    isLocationManagerMounting(); // false
+    isLocationManagerMounted();  // false
+
+    // Также назначаем Москву по умолчанию
+    ourLocation.value = DEFAULT_CENTER;
+  }
+};
+
 
 const emit = defineEmits(['back', 'next']);
 

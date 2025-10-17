@@ -32,10 +32,16 @@ export const useUserStore = defineStore('user', {
           name: suggestion.value,
           data: suggestion.data
         }));
+
       } catch (error) {
         console.error('Ошибка при запросе адресов:', error);
       }
     },
+
+  async saveUserLocation({ coordinates, address }) {
+    this.selectedCoordinates = coordinates;
+    this.selectedAddress = address;
+  },
 
 async getCoordinatesByAddress(address) {
   const token = 'a2c3836e1483440a86077f7d23c169405924ddc6';
