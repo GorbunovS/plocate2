@@ -27,11 +27,7 @@ import Pl_logo from '../assets/pl_logo.svg';       // Для светлой те
 import Pl_logo_dark from '../assets/pl_logo_dark.svg'; // Для тёмной темы
 import '../style.css'; // Глобальные стили
 
-// Глобальная инициализация Mini App (вызывать один раз)
-const [miniApp] = initMiniApp();
-onMounted(() => {
-  miniApp.ready(); // Готовность WebApp
-});
+
 
 // Реактивные данные пользователя
 const initData = ref(null);
@@ -41,24 +37,22 @@ onMounted(() => {
   const params = retrieveLaunchParams();
   initData.value = params.initData;
   initDataRaw.value = params.initDataRaw;
-  console.log('User data:', initData.value?.user); // Для отладки
+  console.log('User data:', initData.value?.user); 
 });
 
-// Computed для имени пользователя (первый доступ или username)
 const userName = computed(() => {
   return initData.value?.user?.first_name || initData.value?.user?.username || 'Гость';
 });
 
-// Тема
 const currentTheme = ref(localStorage.getItem('theme') || 'dark');
 const logoSrc = computed(() => {
   return currentTheme.value === 'light' ? Pl_logo_dark : Pl_logo;
 });
 
-// Навигация
+
 const currentPage = ref('home');
 
-// Слушатель изменения темы (опционально, для интеграции с Telegram theme)
+
 onMounted(() => {
   if (miniApp.theme) {
     currentTheme.value = miniApp.theme === 'light' ? 'light' : 'dark';
