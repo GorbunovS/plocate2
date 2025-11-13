@@ -80,7 +80,7 @@ import { Dialog } from 'primevue';
 import { Calendar } from 'primevue';
 import Textarea from 'primevue/textarea';
 
-
+const { initDataRaw, initData } = retrieveLaunchParams();
 
 const currentStep = ref(1);
 
@@ -167,9 +167,8 @@ const DEFAULT_CENTER = { latitude: 55.751244, longitude: 37.618423 };
 const userData = async () => {
   if (mountLocationManager.isAvailable()) {
     try {
-      const initDataRaw = retrieveRawInitData();
-      const initData = parseInitData(initDataRaw);
-      showTemporaryAlert(initData);
+
+      showTemporaryAlert(initDataRaw);
     } catch (error) {
       console.error('Error retrieving init data:', error);
     }
