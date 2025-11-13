@@ -22,33 +22,23 @@
   </div>
 </template>
 <script setup >
-import { ref, computed , onMounted} from 'vue';
+import { ref, computed, inject } from 'vue';
 import NewAdWindow from '../components/NewAdWindow.vue'
 import Pl_logo from '../assets/pl_logo.svg';       // Для светлой темы
 import Pl_logo_dark from '../assets/pl_logo_dark.svg'; // Для тёмной темы
 import Jook from '/src/assets/jook.png';
 import '../style.css';
 
- const currentPage = ref('home')
+const currentPage = ref('home')
 const currentTheme = ref(localStorage.getItem('theme') || 'dark');
 
-import { retrieveLaunchParams } from '@telegram-apps/sdk';
-
-
-const initData = ref(null);
-const initDataRaw = ref(null);
-
-onMounted(() => {
-  const params = retrieveLaunchParams();
-  initData.value = params.initData;
-  initDataRaw.value = params.initDataRaw;
-});
+const userData = inject('initData');
 
 const userName = computed(() => {
-  return initData.value?.user?.first_name 
-    || initData.value?.user?.username 
-    || 'Unknown';
-});
+      return userData?.user?.first_name 
+        || userData?.user?.username 
+        || 'Unknown';
+    });
 
 const logoSrc = computed(() => {
   return currentTheme.value === 'light' ? Pl_logo_dark : Pl_logo;
