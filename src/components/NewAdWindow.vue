@@ -69,16 +69,15 @@ import { useUserStore } from '../store';
 import { useMiniApp, Alert, useLocationManager } from 'vue-tg';
 import {
   mountLocationManager,
-  retrieveRawInitData,
   isLocationManagerMounting,
   isLocationManagerMounted,
   locationManagerMountError,
   requestLocation
 } from '@telegram-apps/sdk';
-import { parseInitData } from '@telegram-apps/sdk';
 import { Dialog } from 'primevue';
 import { Calendar } from 'primevue';
 import Textarea from 'primevue/textarea';
+import {retrieveLaunchParams} from '@telegram-apps/sdk';
 
 const { initDataRaw, initData } = retrieveLaunchParams();
 
@@ -164,17 +163,16 @@ const closeMap = () => {
 };
 const DEFAULT_CENTER = { latitude: 55.751244, longitude: 37.618423 };
 
-const userData = async () => {
-  if (mountLocationManager.isAvailable()) {
-    try {
+// const userData = async () => {
+//   if (mountLocationManager.isAvailable()) {
+//     try {
+//       showTemporaryAlert(initDataRaw);
+//     } catch (error) {
+//       console.error('Error retrieving init data:', error);
+//     }
+//   }
 
-      showTemporaryAlert(initDataRaw);
-    } catch (error) {
-      console.error('Error retrieving init data:', error);
-    }
-  }
-
-}
+// }
 
 const userLocation = async () => {
   if (mountLocationManager.isAvailable()) {
