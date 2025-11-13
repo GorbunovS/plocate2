@@ -21,36 +21,36 @@
     </div>
   </div>
 </template>
-<script setup >
+
+<script setup>
 import { ref, computed, inject } from 'vue';
 import NewAdWindow from '../components/NewAdWindow.vue'
-import Pl_logo from '../assets/pl_logo.svg';       // Для светлой темы
-import Pl_logo_dark from '../assets/pl_logo_dark.svg'; // Для тёмной темы
+import Pl_logo from '../assets/pl_logo.svg';
+import Pl_logo_dark from '../assets/pl_logo_dark.svg';
 import Jook from '/src/assets/jook.png';
 import '../style.css';
 
 const currentPage = ref('home')
 const currentTheme = ref(localStorage.getItem('theme') || 'dark');
 
-const userData = inject('initData');
+
+const userData = inject('initData', null);
 
 const userName = computed(() => {
-      return userData?.user?.first_name 
-        || userData?.user?.username 
-        || 'Unknown';
-    });
+  if (!userData?.user) return 'Unknown';
+  return userData.user.first_name 
+    || userData.user.username 
+    || 'Unknown';
+});
 
 const logoSrc = computed(() => {
   return currentTheme.value === 'light' ? Pl_logo_dark : Pl_logo;
 });
-
-
-
-
 </script>
 
+
 <style scoped>
-/* Твои стили из предыдущих сообщений */
+
 .body {
   pad: 50px;
   display: flex;

@@ -15,15 +15,26 @@ import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
 import { locationManager } from '@telegram-apps/sdk';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 import Chip from 'primevue/chip';
-import { useUserStore } from './store'
 import { createPinia } from 'pinia'
 
 const pinia = createPinia()
-const userStore = useUserStore(pinia)
 
 
 
-init();
+try {
+  init();
+  const { initDataRaw, initData } = retrieveLaunchParams();
+  
+  if (!initData) {
+    console.warn('initData не доступны');
+  }
+  
+  app.provide('initData', initData || null);
+  app.provide('initDataRaw', initDataRaw || null);
+} catch (error) {
+  console.error('Ошибка инициализации Telegram SDK:', error);
+}
+
 locationManager.isSupported(); 
 const { initDataRaw, initData } = retrieveLaunchParams();
 
