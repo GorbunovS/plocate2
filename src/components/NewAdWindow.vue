@@ -70,12 +70,12 @@ import { useMiniApp, Alert, useLocationManager } from 'vue-tg';
 import {
   mountLocationManager,
   retrieveRawInitData,
-  parseInitData,
   isLocationManagerMounting,
   isLocationManagerMounted,
   locationManagerMountError,
   requestLocation
 } from '@telegram-apps/sdk';
+import { parseInitData } from '@telegram-apps/sdk';
 import { Dialog } from 'primevue';
 import { Calendar } from 'primevue';
 import Textarea from 'primevue/textarea';
