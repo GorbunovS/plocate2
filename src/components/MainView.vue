@@ -1,6 +1,6 @@
 <template>
   <div class="header p-4 flex h-20 z-10 mt-10 items-center justify-center">
-    <span>{{ userName || 'Гость' }}</span> <!-- Fallback если данных нет -->
+    <span>{{ userName  }}</span> <!-- Fallback если данных нет -->
   </div>
   <div class="body gap-5 flex flex-col min-h-screen text-gray-900 dark:text-gray-100">
     <div v-if="currentPage === 'newAd'">
@@ -21,27 +21,28 @@
 
 <script setup>
 import { ref, computed, onMounted, inject } from 'vue';
-import { initMiniApp, retrieveLaunchParams } from '@telegram-apps/sdk';
+import {  retrieveLaunchParams } from '@telegram-apps/sdk';
 import NewAdWindow from '../components/NewAdWindow.vue';
 import Pl_logo from '../assets/pl_logo.svg';       // Для светлой темы
 import Pl_logo_dark from '../assets/pl_logo_dark.svg'; // Для тёмной темы
 import '../style.css'; // Глобальные стили
 
+const { initDataRaw } = retrieveLaunchParams();
 
 
-// Реактивные данные пользователя
 const initData = ref(null);
-const initDataRaw = ref('');
+const userDaraRow = ref(null);
+
 
 onMounted(() => {
   const params = retrieveLaunchParams();
   initData.value = params.initData;
-  initDataRaw.value = params.initDataRaw;
-  console.log('User data:', initData.value?.user); 
+  userDaraRow.value = initDataRaw;
+  
 });
 
 const userName = computed(() => {
-  return initData.value?.user?.first_name || initData.value?.user?.username || 'Гость';
+  return userDaraRow.value?.user?.first_name || initData.value?.user?.username || 'Unknown';
 });
 
 const currentTheme = ref(localStorage.getItem('theme') || 'dark');
