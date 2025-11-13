@@ -39,7 +39,7 @@
       <Chip  :label="selectedAddress || 'Адресс не выбран'" 
    icon="pi pi-map-marker" 
   ></Chip>
-    <Button @click="openMap" icon="pi pi-map" label="Выбрать на карте" severity="success" variant="outlined"
+    <Button @click="openMap" icon="pi pi-map" label="Поделитесь местоположением" severity="success" variant="outlined"
       class="w-full" />
       <div class="w-full text-center text-sm text-gray-500">{{ adress }}</div>
     <FloatLabel class="w-full" variant="in">
@@ -48,6 +48,12 @@
       <label for="username">Или введите адрес</label>
     </FloatLabel>
   </div>
+
+  <div v-if="currentStep === 2" class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
+    <span class="text-lm">Опишите ситуацию</span>
+    <span class="text-sm text-left text-gray-300">Постарайтесь как можно подробнее описать обстоятельства и животное для более качественного поиска</span>
+    <Textarea v-model="description" :autoResize="true" class="w-full h-24 border-1 text-xs p-2 rounded-md border-gray-400" />
+  </div>  
 
   <div class="actions p-4 flex flex-col gap-2 sm:gap-4 justify-center">
     <Button label="Далее" severity="success" @click="currentStep = 2" variant="outlined" 
@@ -58,6 +64,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from 'vue';
+
 import { storeToRefs } from 'pinia'
 import MapVew from './MapVew.vue';
 import { useUserStore } from '../store';
@@ -70,6 +77,8 @@ import {
   requestLocation
 } from '@telegram-apps/sdk';
 import { Dialog } from 'primevue';
+
+
 
 const currentStep = ref(1);
 
@@ -173,6 +182,8 @@ const onFileSelect = (event) => {
   if (!file) return;
   if (images.value.length >= 3) return; // Лимит
   const reader = new FileReader();
+
+  userStore.uploadImage(file);
   reader.onload = (e) => {
     images.value.push(e.target.result);
     event.target.value = '';
