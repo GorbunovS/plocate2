@@ -1,6 +1,7 @@
 <template>
       <div class="header p-4 flex h-20 z-10 mt-10 items-center justify-center">
         <span class="">PetLocate</span>
+         <span class="">{{ userName }}</span>
     </div>
   <div class="body gap-5 flex flex-col min-h-screen text-gray-900 dark:text-gray-100">
     <div v-if="currentPage === 'newAd'">
