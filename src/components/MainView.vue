@@ -28,8 +28,16 @@ import Pl_logo_dark from '../assets/pl_logo_dark.svg'; // Для тёмной т
 import Jook from '/src/assets/jook.png';
 import '../style.css';
 
- const currentPage = ref('home')
+import {retrieveLaunchParams} from '@telegram-apps/sdk';
+
+const { initDataRaw, initData } = retrieveLaunchParams();
+
+const currentPage = ref('home')
 const currentTheme = ref(localStorage.getItem('theme') || 'dark');
+
+const userName = computed(() => {
+  return initDataRaw?.user?.first_name;
+})
 
 
 const logoSrc = computed(() => {

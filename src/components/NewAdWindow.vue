@@ -77,9 +77,7 @@ import {
 import { Dialog } from 'primevue';
 import { Calendar } from 'primevue';
 import Textarea from 'primevue/textarea';
-import {retrieveLaunchParams} from '@telegram-apps/sdk';
 
-const { initDataRaw, initData } = retrieveLaunchParams();
 
 const currentStep = ref(1);
 
@@ -182,7 +180,6 @@ const userLocation = async () => {
       isLocationManagerMounting();
       await promise;
       const location = await requestLocation();
-      showTemporaryAlert(location,);
       ourLocation.value = {
         latitude: location.latitude,
         longitude: location.longitude
