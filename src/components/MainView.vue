@@ -32,7 +32,7 @@ import '../style.css';
 const currentTheme = ref(localStorage.getItem('theme') || 'dark');
 
 import { retrieveLaunchParams } from '@telegram-apps/sdk';
-import { ref, computed, onMounted } from 'vue';
+
 
 const initData = ref(null);
 const initDataRaw = ref(null);
