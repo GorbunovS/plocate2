@@ -97,8 +97,8 @@ const status = ref('');
 const alertMsg = ref('');
 const showAlert = ref(false);
 
-const miniApp = useMiniApp();
-const locationManager = useLocationManager();
+// const miniApp = useMiniApp();
+// const locationManager = useLocationManager();
 const adType = ref(null);
 const petType = ref(null);
 const images = ref([]);

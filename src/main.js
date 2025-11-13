@@ -11,36 +11,21 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FloatLabel from 'primevue/floatlabel';
 import AutoComplete from 'primevue/autocomplete';
 import { VueTelegramPlugin } from 'vue-tg';
-import { init, retrieveLaunchParams } from '@telegram-apps/sdk';
+import { init } from '@telegram-apps/sdk';
 import { locationManager } from '@telegram-apps/sdk';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 import Chip from 'primevue/chip';
 import { createPinia } from 'pinia'
 
+
 const pinia = createPinia()
 
 
 
-try {
-  init();
-  const { initDataRaw, initData } = retrieveLaunchParams();
-  
-  if (!initData) {
-    console.warn('initData не доступны');
-  }
-  
-  app.provide('initData', initData || null);
-  app.provide('initDataRaw', initDataRaw || null);
-} catch (error) {
-  console.error('Ошибка инициализации Telegram SDK:', error);
-}
-
+init();
 locationManager.isSupported(); 
-const { initDataRaw, initData } = retrieveLaunchParams();
-
 const app = createApp(App);
-app.provide('initData', initData);
-app.provide('initDataRaw', initDataRaw);
+
 app.use(router); 
 app.use(pinia)
 app.use(VueTelegramPlugin);
