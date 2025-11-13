@@ -10,16 +10,41 @@ export const useUserStore = defineStore("user", {
   }),
 
   actions: {
+    async createNewAd(ad) {
+      if (ad.adType === "Нашёл") {
+        await fetch("http://192.168.0.127:5678/webhook-test/newFindAdd", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ad: ad,
+          }),
+        });
+      }
+      else if (ad.adType === "Потерял") {
+        await fetch("http://192.168.0.127:5678/webhook-test/newLostAdd", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ad: ad,
+          }),
+        });
+      }
+    },
+
     async uploadImage(file) {
       const CLIENT_ID = "sxkNeeQ896zedL1QqiEV";
       const formData = new FormData();
-      formData.append("image", file); 
+      formData.append("image", file);
       formData.append("title", "Photo from Mini App");
 
       const response = await fetch("https://api.imageban.ru/v1", {
         method: "POST",
         headers: {
-          Authorization:`TOKEN ${CLIENT_ID}`
+          Authorization: `TOKEN ${CLIENT_ID}`,
         },
         body: formData,
       });
