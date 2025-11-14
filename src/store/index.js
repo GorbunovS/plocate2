@@ -22,7 +22,7 @@ export const useTgStore = defineStore('tg', () => {  // ← Arrow-функция
     }
 
     else {
-      popup.showAlert(initData.user.first_name);
+      popup.showAlert(user.username);
     }
   };
 
