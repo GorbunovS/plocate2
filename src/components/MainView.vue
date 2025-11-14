@@ -1,7 +1,6 @@
 <template>
       <div class="header p-4 flex h-20 z-10 mt-10 items-center justify-center">
         <span class="">PetLocate</span>
-         <span class="">{{ userName }}</span>
     </div>
   <div class="body gap-5 flex flex-col min-h-screen text-gray-900 dark:text-gray-100">
     <div v-if="currentPage === 'newAd'">
@@ -23,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, computed, inject } from 'vue';
+import { ref, computed } from 'vue';
 import NewAdWindow from '../components/NewAdWindow.vue'
 import Pl_logo from '../assets/pl_logo.svg';
 import Pl_logo_dark from '../assets/pl_logo_dark.svg';
@@ -34,15 +33,6 @@ import '../style.css';
 const currentPage = ref('home')
 const currentTheme = ref(localStorage.getItem('theme') || 'dark');
 
-
-const userData = inject('initData', null);
-
-const userName = computed(() => {
-  if (!userData?.user) return 'Unknown';
-  return userData.user.first_name 
-    || userData.user.username 
-    || 'Unknown';
-});
 
 const logoSrc = computed(() => {
   return currentTheme.value === 'light' ? Pl_logo_dark : Pl_logo;
