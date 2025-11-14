@@ -21,12 +21,9 @@ export const useTgStore = defineStore('tg', () => {  // ← Arrow-функция
     }
 
     else {
-      popup.showAlert('В Telegram');
+      popup.showAlert(userId.value);
     }
   };
-
-
- 
 
   return {  
     isAuthenticated,
