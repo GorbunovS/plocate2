@@ -8,10 +8,11 @@ export const useTgStore = defineStore('tg', () => {  // ← Arrow-функция
   const miniApp = useMiniApp();  // Внутри функции
   const popup = usePopup();
   const isAuthenticated = ref(false);
-  const user = ref(null);
 
-  const initData = computed(() => miniApp.initData);  // Getter
+
+  const initData = computed(() => miniApp.initData); 
   const userId = computed(() => miniApp.initDataUnsafe?.user?.id);
+  const user = computed (() => miniApp.initDataUnsafe?.user);
 
 
   const initializeAuth = async () => {
@@ -21,7 +22,7 @@ export const useTgStore = defineStore('tg', () => {  // ← Arrow-функция
     }
 
     else {
-      popup.showAlert(initData.user.firstName);
+      popup.showAlert(initData.user.first_name);
     }
   };
 
