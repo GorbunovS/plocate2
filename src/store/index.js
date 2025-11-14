@@ -1,44 +1,32 @@
-
 import { defineStore } from "pinia";
-import { useMiniApp, usePopup } from 'vue-tg';
-import { ref, computed } from 'vue';
- 
+import { useMiniApp, usePopup } from "vue-tg";
+import { ref, computed } from "vue";
 
-export const useTgStore = defineStore('tg', () => {  // ← Arrow-функция
-  const miniApp = useMiniApp();  // Внутри функции
+export const useTgStore = defineStore("tg", () => {
+  const miniApp = useMiniApp(); // Внутри функции
   const popup = usePopup();
   const isAuthenticated = ref(false);
 
-
-  const initData = computed(() => miniApp.initData); 
+  const initData = computed(() => miniApp.initData);
   const userId = computed(() => miniApp.initDataUnsafe?.user?.id);
-  const user = computed (() => miniApp.initDataUnsafe?.user);
-
+  const user = computed(() => miniApp.initDataUnsafe?.user);
 
   const initializeAuth = async () => {
 
-    popup.showAlert(`Добро пожаловать!${user.value.username}`);
-    // if (!miniApp.initData) {
-    //   popup.showAlert('Не в Telegram');
-    //   return;
-    // }
-
-    // else {
-    //   popup.showAlert(`Username: @${user.username}`);
-    // }
   };
 
-  return {  
+  return {
     isAuthenticated,
     user,
     initData,
     userId,
-    miniApp,  
-    initializeAuth
+    miniApp,
+    initializeAuth,
   };
 });
 export const useUserStore = defineStore("user", {
   state: () => ({
+    currentUserId: null,
     count: 0,
     filteredAddresses: [],
     selectedCoordinates: { lat: null, lon: null },
@@ -46,29 +34,17 @@ export const useUserStore = defineStore("user", {
   }),
 
   actions: {
+
     async createNewAd(ad) {
-      if (ad.adType === "Нашёл") {
-        await fetch("http://192.168.0.127:5678/webhook-test/newFindAdd", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ad: ad,
-          }),
-        });
-      }
-      else if (ad.adType === "Потерял") {
-        await fetch("http://192.168.0.127:5678/webhook-test/newLostAdd", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ad: ad,
-          }),
-        });
-      }
+      await fetch("http://192.168.0.127:5678/webhook-test/newFindAdd", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ad: ad,
+        }),
+      });
     },
 
     async uploadImage(file) {

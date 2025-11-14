@@ -61,12 +61,12 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted,computed } from 'vue';
 
 import { storeToRefs } from 'pinia'
 import MapVew from './MapVew.vue';
 import { useUserStore } from '../store';
-import { useMiniApp, Alert, useLocationManager } from 'vue-tg';
+import {  Alert } from 'vue-tg';
 import {
   mountLocationManager,
   isLocationManagerMounting,
@@ -77,6 +77,10 @@ import {
 import { Dialog } from 'primevue';
 import { Calendar } from 'primevue';
 import Textarea from 'primevue/textarea';
+import { useTgStore } from '../store';
+
+const tgStore = useTgStore();
+const user_id = computed(() => tgStore.userId);
 
 
 const currentStep = ref(1);
@@ -109,6 +113,7 @@ const location = ref(null); // Для хранения координат
 const saveAd = async () => {
   if (adType.value && petType.value) {
     const ad = {
+      userId: user_id.value,
       adType: adType.value.name,
       petType: petType.value.name,
       images: images.value,
@@ -161,16 +166,6 @@ const closeMap = () => {
 };
 const DEFAULT_CENTER = { latitude: 55.751244, longitude: 37.618423 };
 
-// const userData = async () => {
-//   if (mountLocationManager.isAvailable()) {
-//     try {
-//       showTemporaryAlert(initDataRaw);
-//     } catch (error) {
-//       console.error('Error retrieving init data:', error);
-//     }
-//   }
-
-// }
 
 const userLocation = async () => {
   if (mountLocationManager.isAvailable()) {
@@ -252,6 +247,6 @@ const petTypes = ref([
 
 onMounted(() => {
   userLocation();
-  userData();
+
 });
 </script>
