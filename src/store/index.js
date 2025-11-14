@@ -1,6 +1,42 @@
-// index.js (store)
-import { defineStore } from "pinia";
 
+import { defineStore } from "pinia";
+import { useMiniApp, usePopup } from 'vue-tg';
+import { ref, computed } from 'vue';
+import axios from 'axios';  
+
+export const useTgStore = defineStore('tg', () => {  // ← Arrow-функция
+  const miniApp = useMiniApp();  // Внутри функции
+  const popup = usePopup();
+  const isAuthenticated = ref(false);
+  const user = ref(null);
+
+  const initData = computed(() => miniApp.initData);  // Getter
+  const userId = computed(() => miniApp.initDataUnsafe?.user?.id);
+
+
+  const initializeAuth = async () => {
+    if (!miniApp.initData) {
+      popup.showAlert('Не в Telegram');
+      return;
+    }
+
+    else {
+      popup.showAlert('В Telegram');
+    }
+  };
+
+
+ 
+
+  return {  
+    isAuthenticated,
+    user,
+    initData,
+    userId,
+    miniApp,  
+    initializeAuth
+  };
+});
 export const useUserStore = defineStore("user", {
   state: () => ({
     count: 0,

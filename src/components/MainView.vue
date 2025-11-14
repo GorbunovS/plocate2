@@ -30,6 +30,7 @@ import Pl_logo_dark from '../assets/pl_logo_dark.svg';
 import Jook from '/src/assets/jook.png';
 import '../style.css';
 
+
 const currentPage = ref('home')
 const currentTheme = ref(localStorage.getItem('theme') || 'dark');
 
