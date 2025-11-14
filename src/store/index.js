@@ -53,7 +53,7 @@ export const useUserStore = defineStore("user", {
     },
     async getUserAds() {
       const response = await fetch(
-        "http://petlocate.ru/webhook/getUserAdds",
+        "https://petlocate.ru/webhook/getUserAdds",
         {
           method: "POST",
           headers: {
