@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import { useMiniApp, usePopup } from 'vue-tg';
 import { ref, computed } from 'vue';
-import axios from 'axios';  
+ 
 
 export const useTgStore = defineStore('tg', () => {  // ← Arrow-функция
   const miniApp = useMiniApp();  // Внутри функции
