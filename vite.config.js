@@ -4,6 +4,11 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
   server: {
+    allowedHosts: [
+      'pa8bg6-194-32-231-58.ru.tuna.am',
+      '.tuna.am',  
+      '.tapps.global'  
+    ],
     proxy: {
       '/dadata': {
         target: 'https://cleaner.dadata.ru',
