@@ -36,7 +36,7 @@ export const useUserStore = defineStore("user", {
   actions: {
 
     async createNewAd(ad) {
-      await fetch("https://7a07uz-194-32-231-58.ru.tuna.am/webhook-test/newFindAdd", {
+      await fetch("http://192.168.0.127:5678/webhook-test/newFindAdd", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
