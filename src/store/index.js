@@ -15,14 +15,14 @@ export const useTgStore = defineStore('tg', () => {  // ← Arrow-функция
   const user = computed (() => miniApp.initDataUnsafe?.user);
 
 
-  const initializeAuth = async () => {
+  const initializeAuth = async (user) => {
     if (!miniApp.initData) {
       popup.showAlert('Не в Telegram');
       return;
     }
 
     else {
-      popup.showAlert(user.username);
+      popup.showAlert(`Username: @${user.username}`);
     }
   };
 
