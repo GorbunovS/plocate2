@@ -34,7 +34,7 @@ export const useUserStore = defineStore("user", {
 
   actions: {
     async deleteThisAd(adId) {
-      await fetch("http://192.168.0.127:5678/webhook/deleteAd", {
+      await fetch("http://localhost:5678/webhook/deleteAd", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +52,7 @@ export const useUserStore = defineStore("user", {
     },
     async getUserAds() {
       const response = await fetch(
-        "http://192.168.0.127:5678/webhook/getUserAdds",
+        "http://localhost:5678/webhook/getUserAdds",
         {
           method: "POST",
           headers: {
@@ -68,7 +68,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async createNewAd(ad) {
-      await fetch("http://192.168.0.127:5678/webhook/newFindAdd", {
+      await fetch("http://localhost:5678/webhook/newFindAdd", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
