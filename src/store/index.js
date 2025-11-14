@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { useMiniApp, usePopup } from "vue-tg";
 import { ref, computed } from "vue";
 
+
 export const useTgStore = defineStore("tg", () => {
   const miniApp = useMiniApp(); // Внутри функции
   const popup = usePopup();
@@ -80,7 +81,7 @@ export const useUserStore = defineStore("user", {
         if (response.ok) {
           window.location.reload();
         } else {
-          console.error("Failed to create ad");
+        
         }
       });
     },
