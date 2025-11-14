@@ -3,10 +3,13 @@
 import './style.css'
 import { onMounted } from 'vue';
 import { useTgStore } from './store';
+import { useUserStore } from './store';
 
+const userStore = useUserStore();
 const tgStore = useTgStore();
 
 onMounted(() => {
+  userStore.getUserAds();
   tgStore.initializeAuth();
 });
 

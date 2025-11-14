@@ -8,7 +8,6 @@
     <Alert v-if="showAlert" :message="alertMsg" />
     <span class="text-sm text-gray-500 italic">Тип объявления</span>
     <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
-
     <span class="text-sm text-gray-500 italic">Тип животного</span>
     <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name" dataKey="value"
       aria-labelledby="custom">
@@ -113,10 +112,11 @@ const location = ref(null); // Для хранения координат
 const saveAd = async () => {
   if (adType.value && petType.value) {
     const ad = {
-      userId: user_id.value,
-      adType: adType.value.name,
-      petType: petType.value.name,
-      images: images.value,
+      userId: user_id.value || 0,
+      userName: tgStore.username || 'unknown',
+      adType: adType.value.value,
+      petType: petType.value.value,
+      images: imageUrls.value,
       location: {
         name: status.value.name,
         coordinates: { latitude: status.value.data.geo_lat, longitude: status.value.data.geo_lon } || null
@@ -235,13 +235,13 @@ const removeImage = (index) => {
 };
 
 const adTypes = ref([
-  { name: 'Потерял', value: 1 },
-  { name: 'Нашёл', value: 2 },
+  { name: 'Потерял', value: 'lost' },
+  { name: 'Нашёл', value: 'found' },
 ]);
 
 const petTypes = ref([
-  { name: 'Собаку', value: 1, icon: 'las la-dog' },
-  { name: 'Кошку', value: 2, icon: 'las la-cat' },
+  { name: 'Собаку', value: 'dog', icon: 'las la-dog' },
+  { name: 'Кошку', value: 'cat', icon: 'las la-cat' },
 ]);
 
 

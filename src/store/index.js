@@ -11,9 +11,7 @@ export const useTgStore = defineStore("tg", () => {
   const userId = computed(() => miniApp.initDataUnsafe?.user?.id);
   const user = computed(() => miniApp.initDataUnsafe?.user);
 
-  const initializeAuth = async () => {
-
-  };
+  const initializeAuth = async () => {};
 
   return {
     isAuthenticated,
@@ -26,17 +24,51 @@ export const useTgStore = defineStore("tg", () => {
 });
 export const useUserStore = defineStore("user", {
   state: () => ({
-    currentUserId: null,
+    currentUserId: 2,
     count: 0,
     filteredAddresses: [],
     selectedCoordinates: { lat: null, lon: null },
     selectedAddress: "",
+    ads: [],
   }),
 
   actions: {
+    async deleteThisAd(adId) {
+      await fetch("http://192.168.0.127:5678/webhook/deleteAd", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          adId: adId,
+        }),
+      }).then((response) => {
+        if (response.ok) {
+         window.location.reload();
+        } else {
+          console.error("Failed to delete ad");
+        }
+      })
+    },
+    async getUserAds() {
+      const response = await fetch(
+        "http://192.168.0.127:5678/webhook/getUserAdds",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+          userId: this.currentUserId,
+          }),
+        }
+      );
+       const data = await response.json();
+      this.ads = Array.isArray(data) ? data : [data];
+    },
 
     async createNewAd(ad) {
-      await fetch("http://192.168.0.127:5678/webhook-test/newFindAdd", {
+      await fetch("http://192.168.0.127:5678/webhook/newFindAdd", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,6 +76,12 @@ export const useUserStore = defineStore("user", {
         body: JSON.stringify({
           ad: ad,
         }),
+      }).then((response) => {
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          console.error("Failed to create ad");
+        }
       });
     },
 
