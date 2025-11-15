@@ -1,15 +1,18 @@
 <script setup >
 
 import './style.css'
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useTgStore } from './store';
 import { useUserStore } from './store';
 
 const userStore = useUserStore();
 const tgStore = useTgStore();
 
+  
+const currentUserId = computed (()=>tgStore.userId )
+
 onMounted(() => {
-  userStore.getUserAds();
+  userStore.getUserAds(currentUserId.value);
   tgStore.initializeAuth();
 });
 

@@ -25,7 +25,7 @@ export const useTgStore = defineStore("tg", () => {
 });
 export const useUserStore = defineStore("user", {
   state: () => ({
-    currentUserId: 2,
+    currentUserId: useTgStore.userId,
     count: 0,
     filteredAddresses: [],
     selectedCoordinates: { lat: null, lon: null },
@@ -51,7 +51,7 @@ export const useUserStore = defineStore("user", {
         }
       })
     },
-    async getUserAds() {
+    async getUserAds(user_id) {
       const response = await fetch(
         "https://petlocate.ru/webhook/getUserAdds",
         {
@@ -60,7 +60,7 @@ export const useUserStore = defineStore("user", {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-          userId: this.currentUserId,
+          userId: user_id,
           }),
         }
       );
