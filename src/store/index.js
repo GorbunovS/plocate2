@@ -35,7 +35,7 @@ export const useUserStore = defineStore("user", {
 
   actions: {
     async deleteThisAd(adId) {
-      await fetch("http://95.31.188.123/webhook/deleteAd", {
+      await fetch("https://95.31.188.123/webhook/deleteAd", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export const useUserStore = defineStore("user", {
     },
     async getUserAds() {
       const response = await fetch(
-        "http://petlocate.ru/webhook/getUserAdds",
+        "https://95.31.188.123/webhook/getUserAdds",
         {
           method: "POST",
           headers: {
@@ -69,7 +69,7 @@ export const useUserStore = defineStore("user", {
     },
 
     async createNewAd(ad) {
-      await fetch("http://95.31.188.123/webhook/newFindAdd", {
+      await fetch("https://95.31.188.123/webhook/newFindAdd", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
