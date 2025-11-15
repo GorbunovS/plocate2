@@ -26,7 +26,7 @@ init();
 locationManager.isSupported(); 
 const app = createApp(App);
 
-app.use(router); 
+app.use(router);  
 app.use(pinia)
 app.use(VueTelegramPlugin);
 app.component('Chip', Chip);
