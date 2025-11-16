@@ -11,7 +11,7 @@
     <div v-if="currentPage === 'home'" class="views flex flex flex-col items-center justify-center text-center p-4 gap-4">
       <img v-if="ads.length < 1 " :src="Jook" alt="jook" class="w-32 h-32 object-contain" />
       <span  class="text-lg font-semibold"> Мои объявления</span>
-       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" v-if="ads">
+       <div class="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" v-if="ads">
        <PetCard v-for="ad in ads" :key="ad.id" :ad="ad" @stop-search="userStore.deleteThisAd(ad.id)"/>
       </div>
    
