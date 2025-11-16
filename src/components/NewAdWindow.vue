@@ -1,71 +1,88 @@
 <template>
-  <Dialog :position="'bottom'" class="w-full h-full" v-model:visible="mapIsOpen">
-    <!-- {{ ourLocation }}  -->
-    <MapVew class="h-full w-full" :user-location="[ourLocation.latitude, ourLocation.longitude]"
-      @save-location="saveLocation" @close-dialog="mapIsOpen = false" />
-  </Dialog>
-  <div v-if="currentStep === 1" class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
-    <Alert v-if="showAlert" :message="alertMsg" />
-    <span class="text-sm text-gray-500 italic">Тип объявления</span>
-    <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" />
-    <span class="text-sm text-gray-500 italic">Тип животного</span>
-    <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name" dataKey="value"
-      aria-labelledby="custom">
-      <template #option="slotProps">
-        <i :class="slotProps.option.icon"></i>
-        <span class="ml-2">{{ slotProps.option.name }}</span>
-      </template>
-    </SelectButton>
-    <span class="text-sm text-gray-500 italic">Изображение (Добавьте до 3)</span>
-    <div class="flex flex-row gap-2 h-24 w-full overflow-x-auto">
-      <div v-for="(img, index) in images" :key="`img-${index}`" class="relative flex-shrink-0 w-24">
-        <img :src="img" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain" />
-        <Button icon="pi pi-trash" severity="danger" text @click="removeImage(index)"
-          class="absolute top-0 right-0 text-xs" />
+  <div class="h-screen w-full flex flex-col overflow-hidden bg-surface-ground dark:bg-surface-800">
+    <!-- Диалог карты: полноэкранный для мобильных -->
+    <Dialog :position="'bottom'" class="w-full h-full" :style="{ maxHeight: '100vh' }" :modal="true"
+      v-model:visible="mapIsOpen" @click="handleOutsideClick">
+      <MapVew class="h-full w-full" :user-location="[ourLocation.latitude, ourLocation.longitude]"
+        @save-location="saveLocation" @close-dialog="mapIsOpen = false" @click="handleOutsideClick" />
+    </Dialog>
+
+    <!-- Контент шагов: скролл внутри, без сдвига viewport -->
+    <div v-if="currentStep === 1" class="flex-1 flex flex-col p-4 items-start gap-4 overflow-y-auto"
+      @click="handleOutsideClick">
+      <Alert v-if="showAlert" :message="alertMsg" @click.stop />
+      <span class="text-sm text-gray-500 italic">Тип объявления</span>
+      <SelectButton :invalid="adType === null" v-model="adType" :options="adTypes" optionLabel="name" @click.stop />
+      <span class="text-sm text-gray-500 italic">Тип животного</span>
+      <SelectButton :invalid="petType === null" v-model="petType" :options="petTypes" optionLabel="name" dataKey="value"
+        aria-labelledby="custom" @click.stop>
+        <template #option="slotProps">
+          <i :class="slotProps.option.icon"></i>
+          <span class="ml-2">{{ slotProps.option.name }}</span>
+        </template>
+      </SelectButton>
+      <span class="text-sm text-gray-500 italic">Изображение (Добавьте до 3)</span>
+      <div class="flex flex-row gap-2 h-24 w-full overflow-x-auto">
+        <div v-for="(img, index) in images" :key="`img-${index}`" class="relative flex-shrink-0 w-24">
+          <img :src="img" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain" @click.stop />
+          <Button icon="pi pi-trash" severity="danger" text @click="removeImage(index)"
+            class="absolute top-0 right-0 text-xs" />
+        </div>
+        <div v-if="images.length < 3"
+          class="shadow-md rounded-xl w-24 h-full bg-gray-800 dark:bg-gray-700 flex items-center justify-center cursor-pointer"
+          @click="openFileInput">
+          <i class="pi pi-plus text-gray-500 text-2xl"></i>
+        </div>
       </div>
-      <div v-if="images.length < 3"
-        class="shadow-md rounded-xl w-24 h-full bg-gray-800 flex items-center justify-center cursor-pointer"
-        @click="openFileInput">
-        <i class="pi pi-plus text-gray-500 text-2xl"></i>
-      </div>
+      <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
+      <span class="text-sm text-gray-500 italic">Место</span>
+      <Chip :label="selectedAddress || 'Адресс не выбран'" icon="pi pi-map-marker" />
+      <Button @click="openMap" icon="pi pi-map" label="Поделитесь местоположением" severity="success" variant="outlined"
+        class="w-full" />
+      <div class="w-full text-center text-sm text-gray-500">{{ adress }}</div>
+      <FloatLabel class="w-full" variant="in">
+        <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="userStore.searchAddresses($event)"
+          optionLabel="name" class="w-full" @focus="handleInputFocus" @blur="handleInputBlur" />
+        <label for="username">Или введите адрес</label>
+      </FloatLabel>
     </div>
-    <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
-    <span class="text-sm text-gray-500 italic">Место</span>
-    <Chip :label="selectedAddress || 'Адресс не выбран'" icon="pi pi-map-marker"></Chip>
-    <Button @click="openMap" icon="pi pi-map" label="Поделитесь местоположением" severity="success" variant="outlined"
-      class="w-full" />
-    <div class="w-full text-center text-sm text-gray-500">{{ adress }}</div>
-    <FloatLabel class="w-full" variant="in">
-      <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="userStore.searchAddresses($event)"
-        optionLabel="name" class="w-full" />
-      <label for="username">Или введите адрес</label>
-    </FloatLabel>
+
+    <div v-if="currentStep === 2" class="flex-1 flex flex-col p-4 items-start gap-4 overflow-y-auto"
+      @click="handleOutsideClick">
+      <span class="text-lm">Опишите ситуацию</span>
+      <span class="text-sm text-left text-gray-300">
+        Постарайтесь как можно подробнее описать обстоятельства и животное для более качественного поиска
+      </span>
+      <Textarea v-model="description" rows="5" cols="30" :autoResize="true"
+        class="w-full h-24 border-1 text-xs p-2 rounded-md border-gray-400 dark:border-gray-600"
+        @focus="handleInputFocus" @blur="handleInputBlur" />
+      <span class="text-lm"> Время обнаружения пропажи</span>
+      <Calendar class="w-full" v-model="detected" showTime showOtherMonths dateFormat="dd.mm.yy" :showIcon="true"
+        @focus="handleInputFocus" @blur="handleInputBlur" />
+      <span class="text-lm"> Фактическое(предполагаемое) время пропажи</span>
+      <Calendar class="w-full" v-model="factual" showTime showOtherMonths dateFormat="dd.mm.yy" :showIcon="true"
+        @focus="handleInputFocus" @blur="handleInputBlur" />
+    </div>
+
+
   </div>
-  <div v-if="currentStep === 2" class="flex flex-col p-4 items-start gap-4 overflow-y-auto">
-    <span class="text-lm">Опишите ситуацию</span>
-    <span class="text-sm text-left text-gray-300">Постарайтесь как можно подробнее описать обстоятельства и животное для
-      более качественного поиска</span>
-    <Textarea v-model="description" rows="5" cols="30" :autoResize="true"
-      class="w-full h-24 border-1 text-xs p-2 rounded-md border-gray-400" />
-    <span class="text-lm"> Время обнаружения пропажи</span>
-    <Calendar class="w-full" v-model="detected" showTime showOtherMonths dateFormat="dd.mm.yy" :showIcon="true" />
-    <span class="text-lm"> Фактическое(предполагаемое) время пропажи</span>
-    <Calendar class="w-full" v-model="factual" showTime showOtherMonths dateFormat="dd.mm.yy" :showIcon="true" />
-  </div>
-  <div class="actions p-4 flex flex-col gap-2 sm:gap-4 justify-center">
-    <Button :label="currentStep === 2 ? 'Сохранить' : 'Далее'" severity="success"
-      @click="currentStep === 2 ? saveAd() : currentStep = 2" variant="outlined" class="w-full sm:w-auto" />
+  <div
+    class="fixed bottom-0 left-0 gap-4 right-0 z-20 bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
     <Button @click="back" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined"
       class="w-full sm:w-auto" />
+    <Button :label="currentStep === 2 ? 'Сохранить' : 'Далее'" severity="success"
+      @click="currentStep === 2 ? saveAd() : currentStep = 2" variant="outlined" class="w-full sm:w-auto" />
+    
   </div>
 </template>
+
 <script setup>
-import { ref, onMounted,computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 import { storeToRefs } from 'pinia'
 import MapVew from './MapVew.vue';
 import { useUserStore } from '../store';
-import {  Alert } from 'vue-tg';
+import { Alert } from 'vue-tg';
 import {
   mountLocationManager,
   isLocationManagerMounting,

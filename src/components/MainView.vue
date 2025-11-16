@@ -23,6 +23,26 @@
 
     </div>
     </div>
+     <div v-if="currentPage === 'home'" class="fixed bottom-0 left-0 right-0 z-20 bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
+      <Button 
+        icon="pi pi-home" 
+        severity="secondary" 
+     
+        text 
+        size="large" 
+        @click="currentPage = 'home'"
+        class="flex-1 mx-2"
+      />
+      <Button 
+        icon="pi pi-globe" 
+        severity="secondary" 
+        
+        text 
+        size="large" 
+        @click="handleGlobeClick"
+        class="flex-1 mx-2"
+      />
+    </div>
   </div>
 </template>
 
