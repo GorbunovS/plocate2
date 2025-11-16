@@ -1,38 +1,62 @@
 <template>
-  <Panel toggleable>
- <template #header>
- <img class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center " :src="ad.images[0]"/>
-  {{ ad.type }} {{ getAnimalTypeLabel(ad.animal_type) }}
- </template>
+  <Panel toggleable collapsed>
+    <template #header>
+      <Chip class="py-0 pl-0 pr-4" :label="getAnimalTypeLabel(ad.animal_type)" :image="ad.images[0]" />
+      {{ getAdTypeLabel(ad.type) }}
+    </template>
     <template #footer>
-        <div class="flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-                <Button icon="pi pi-trash" rounded text></Button>
-               <Button >Похожие</Button>
-            </div>
-     
-            <span class="text-surface-500 dark:text-surface-400">Поиск ведётся:{{ getSearchDuration(ad.updated_at) }}</span>
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <Button>Похожие</Button>
+
         </div>
+        <span class="text-surface-500 dark:text-surface-400"><i class="pi pi-hourglass" style="font-size: 1rem"></i> {{
+          getSearchDuration(ad.updated_at) }}</span>
+      </div>
     </template>
+    <div class="flex justify-start p-2">
+      <div class="max-w-xs p-4 bg-gray-100 dark:bg-gray-700 rounded-xl shadow-md rounded-bl-none">
+        <p class="m-0 text-sm">{{ ad.description }}</p>
+      </div>
+    </div>
     <template #icons>
-        <Button icon="pi pi-cog" severity="secondary" rounded text @click="toggle" />
-        <Menu ref="menu" id="config_menu" :model="items" popup />
+      <Button icon="pi pi-cog" severity="secondary" rounded text @click="toggle" />
+      <Menu ref="menu" id="config_menu" :model="items" popup />
     </template>
-
-
-     <p class="m-0">
-    {{ ad.description }}
-    </p>
   </Panel>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, ref } from 'vue'
 import Button from 'primevue/button'
-import {Menu} from 'primevue';
+import { Menu } from 'primevue';
 import Card from 'primevue/card';
-import {Panel}  from 'primevue';
-import {Image} from 'primevue';
+import { Panel } from 'primevue';
+import { Image } from 'primevue';
+
+const menu = ref(null);
+
+const items = ref([
+
+  {
+    label: 'Редактировать',
+    icon: 'pi pi-pen-to-square'
+  },
+  {
+    separator: true
+  },
+  {
+    label: 'Удалить',
+    icon: 'pi pi-times',
+    command: () => {
+      emit('stop-search', props.ad.id)
+    }
+  }
+]);
+
+const toggle = (event) => {
+  menu.value.toggle(event);
+};
 
 
 const props = defineProps({
@@ -56,6 +80,15 @@ const getAnimalTypeLabel = (type) => {
   return labels[type] || type
 }
 
+const getAdTypeLabel = (type) => {
+  const labels = {
+    found: "Ищем хоязина",
+    lost: "Ищем питомца"
+
+  }
+  return labels[type] || type
+}
+
 const getSearchDuration = (dateString) => {
   if (!dateString) return ''
   const date = new Date(dateString)
@@ -75,9 +108,7 @@ const viewSimilar = () => {
   emit('view-similar', props.ad.id)
 }
 
-const stopSearch = () => {
-  emit('stop-search', props.ad.id)
-}
+
 </script>
 
 <style scoped>
