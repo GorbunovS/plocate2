@@ -30,9 +30,9 @@
 import { defineProps, defineEmits, ref } from 'vue'
 import Button from 'primevue/button'
 import { Menu } from 'primevue';
-import Card from 'primevue/card';
+// import Card from 'primevue/card';
 import { Panel } from 'primevue';
-import { Image } from 'primevue';
+// import { Image } from 'primevue';
 
 const menu = ref(null);
 
@@ -82,8 +82,8 @@ const getAnimalTypeLabel = (type) => {
 
 const getAdTypeLabel = (type) => {
   const labels = {
-    found: "Ищем хоязина",
-    lost: "Ищем питомца"
+    found: "Потеряли",
+    lost: "Нашли"
 
   }
   return labels[type] || type
