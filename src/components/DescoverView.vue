@@ -4,7 +4,7 @@
     
     <Splitter class="pb-10 h-full" style="height: 100vh" layout="vertical">
         <SplitterPanel :minSize="25">
-            <AdsMap :ads="worldAds" />
+            <AdsMap :center="ourLocation" :ads="worldAds" />
         </SplitterPanel>
         
         <SplitterPanel :minSize="35" class="flex flex-col overflow-hidden">
@@ -33,39 +33,30 @@ import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
 import {
     mountLocationManager,
-    isLocationManagerMounting,
-    isLocationManagerMounted,
-    locationManagerMountError,
     requestLocation
 } from '@telegram-apps/sdk';
 
-const ourLocation = ref({});
+
 const userStore = useUserStore();
 const { worldAds } = storeToRefs(userStore);
-const DEFAULT_CENTER = { latitude: 55.751244, longitude: 37.618423 };
+
+const ourLocation = ref([55.751244, 37.618423]); 
+
 const userLocation = async () => {
     if (mountLocationManager.isAvailable()) {
-        ourLocation.value = DEFAULT_CENTER;
         try {
-            const promise = mountLocationManager();
-            isLocationManagerMounting();
-            await promise;
+            await mountLocationManager();
             const location = await requestLocation();
-            ourLocation.value = {
-                latitude: location.latitude,
-                longitude: location.longitude
-            }
-            isLocationManagerMounted();
+            // переход к массиву!
+            ourLocation.value = [location.latitude, location.longitude];
         } catch (err) {
-            locationManagerMountError();
-            isLocationManagerMounting();
-            isLocationManagerMounted();
+            ourLocation.value = [55.751244, 37.618423];
         }
-    }
-    else {
-        ourLocation.value = DEFAULT_CENTER;
+    } else {
+        ourLocation.value = [55.751244, 37.618423];
     }
 }
+
 
 onMounted(() => {
     userLocation();
