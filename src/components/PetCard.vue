@@ -1,12 +1,17 @@
 <template>
-    <Panel v-if="ad.type === 'lost'" toggleable collapsed>
-
-        <template #header>
+    <Panel toggleable collapsed>
+        <template v-if="ad.type === 'found'" #header>
+            <Tag severity="warn" class="mr-2">
+                <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
+            </Tag>
+            Ищет хозяина
+        </template>
+        <template v-if="ad.type === 'lost'" #header>
             <Tag severity="success" class="mr-2">
 
                 <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
             </Tag>
-            {{ getAdTypeLabel(ad.type) }}
+             Потерял {{ getAnimalTypeLabel(ad.animal_type) }}
         </template>
         <template #footer>
             <div class="flex flex-wrap items-center justify-between gap-4">
@@ -24,49 +29,7 @@
             :showItemNavigators="true" :showIndicators="true" :showIndicatorsOnHover="false"
             :changeItemOnIndicatorHover="true" containerStyle="max-width: 560px; height: 300px">
             <template #item="slotProps">
-                <img :src="slotProps.item" alt="Image" class="shadow-md rounded-xl w-full h-full object-cover" />
-            </template>
-
-            <!-- Кастомный индикатор (кружочки) -->
-            <template #indicator="{ index, class: indicatorClass }">
-                <button :class="indicatorClass" class="w-2 h-2 rounded-full"></button>
-            </template>
-        </Galleria>
-        <div class="flex flex-wrap mt-4 items-center gap-4">
-            <Avatar
-                :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
-                size="normal" shape="circle"> </Avatar>
-            <span class="text-sm">{{ ad.description }}</span>
-        </div>
-        <template #icons>
-            <Button icon="pi pi-cog" severity="secondary" rounded text @click="toggle" />
-            <Menu ref="menu" id="config_menu" :model="items" popup />
-        </template>
-    </Panel>
-    <Panel v-if="ad.type === 'found'" toggleable collapsed>
-        <template #header>
-            <Tag severity="warn" class="mr-2">
-                <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
-            </Tag>
-            Потерял {{ getAnimalTypeLabel(ad.animal_type) }}
-        </template>
-        <template #footer>
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center gap-2">
-                    <OverlayBadge severity="warn" value="0">
-                        <Button label="Похожие" />
-                    </OverlayBadge>
-                </div>
-                <span class="text-surface-500 dark:text-surface-400"><i class="pi pi-hourglass"
-                        style="font-size: 1rem"></i> {{
-                            getSearchDuration(ad.updated_at) }}</span>
-            </div>
-        </template>
- <Galleria :value="ad.images" :responsiveOptions="responsiveOptions" showThumbnails="false"
-            :showItemNavigators="true" :showIndicators="true" :showIndicatorsOnHover="false"
-            :changeItemOnIndicatorHover="true" containerStyle="max-width: 560px; height: 300px">
-            <template #item="slotProps">
-                <img :src="slotProps.item" alt="Image" class="shadow-md rounded-xl w-full h-full object-cover" />
+                <img :src="slotProps.item" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain" />
             </template>
 
             <!-- Кастомный индикатор (кружочки) -->

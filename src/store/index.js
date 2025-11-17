@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useMiniApp, usePopup } from "vue-tg";
 import { ref, computed } from "vue";
+import router from "../router";
 
 
 export const useTgStore = defineStore("tg", () => {
@@ -62,7 +63,7 @@ export const useUserStore = defineStore("user", {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-          userId:user_id,//323680895, //user_id
+          userId:user_id //323680895, //
           }),
         }
       );
@@ -82,6 +83,7 @@ export const useUserStore = defineStore("user", {
       }).then((response) => {
         if (response.ok) {
           window.location.reload();
+          router.push({ name: "home" });
         } else {
         
         }
