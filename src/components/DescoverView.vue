@@ -11,20 +11,22 @@
             📍 {{ ourLocation.latitude.toFixed(4) }}, {{ ourLocation.longitude.toFixed(4) }}
         </span>
         <span v-else class="text-gray-500">
-         
+            Получение геопозиции...
         </span>
     </div>
     
     <Splitter class="pb-10 h-full" style="height: 100vh" layout="vertical">
         <SplitterPanel :minSize="25">
             <AdsMap 
-               
-                :center="[ ourLocation.latitude,  ourLocation.longitude]" 
+                v-if="ourLocation"
+                :center="ourLocation" 
                 :ads="worldAds" 
             />
-      
+            <div v-else class="flex items-center justify-center h-full text-gray-500">
+                Карта загружается...
+            </div>
         </SplitterPanel>
-       
+        
         <SplitterPanel :minSize="35" class="flex flex-col overflow-hidden">
             <div class="w-full h-full overflow-y-auto">
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-2">
@@ -41,7 +43,7 @@
 </template>
 
 <script setup>
-import { onMounted,  ref } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import { useUserStore } from '../store';
 import { storeToRefs } from 'pinia';
 import PetCard from './PetCard.vue';
@@ -97,7 +99,7 @@ const getLocation = () => {
             }
             
             userLocationError.value = errorMessage;
-            // console.error(error);
+            console.error(error);
         },
         {
             enableHighAccuracy: true,
