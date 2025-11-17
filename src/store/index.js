@@ -12,8 +12,8 @@ export const useTgStore = defineStore("tg", () => {
   const initData = computed(() => miniApp.initData);
   const userId = computed(() => miniApp.initDataUnsafe?.user?.id);
   const user = computed(() => miniApp.initDataUnsafe?.user);
-  const userAvatar = computed(() =>miniApp.initDataUnsafe?.user?.photo_url );
-
+  const userAvatar = computed(() =>miniApp.initDataUnsafe?.user?.photo_url )
+  const userLocation = computed(() => miniApp.initDataUnsafe?.user?.location);
 
   const initializeAuth = async () => {};
 
@@ -25,6 +25,7 @@ export const useTgStore = defineStore("tg", () => {
     miniApp,
     initializeAuth,
     userAvatar,
+    userLocation
   };
 });
 export const useUserStore = defineStore("user", {
