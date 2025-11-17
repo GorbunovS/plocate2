@@ -27,7 +27,7 @@
       </div>
       
       <div class="w-full h-[60vh] overflow-y-auto">
-       <div class="grid w-full  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" v-if="ads">
+       <div class="grid w-full  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2" v-if="ads">
        <PetCard v-for="ad in ads" :key="ad.id" :ad="ad" @stop-search="userStore.deleteThisAd(ad.id)"/>
       </div>
       </div>
@@ -47,9 +47,6 @@ import '../style.css';
 import { useUserStore } from '../store';
 import { storeToRefs } from 'pinia';
 import PetCard from './PetCard.vue';
-
-
-
 
 const userStore = useUserStore();
 const { ads } = storeToRefs(userStore);

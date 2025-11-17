@@ -13,6 +13,7 @@ export const useTgStore = defineStore("tg", () => {
   const userId = computed(() => miniApp.initDataUnsafe?.user?.id);
   const user = computed(() => miniApp.initDataUnsafe?.user);
   const userAvatar = computed(() =>miniApp.initDataUnsafe?.user?.photo_url )
+  const userLocation = computed(() => miniApp.initDataUnsafe?.user?.location);
 
   const initializeAuth = async () => {};
 
@@ -23,7 +24,8 @@ export const useTgStore = defineStore("tg", () => {
     userId,
     miniApp,
     initializeAuth,
-    userAvatar
+    userAvatar,
+    userLocation
   };
 });
 export const useUserStore = defineStore("user", {
@@ -34,6 +36,7 @@ export const useUserStore = defineStore("user", {
     selectedCoordinates: { lat: null, lon: null },
     selectedAddress: "",
     ads: [],
+    worldAds: [],
   }),
 
   actions: {
@@ -69,6 +72,21 @@ export const useUserStore = defineStore("user", {
       );
        const data = await response.json();
       this.ads = Array.isArray(data) ? data : [data];
+    },
+
+      async getAllAds() {
+      const response = await fetch(
+        "https://petlocate.ru/webhook/getAllAds",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+        }
+      );
+       const data = await response.json();
+        this.worldAds = Array.isArray(data) ? data : [data];
     },
 
     async createNewAd(ad) {
