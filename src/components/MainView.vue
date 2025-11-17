@@ -1,6 +1,6 @@
 <template>
-      <div class="header flex h-20 z-10 items-center justify-center">
-        <span class="">PetLocate</span>
+      <div class="header flex h-25 z-10 items-center justify-center">
+        
     </div>
 <div class="body flex flex-col gap-5 overflow-hidden pb-24">
     
@@ -10,22 +10,28 @@
       />
     </div>
  <div v-if="currentPage === 'home'" class="flex flex-col items-center justify-start text-center p-4 gap-4 h-full">
-      <img v-if="ads.length < 1 " :src="Jook" alt="jook" class="w-32 h-32 object-contain" />
+          <div v-if="ads.length === 0" class="flex flex-col items-center justify-center text-center p-4 gap-4 h-full">
+         <img :src="Jook" alt="jook" class="w-32 h-32 object-contain" />
+      <p  class="text-lg font-semibold">Добро пожаловать в PetLocate</p>
+      <p  class="text-sm text-gray-600 dark:text-gray-400">Мы поможем найти вашего питомца или возможного хозяина</p>
+         <div class="actions p-4 flex  flex-col gap-2 sm:gap-4 w-full justify-center ">
+
+      <Button icon="pi pi-plus" label="Добавить объявление"  severity="success" variant="outlined" @click="currentPage = 'newAd'" class=" sm:w-auto" />
+
+    </div>
+    </div>
+      <div v-else class="flex space-x-4 flex-row w-full justify-between items-center">
+        
       <span  class="text-lg font-semibold"> Мои объявления</span>
+      <Button icon="pi pi-plus" size="small" severity="success" rounded aria-label="Search" />
+      </div>
+      
       <div class="w-full h-[60vh] overflow-y-auto">
        <div class="grid w-full  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" v-if="ads">
        <PetCard v-for="ad in ads" :key="ad.id" :ad="ad" @stop-search="userStore.deleteThisAd(ad.id)"/>
       </div>
       </div>
-
-      <p  v-if="ads.length < 1 " class="text-lg font-semibold">Добро пожаловать в PetLocate</p>
-      <p v-if="ads.length < 1 " class="text-sm text-gray-600 dark:text-gray-400">Мы поможем найти вашего питомца или возможного хозяина</p>
-         <div class="actions p-4 flex  flex-col gap-2 sm:gap-4 w-full justify-center ">
-
-      <Button icon="pi " label="Новое объявление" severity="success" variant="outlined" @click="currentPage = 'newAd'" class=" sm:w-auto" />
-
-    </div>
-    </div>
+    </div>  
 <div v-if="currentPage === 'home'" class="fixed bottom-0 w-full pb-4 left-0 right-0 z-20 backdrop-blur bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
   <ButtonGroup class="w-full flex justify-between">
     <Button 
