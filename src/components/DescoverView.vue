@@ -19,7 +19,7 @@
         <SplitterPanel :minSize="25">
             <AdsMap 
                 v-if="ourLocation"
-                :center="ourLocation" 
+                :center="[ourLocation.latitude, ourLocation.longitude]" 
                 :ads="worldAds" 
             />
             <div v-else class="flex items-center justify-center h-full text-gray-500">
