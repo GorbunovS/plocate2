@@ -6,7 +6,7 @@
     />
     <l-map ref="map" :zoom="zoom" :center="center" style="height:100%; width:100%;">
       <l-tile-layer
-       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+       url="https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=g7cM1vMR1viO2I3YInIA"
         layer-type="base"
         name="OpenStreetMap"
       />
@@ -26,6 +26,8 @@ const props = defineProps({
     default: () => [55.751244, 37.618423]
   }
 })
+
+
 
 const map = ref(null)
 const zoom = ref(13)

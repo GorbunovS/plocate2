@@ -43,18 +43,27 @@ const { worldAds } = storeToRefs(userStore);
 const ourLocation = ref([55.751244, 37.618423]); 
 
 const userLocation = async () => {
-    if (mountLocationManager.isAvailable()) {
-        try {
-            await mountLocationManager();
-            const location = await requestLocation();
-            // переход к массиву!
-            ourLocation.value = [location.latitude, location.longitude];
-        } catch (err) {
-            ourLocation.value = [55.751244, 37.618423];
-        }
-    } else {
-        ourLocation.value = [55.751244, 37.618423];
+  if (mountLocationManager.isAvailable()) {
+    ourLocation.value = DEFAULT_CENTER;
+    try {
+      const promise = mountLocationManager();
+      isLocationManagerMounting();
+      await promise;
+      const location = await requestLocation();
+      ourLocation.value = {
+        latitude: location.latitude,
+        longitude: location.longitude
+      }
+      isLocationManagerMounted(); // true
+    } catch (err) {
+      locationManagerMountError(); // equals "err"
+      isLocationManagerMounting(); // false
+      isLocationManagerMounted(); // false
     }
+  }
+  else {
+    
+  }
 }
 
 
