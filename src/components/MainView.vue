@@ -2,17 +2,20 @@
       <div class="header flex h-20 z-10 items-center justify-center">
         <span class="">PetLocate</span>
     </div>
-  <div class="body gap-5 flex flex-col min-h-screen text-gray-900 dark:text-gray-100">
+<div class="body flex flex-col gap-5 overflow-hidden pb-24">
+    
     <div v-if="currentPage === 'newAd'">
       <NewAdWindow
       @back="currentPage = 'home'"
       />
     </div>
-    <div v-if="currentPage === 'home'" class="views flex flex flex-col items-center  justify-center text-center p-4 gap-4">
+ <div v-if="currentPage === 'home'" class="flex flex-col items-center justify-start text-center p-4 gap-4 h-full">
       <img v-if="ads.length < 1 " :src="Jook" alt="jook" class="w-32 h-32 object-contain" />
       <span  class="text-lg font-semibold"> Мои объявления</span>
-       <div class="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" v-if="ads">
+      <div class="w-full h-[60vh] overflow-y-auto">
+       <div class="grid w-full  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" v-if="ads">
        <PetCard v-for="ad in ads" :key="ad.id" :ad="ad" @stop-search="userStore.deleteThisAd(ad.id)"/>
+      </div>
       </div>
 
       <p  v-if="ads.length < 1 " class="text-lg font-semibold">Добро пожаловать в PetLocate</p>
@@ -23,28 +26,32 @@
 
     </div>
     </div>
-     <div v-if="currentPage === 'home'" class="fixed bottom-5 left-0 right-0 z-20 bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
-      <ButtonGroup>
-      <Button 
-        icon="pi pi-home" 
-        severity="secondary" 
-     
-        text 
-        size="large" 
-        @click="currentPage = 'home'"
-        class="flex-1 mx-2"
-      />
-      <Button 
-        icon="pi pi-globe" 
-        severity="secondary" 
-        
-        text 
-        size="large" 
-        @click="handleGlobeClick"
-        class="flex-1 mx-2"
-      />
-      </ButtonGroup>
-    </div>
+<div v-if="currentPage === 'home'" class="fixed bottom-0 w-full left-0 right-0 z-20 backdrop-blur bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
+  <ButtonGroup class="w-full flex justify-between">
+    <Button 
+      icon="pi pi-home" 
+      :severity="currentPage === 'home' ? 'success' : 'secondary'" 
+      text 
+      size="large" 
+      @click="currentPage = 'home'"
+    />
+    <Button 
+      icon="pi pi-plus" 
+      severity="secondary" 
+      text 
+      size="large" 
+      @click="currentPage = 'newAd'"
+    />
+    <Button 
+      icon="pi pi-globe" 
+      :severity="currentPage === 'descover' ? 'success' : 'secondary'" 
+      text 
+      size="large" 
+      @click="handleGlobeClick"
+    />
+  </ButtonGroup>
+</div>
+ 
   </div>
 </template>
 
