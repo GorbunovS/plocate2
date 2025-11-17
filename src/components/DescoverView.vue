@@ -40,7 +40,7 @@ import {
 const userStore = useUserStore();
 const { worldAds } = storeToRefs(userStore);
 
-const ourLocation = ref([55.751244, 37.618423]); 
+const ourLocation = ref([]); 
 
 const userLocation = async () => {
   if (mountLocationManager.isAvailable()) {
@@ -50,10 +50,8 @@ const userLocation = async () => {
       isLocationManagerMounting();
       await promise;
       const location = await requestLocation();
-      ourLocation.value = {
-        latitude: location.latitude,
-        longitude: location.longitude
-      }
+      ourLocation.value = {[location.latitude, location.longitude]};
+      
       isLocationManagerMounted(); // true
     } catch (err) {
       locationManagerMountError(); // equals "err"
@@ -62,7 +60,7 @@ const userLocation = async () => {
     }
   }
   else {
-    
+    ourLocation.value = [37.6173, 55.7522];
   }
 }
 
