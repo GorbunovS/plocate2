@@ -16,6 +16,8 @@ import { locationManager } from '@telegram-apps/sdk';
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet';
 import Chip from 'primevue/chip';
 import { createPinia } from 'pinia'
+import 'maplibre-gl/dist/maplibre-gl.css'
+
 
 
 

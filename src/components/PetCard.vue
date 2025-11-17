@@ -8,7 +8,6 @@
         </template>
         <template v-if="ad.type === 'lost'" #header>
             <Tag severity="success" class="mr-2">
-
                 <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
             </Tag>
              Потерял {{ getAnimalTypeLabel(ad.animal_type) }}
