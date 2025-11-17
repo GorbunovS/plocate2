@@ -1,7 +1,7 @@
 <template>
     <Alert :message="userLocationError"  severity="danger" />
     <div class="header flex h-full z-10 items-center justify-center">
-        {{ ourLocation }}
+        {{ ourLocation.value }}
     </div>
     
     <Splitter class="pb-10 h-full" style="height: 100vh" layout="vertical">
@@ -38,7 +38,11 @@ import { useLocationManager } from 'vue-tg'
 
 const locationManager = useLocationManager()
 
-const ourLocation = computed(() => locationManager.getLocation );
+const ourLocation = computed(() => {
+   return locationManager.getLocation()
+}
+);
+
 
 const userStore = useUserStore();
 const { worldAds } = storeToRefs(userStore);
