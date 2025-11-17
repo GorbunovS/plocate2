@@ -1,38 +1,29 @@
 <template>
-  <div class="relative w-full h-full">    
-    <LMap 
-      :zoom="13" 
-      :center="[55.751244, 37.618423]" 
-      @moveend="(e) => emit('center-changed', e.target.getCenter())"
-      :attribution-control="false"
-      class="w-full h-full"
-    >
-      <LTileLayer :url="tileUrl" :attribution="''" />
-    </LMap>
+  <div style="height:300px; width:800px">
+    <l-map ref="map" v-model:zoom="zoom" :center="[47.41322, -1.219482]">
+      <l-tile-layer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        layer-type="base"
+        name="OpenStreetMap"
+      ></l-tile-layer>
+    </l-map>
   </div>
 </template>
 
-<script setup>
-import { defineEmits } from 'vue';
-// import Marker from '../assets/marker.svg';
-import { LMap, LTileLayer } from '@vue-leaflet/vue-leaflet';
-import 'leaflet/dist/leaflet.css';
+<script>
+import "leaflet/dist/leaflet.css";
+import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
 
-const emit = defineEmits(['center-changed']);
-
-const props = defineProps({
-  userLocation: {
-    type: Array,
-    default: () => [55.751244, 37.618423]
-  }
-});
-
-const tileUrl = 'https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=g7cM1vMR1viO2I3YInIA';
+export default {
+  components: {
+    LMap,
+    LTileLayer,
+  },
+  data() {
+    return {
+      zoom: 2,
+    };
+  },
+};
 </script>
-
-<style scoped>
-.leaflet-control-attribution {
-  display: none !important;
-}
-</style>
 
