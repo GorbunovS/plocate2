@@ -2,10 +2,10 @@
     <Panel v-if="ad.type === 'lost'" toggleable collapsed>
 
         <template #header>
-            <Badge severity="success" class="mr-2">
+            <Tag severity="success" class="mr-2">
 
                 <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
-            </Badge>
+            </Tag>
             {{ getAdTypeLabel(ad.type) }}
         </template>
         <template #footer>
@@ -42,9 +42,9 @@
     </Panel>
     <Panel v-if="ad.type === 'found'" toggleable collapsed>
         <template #header>
-            <Badge severity="warn" class="mr-2">
+            <Tag severity="warn" class="mr-2">
                 <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
-            </Badge>
+            </Tag>
           Потерял {{ getAnimalTypeLabel(ad.animal_type) }}
         </template>
         <template #footer>
@@ -78,7 +78,7 @@
 import { defineProps, defineEmits, ref } from 'vue'
 import Button from 'primevue/button'
 import { Menu } from 'primevue';
-import { Badge, OverlayBadge } from 'primevue';
+import { Tag, OverlayBadge } from 'primevue';
 import { Panel } from 'primevue';
 // import { Image } from 'primevue';
 import { Avatar } from 'primevue';

@@ -26,7 +26,7 @@
 
     </div>
     </div>
-<div v-if="currentPage === 'home'" class="fixed bottom-0 w-full left-0 right-0 z-20 backdrop-blur bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
+<div v-if="currentPage === 'home'" class="fixed bottom-0 w-full pb-4 left-0 right-0 z-20 backdrop-blur bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
   <ButtonGroup class="w-full flex justify-between">
     <Button 
       icon="pi pi-home" 

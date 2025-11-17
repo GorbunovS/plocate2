@@ -67,7 +67,7 @@
 
   </div>
   <div
-    class="fixed bottom-0 left-0 gap-4 right-0 backdrop-blur z-20 bg-surface-card dark:bg-surface-700 border-t min-h-16 border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
+    class="fixed bottom-0 left-0 pb-5 gap-4 right-0 backdrop-blur z-20 bg-surface-card dark:bg-surface-700 border-t min-h-16 border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
     <Button @click="back" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined"
       class="w-full sm:w-auto" />
     <Button :label="currentStep === 2 ? 'Сохранить' : 'Далее'" severity="success"
