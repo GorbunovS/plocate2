@@ -3,7 +3,7 @@
     </div>
     <Splitter layout="vertical">
         <SplitterPanel :size="30">
-           <AdsMap class="h-full"/>
+           <AdsMap />
         </SplitterPanel>
         <SplitterPanel :size="70">
             <div class="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2" v-if="worldAds">
