@@ -13,7 +13,7 @@ export const useTgStore = defineStore("tg", () => {
   const userId = computed(() => miniApp.initDataUnsafe?.user?.id);
   const user = computed(() => miniApp.initDataUnsafe?.user);
   const userAvatar = computed(() =>miniApp.initDataUnsafe?.user?.photo_url )
-  const userLocation = computed(() => miniApp.initDataUnsafe?.user?.location);
+
 
   const initializeAuth = async () => {};
 

@@ -1,5 +1,7 @@
 <template>
+    <Alert :message="userLocationError"  severity="danger" />
     <div class="header flex h-full z-10 items-center justify-center">
+        {{ ourLocation }}
     </div>
     
     <Splitter class="pb-10 h-full" style="height: 100vh" layout="vertical">
@@ -31,42 +33,21 @@ import PetCard from './PetCard.vue';
 import AdsMap from './AdsMap.vue';
 import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
-import {
-    mountLocationManager,
-    requestLocation
-} from '@telegram-apps/sdk';
+import { Alert } from 'vue-tg';
+import { useLocationManager } from 'vue-tg'
 
+const locationManager = useLocationManager()
+
+const ourLocation = computed(() => locationManager.getLocation);
 
 const userStore = useUserStore();
 const { worldAds } = storeToRefs(userStore);
 
-const ourLocation = ref([]); 
 
-const userLocation = async () => {
-  if (mountLocationManager.isAvailable()) {
-    ourLocation.value = DEFAULT_CENTER;
-    try {
-      const promise = mountLocationManager();
-      isLocationManagerMounting();
-      await promise;
-      const location = await requestLocation();
-      ourLocation.value = [location.latitude, location.longitude];
-      
-      isLocationManagerMounted(); // true
-    } catch (err) {
-      locationManagerMountError(); // equals "err"
-      isLocationManagerMounting(); // false
-      isLocationManagerMounted(); // false
-    }
-  }
-  else {
-    ourLocation.value = [37.6173, 55.7522];
-  }
-}
 
 
 onMounted(() => {
-    userLocation();
+ 
     userStore.getAllAds();
 });
 </script>
