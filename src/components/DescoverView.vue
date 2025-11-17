@@ -5,7 +5,6 @@
     <Splitter class="pb-10 h-full" style="height: 100vh" layout="vertical">
         <SplitterPanel :minSize="25">
             <AdsMap :center="[ourLocation.longitude, ourLocation.latitude]" :ads="worldAds" />
-
         </SplitterPanel>
 
         <SplitterPanel :minSize="35" class="flex flex-col overflow-hidden">
