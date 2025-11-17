@@ -25,7 +25,6 @@ export const useTgStore = defineStore("tg", () => {
     miniApp,
     initializeAuth,
     userAvatar,
-    userLocation
   };
 });
 export const useUserStore = defineStore("user", {

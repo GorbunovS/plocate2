@@ -26,7 +26,7 @@
 
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useUserStore } from '../store';
 import { storeToRefs } from 'pinia';
 import PetCard from './PetCard.vue';
@@ -38,7 +38,7 @@ import { useLocationManager } from 'vue-tg'
 
 const locationManager = useLocationManager()
 
-const ourLocation = computed(() => locationManager.getLocation);
+const ourLocation = computed(() => locationManager.getLocation );
 
 const userStore = useUserStore();
 const { worldAds } = storeToRefs(userStore);
