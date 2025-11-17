@@ -1,19 +1,27 @@
 <template>
-    <div class="header flex h-25 z-10 items-center justify-center">
+    <div class="header flex h-full z-10 items-center justify-center">
     </div>
-    <Splitter layout="vertical">
-        <SplitterPanel :size="30">
-           <AdsMap />
+    
+    <Splitter class="pb-10 h-full" style="height: 100vh" layout="vertical">
+        <SplitterPanel :minSize="25">
+            <AdsMap :ads="worldAds" />
         </SplitterPanel>
-        <SplitterPanel :size="70">
-            <div class="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2" v-if="worldAds">
-                <PetCard v-for="ad in worldAds" :key="ad.id" :ad="ad" @stop-search="userStore.deleteThisAd(ad.id)" />
+        
+        <SplitterPanel :minSize="35" class="flex flex-col overflow-hidden">
+            <div class="w-full h-full overflow-y-auto">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 p-2">
+                    <PetCard 
+                        v-for="ad in worldAds" 
+                        :key="ad.id" 
+                        :ad="ad" 
+                        @stop-search="userStore.deleteThisAd(ad.id)" 
+                    />
+                </div>
             </div>
         </SplitterPanel>
     </Splitter>
-
-
 </template>
+
 
 <script setup>
 import { onMounted, ref } from 'vue';
