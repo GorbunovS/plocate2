@@ -50,7 +50,7 @@ const userLocation = async () => {
       isLocationManagerMounting();
       await promise;
       const location = await requestLocation();
-      ourLocation.value = {[location.latitude, location.longitude]};
+      ourLocation.value = [location.latitude, location.longitude];
       
       isLocationManagerMounted(); // true
     } catch (err) {
