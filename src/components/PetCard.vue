@@ -11,8 +11,8 @@
         <template #footer>
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
-                    <OverlayBadge severity="warn" value="0" >
-                    <Button label="Похожие" />
+                    <OverlayBadge severity="warn" value="0">
+                        <Button label="Похожие" />
                     </OverlayBadge>
                 </div>
                 <span class="text-surface-500 dark:text-surface-400"><i class="pi pi-hourglass"
@@ -20,20 +20,23 @@
                             getSearchDuration(ad.updated_at) }}</span>
             </div>
         </template>
-        <div class="flex gap-4 justify-start p-2">
-                  <div class="max-w-xs p-4 bg-gray-100 dark:bg-gray-700 rounded-xl  rounded-bl-none">
-<AvatarGroup>
-  <Avatar 
-    v-for="image in ad.images" 
-    :key="image"
-    :image="image" 
-    size="xlarge" 
-    shape="circle" 
-    ariaLabelledby
-  />
-</AvatarGroup>
-                <p class="m-0 text-sm">{{ ad.description }}</p>
-            </div>
+        <Galleria :value="ad.images" :responsiveOptions="responsiveOptions" showThumbnails="false"
+            :showItemNavigators="true" :showIndicators="true" :showIndicatorsOnHover="false"
+            :changeItemOnIndicatorHover="true" containerStyle="max-width: 560px; height: 300px">
+            <template #item="slotProps">
+                <img :src="slotProps.item" alt="Image" class="shadow-md rounded-xl w-full h-full object-cover" />
+            </template>
+
+            <!-- Кастомный индикатор (кружочки) -->
+            <template #indicator="{ index, class: indicatorClass }">
+                <button :class="indicatorClass" class="w-2 h-2 rounded-full"></button>
+            </template>
+        </Galleria>
+        <div class="flex flex-wrap mt-4 items-center gap-4">
+            <Avatar
+                :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
+                size="normal" shape="circle"> </Avatar>
+            <span class="text-sm">{{ ad.description }}</span>
         </div>
         <template #icons>
             <Button icon="pi pi-cog" severity="secondary" rounded text @click="toggle" />
@@ -45,13 +48,13 @@
             <Tag severity="warn" class="mr-2">
                 <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
             </Tag>
-          Потерял {{ getAnimalTypeLabel(ad.animal_type) }}
+            Потерял {{ getAnimalTypeLabel(ad.animal_type) }}
         </template>
         <template #footer>
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
-                    <OverlayBadge severity="warn" value="0" >
-                    <Button label="Похожие" />
+                    <OverlayBadge severity="warn" value="0">
+                        <Button label="Похожие" />
                     </OverlayBadge>
                 </div>
                 <span class="text-surface-500 dark:text-surface-400"><i class="pi pi-hourglass"
@@ -59,13 +62,23 @@
                             getSearchDuration(ad.updated_at) }}</span>
             </div>
         </template>
-        <div class="flex gap-4 justify-start p-2">
-                  <div class="max-w-xs p-4 bg-gray-100 dark:bg-gray-700 rounded-xl  rounded-bl-none">
-                    <AvatarGroup>
-            <Avatar  :image="ad.images[0]" size="xlarge" shape="circle" class="flex-shrink-0" />
-      </AvatarGroup>
-                <p class="m-0 text-sm">{{ ad.description }}</p>
-            </div>
+ <Galleria :value="ad.images" :responsiveOptions="responsiveOptions" showThumbnails="false"
+            :showItemNavigators="true" :showIndicators="true" :showIndicatorsOnHover="false"
+            :changeItemOnIndicatorHover="true" containerStyle="max-width: 560px; height: 300px">
+            <template #item="slotProps">
+                <img :src="slotProps.item" alt="Image" class="shadow-md rounded-xl w-full h-full object-cover" />
+            </template>
+
+            <!-- Кастомный индикатор (кружочки) -->
+            <template #indicator="{ index, class: indicatorClass }">
+                <button :class="indicatorClass" class="w-2 h-2 rounded-full"></button>
+            </template>
+        </Galleria>
+        <div class="flex flex-wrap mt-4 items-center gap-4">
+            <Avatar
+                :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
+                size="normal" shape="circle"> </Avatar>
+            <span class="text-sm">{{ ad.description }}</span>
         </div>
         <template #icons>
             <Button icon="pi pi-cog" severity="secondary" rounded text @click="toggle" />
@@ -80,8 +93,11 @@ import Button from 'primevue/button'
 import { Menu } from 'primevue';
 import { Tag, OverlayBadge } from 'primevue';
 import { Panel } from 'primevue';
-// import { Image } from 'primevue';
 import { Avatar } from 'primevue';
+import Galleria from 'primevue/galleria';
+import { useTgStore } from '../store';
+
+const tgStore = useTgStore();
 const menu = ref(null);
 
 const items = ref([
@@ -117,6 +133,11 @@ const props = defineProps({
 
 const emit = defineEmits(['view-similar', 'stop-search'])
 
+const responsiveOptions = ref([
+    { breakpoint: '1024px', numVisible: 5 },
+    { breakpoint: '768px', numVisible: 3 },
+    { breakpoint: '560px', numVisible: 1 }
+]);
 const getAnimalTypeIcon = (type) => {
     const labels = {
         dog: 'las la-dog',

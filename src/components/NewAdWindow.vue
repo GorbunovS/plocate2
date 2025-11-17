@@ -1,6 +1,10 @@
 <template>
-  <div class="h-screen w-full flex flex-col overflow-auto bg-surface-ground dark:bg-surface-800">
-    <!-- Диалог карты: полноэкранный для мобильных -->
+        <div class="header flex h-25 z-10 items-center justify-center">
+        
+    </div>
+
+  <div class="h-screen w-full h-[vh60] flex flex-col overflow-auto bg-surface-ground dark:bg-surface-800">
+    
     <Dialog :position="'bottom'" class="w-full h-full" :style="{ maxHeight: '100vh' }" :modal="true"
       v-model:visible="mapIsOpen" @click="handleOutsideClick">
       <MapVew class="h-full w-full" :user-location="[ourLocation.latitude, ourLocation.longitude]"
@@ -95,6 +99,9 @@ import { Calendar } from 'primevue';
 import Textarea from 'primevue/textarea';
 import { useTgStore } from '../store';
 
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 const tgStore = useTgStore();
 const user_id = computed(() => tgStore.userId);
 
@@ -150,13 +157,11 @@ const saveAd = async () => {
 
 
 const back = () => {
-  if (currentStep.value === 1) {
-    emit('back');
-  } else {
-    currentStep.value = 1;
+  if (currentStep.value > 1) {
+    currentStep.value--;
   }
+  else router.push('/');
 }
-
 
 const saveLocation = async ({ center }) => {
   try {

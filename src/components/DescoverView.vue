@@ -1,0 +1,4 @@
+<template> 
+Объявления рядом
+
+</template> 

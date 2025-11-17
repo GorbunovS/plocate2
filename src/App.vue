@@ -4,6 +4,14 @@ import './style.css'
 import { computed, onMounted } from 'vue';
 import { useTgStore } from './store';
 import { useUserStore } from './store';
+import { useRouter, useRoute } from 'vue-router';
+
+const route = useRoute();
+const currentPage = computed(() => route.name);
+const router = useRouter();
+const handleNavigation = (page)=> {
+  router.push(page);
+}
 
 const userStore = useUserStore();
 const tgStore = useTgStore();
@@ -20,7 +28,34 @@ onMounted(() => {
 
 <template>
   <div>
+   
     <router-view></router-view>
+    
+    <div v-if="route.name !== 'newAd'"  class="fixed bottom-0 w-full pb-4 left-0 right-0 z-20 backdrop-blur bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
+  <ButtonGroup class="w-full flex justify-between">
+    <Button 
+      icon="pi pi-home" 
+      :severity="currentPage === 'home' ? 'success' : 'secondary'" 
+      text 
+      size="large" 
+      @click="handleNavigation('/')"
+    />
+    <Button 
+      icon="pi pi-plus" 
+      severity="secondary" 
+      text 
+      size="large" 
+      @click="handleNavigation('newAd')"
+    />
+    <Button 
+      icon="pi pi-globe" 
+      :severity="currentPage === 'descover' ? 'success' : 'secondary'" 
+      text 
+      size="large" 
+      @click="handleNavigation('descover')"
+    />
+  </ButtonGroup>
+</div>
   </div>
 
   

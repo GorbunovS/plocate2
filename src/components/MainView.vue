@@ -23,7 +23,7 @@
       <div v-else class="flex space-x-4 flex-row w-full justify-between items-center">
         
       <span  class="text-lg font-semibold"> Мои объявления</span>
-      <Button icon="pi pi-plus" size="small" severity="success" rounded aria-label="Search" />
+      <Button icon="pi pi-plus" size="small" severity="success" rounded @click="handleNewAdClick"/>
       </div>
       
       <div class="w-full h-[60vh] overflow-y-auto">
@@ -32,31 +32,7 @@
       </div>
       </div>
     </div>  
-<div v-if="currentPage === 'home'" class="fixed bottom-0 w-full pb-4 left-0 right-0 z-20 backdrop-blur bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
-  <ButtonGroup class="w-full flex justify-between">
-    <Button 
-      icon="pi pi-home" 
-      :severity="currentPage === 'home' ? 'success' : 'secondary'" 
-      text 
-      size="large" 
-      @click="currentPage = 'home'"
-    />
-    <Button 
-      icon="pi pi-plus" 
-      severity="secondary" 
-      text 
-      size="large" 
-      @click="currentPage = 'newAd'"
-    />
-    <Button 
-      icon="pi pi-globe" 
-      :severity="currentPage === 'descover' ? 'success' : 'secondary'" 
-      text 
-      size="large" 
-      @click="handleGlobeClick"
-    />
-  </ButtonGroup>
-</div>
+
  
   </div>
 </template>
@@ -71,6 +47,7 @@ import '../style.css';
 import { useUserStore } from '../store';
 import { storeToRefs } from 'pinia';
 import PetCard from './PetCard.vue';
+
 
 
 

@@ -11,6 +11,7 @@ export const useTgStore = defineStore("tg", () => {
   const initData = computed(() => miniApp.initData);
   const userId = computed(() => miniApp.initDataUnsafe?.user?.id);
   const user = computed(() => miniApp.initDataUnsafe?.user);
+  const userAvatar = computed(() =>miniApp.initDataUnsafe?.user?.photo_url )
 
   const initializeAuth = async () => {};
 
@@ -21,6 +22,7 @@ export const useTgStore = defineStore("tg", () => {
     userId,
     miniApp,
     initializeAuth,
+    userAvatar
   };
 });
 export const useUserStore = defineStore("user", {
@@ -60,7 +62,7 @@ export const useUserStore = defineStore("user", {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-          userId:user_id, //323680895, //
+          userId:user_id,//323680895, //user_id
           }),
         }
       );
