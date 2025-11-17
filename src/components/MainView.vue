@@ -19,11 +19,12 @@
       <p v-if="ads.length < 1 " class="text-sm text-gray-600 dark:text-gray-400">Мы поможем найти вашего питомца или возможного хозяина</p>
          <div class="actions p-4 flex  flex-col gap-2 sm:gap-4 w-full justify-center ">
 
-      <Button label="Создать объявление" severity="success" variant="outlined" @click="currentPage = 'newAd'" class=" sm:w-auto" />
+      <Button icon="pi " label="Новое объявление" severity="success" variant="outlined" @click="currentPage = 'newAd'" class=" sm:w-auto" />
 
     </div>
     </div>
      <div v-if="currentPage === 'home'" class="fixed bottom-5 left-0 right-0 z-20 bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
+      <ButtonGroup>
       <Button 
         icon="pi pi-home" 
         severity="secondary" 
@@ -42,6 +43,7 @@
         @click="handleGlobeClick"
         class="flex-1 mx-2"
       />
+      </ButtonGroup>
     </div>
   </div>
 </template>
