@@ -1,3 +1,7 @@
+
+AdsMap Component
+
+
 <template>
   <div class="relative w-full h-full min-h-[300px]">
     <!-- Центральный маркер -->
@@ -8,7 +12,6 @@
     
     <!-- Контейнер карты -->
     <div ref="mapContainer" class="w-full h-full"></div>
-    
   </div>
 </template>
 
@@ -16,7 +19,6 @@
 import { ref, onMounted, watch, defineProps } from 'vue'
 import { createApp } from 'vue'
 import maplibregl from 'maplibre-gl'
-import Chip from 'primevue/chip'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 const props = defineProps({
@@ -27,18 +29,24 @@ const props = defineProps({
   ads: {
     type: Array,
     default: () => []
+  },
+  selectedAdId: {
+    type: [String, Number],
+    default: null
   }
 })
+
+const emit = defineEmits(['card-selected', 'contact'])
 
 const mapContainer = ref(null)
 const map = ref(null)
 const zoom = ref(13)
 const popup = ref(null)
-const debugMode = ref(false)
 const Marker = ref('')
-const markersMap = ref(new Map()) // Хранилище созданных маркеров
+const markersMap = ref(new Map())
+const activeMarkerId = ref(null)
 
-// ✅ Функция валидации координат
+// ✅ Валидация координат
 const isValidCoordinates = (center) => {
   if (!center) return false
   const lng = center.longitude
@@ -51,7 +59,7 @@ const isValidCoordinates = (center) => {
   return true
 }
 
-// ✅ Получение безопасных координат
+// ✅ Безопасные координаты
 const getSafeCoordinates = (center) => {
   if (!isValidCoordinates(center)) {
     console.warn('❌ Координаты невалидны, используются default:', center)
@@ -60,7 +68,7 @@ const getSafeCoordinates = (center) => {
   return [center.longitude, center.latitude]
 }
 
-// ✅ Маппинг данных с сервера в нужный формат
+// ✅ Маппинг данных
 const mapAdData = (rawAd) => {
   return {
     ...rawAd,
@@ -74,78 +82,353 @@ const mapAdData = (rawAd) => {
   }
 }
 
-// ✅ Создание маркера с PrimeVue Chip
-const createChipMarker = (ad) => {
-  const container = document.createElement('div')
-  container.style.pointerEvents = 'auto'
-  container.style.cursor = 'pointer'
+// ✅ Определение иконок по типу животного
+const getAnimalTypeIcon = (animalType) => {
+  const iconMap = {
+    dog: 'las la-dog',
+    cat: 'las la-cat',
+    other: 'las la-paw',
+  }
+  return iconMap[animalType] || 'las la-paw'
+}
 
-  const chipApp = createApp(Chip, {
-    label: ad.description || 'Питомец',
-    image: ad.image_url,
-    icon: ad.animal_type === 'dog' ? 'pi pi-fw pi-paw' : 'pi pi-fw pi-paw',
-    removable: false,
-    class: 'custom-chip-marker',
-    style: 'padding: 4px 12px;'
+// ✅ Определение severity для Tag по типу объявления
+const getTagSeverity = (type) => {
+  return type === 'found' ? 'warn' : 'success'
+}
+
+// ✅ Определение статуса по типу объявления
+const getAdTypeLabel = (type) => {
+  return type === 'found' ? 'Ищет хозяина' : 'Потерял'
+}
+
+// ✅ Определение метки животного
+const getAnimalTypeLabel = (type) => {
+  const labels = {
+    dog: 'собаку',
+    cat: 'кошку',
+    other: 'петомца',
+  }
+  return labels[type] || type
+}// ✅ Вычисление времени поиска
+const getSearchDuration = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffMs = now - date
+
+  const hours = Math.floor(diffMs / (1000 * 60 * 60))
+  const days = Math.floor(hours / 24)
+
+  if (days > 0) {
+    return `${days}д ${hours % 24}ч`
+  }
+  return `${hours}ч`
+}
+
+// ✅ Форматирование адреса
+const formatAddress = (ad) => {
+  if (ad.address) return ad.address
+  return `${ad.location.latitude.toFixed(4)}, ${ad.location.longitude.toFixed(4)}`
+}// ✅ Создание маркера с фото и бэджем (кружок с иконкой)
+const createMarker = (ad) => {
+  const container = document.createElement('div')
+  container.className = 'relative cursor-pointer'
+  container.style.pointerEvents = 'auto'
+
+  // Основной кружок с фото
+  const photoCircle = document.createElement('div')
+  const isSelected = activeMarkerId.value === ad.id
+  photoCircle.className = 'relative w-14 h-14 rounded-full overflow-hidden border-2 shadow-lg transition-transform hover:scale-110'
+  photoCircle.style.cssText = `
+    width: 56px;
+    height: 56px;
+    border: 3px solid ${isSelected ? '#06b6d4' : 'white'};
+    box-shadow: ${isSelected ? '0 0 0 2px #06b6d4, 0 2px 8px rgba(0, 0, 0, 0.2)' : '0 2px 8px rgba(0, 0, 0, 0.2)'};
+    border-radius: 9999px;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  `
+
+  // Фото
+  const img = document.createElement('img')
+  img.src = ad.image_url
+  img.onerror = () => {
+    img.src = 'https://via.placeholder.com/60?text=Pet'
+  }
+  img.style.cssText = `
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  `
+  photoCircle.appendChild(img)
+
+  // Бэдж (иконка) в правом нижнем углу
+  const badge = document.createElement('div')
+  const severity = getTagSeverity(ad.type)
+  
+  let bgColor = '#fbbf24' // warn (жёлтый)
+  let textColor = '#1f2937' // dark text
+  if (severity === 'success') {
+    bgColor = '#10b981' // success (зелёный)
+    textColor = 'white'
+  }
+
+  badge.className = 'absolute bottom-0 right-0 rounded-full border border-white'
+  badge.style.cssText = `
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    background-color: ${bgColor};
+    color: ${textColor};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    font-size: 16px;
+  `
+
+  const icon = document.createElement('i')
+  icon.className = getAnimalTypeIcon(ad.animal_type)
+  icon.style.cssText = `
+    font-size: 16px;
+    line-height: 1;
+  `
+  badge.appendChild(icon)
+
+  container.appendChild(photoCircle)
+  container.appendChild(badge)
+
+  // События
+  photoCircle.addEventListener('mouseenter', () => {
+    photoCircle.style.transform = 'scale(1.1)'
+  })
+  photoCircle.addEventListener('mouseleave', () => {
+    photoCircle.style.transform = 'scale(1)'
   })
 
-  chipApp.mount(container)
-
-  // Стили для Chip маркера
-  const chipElement = container.querySelector('.p-chip')
-  if (chipElement) {
-    chipElement.style.cssText = `
-      background: white !important;
-      border: 2px solid #fff !important;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
-      border-radius: 20px !important;
-      padding: 4px 8px !important;
-      font-size: 12px !important;
-      min-height: 32px !important;
-      white-space: nowrap !important;
-      transition: filter 0.2s, transform 0.2s !important;
-    `
-
-    chipElement.addEventListener('mouseenter', () => {
-      chipElement.style.filter = 'brightness(1.15)'
-      chipElement.style.transform = 'scale(1.1)'
-    })
-    chipElement.addEventListener('mouseleave', () => {
-      chipElement.style.filter = 'brightness(1)'
-      chipElement.style.transform = 'scale(1)'
-    })
-  }
+  container.addEventListener('click', (e) => {
+    e.stopPropagation()
+    activeMarkerId.value = ad.id
+    emit('card-selected', ad.id)
+    openPopup(ad)
+  })
 
   return container
 }
 
-// Определение иконок по типу животного
-const getAnimalTypeIcon = (animalType) => {
-  const iconMap = {
-    dog: 'pi pi-fw pi-paw',
-    cat: 'pi pi-fw pi-paw',
-    rabbit: 'pi pi-fw pi-circle-fill',
-    bird: 'pi pi-fw pi-circle-fill',
-    hamster: 'pi pi-fw pi-circle-fill',
-    reptile: 'pi pi-fw pi-circle-fill',
+// ✅ Открытие попапа как развёрнутая карточка
+const openPopup = (ad) => {
+  if (popup.value) {
+    popup.value.remove()
   }
-  return iconMap[animalType] || 'pi pi-fw pi-paw'
+
+  const severity = getTagSeverity(ad.type)
+  let severityColor = 'text-yellow-600' // warn
+  let bgColor = '#fef3c7' // yellow-50
+  if (severity === 'success') {
+    severityColor = 'text-green-600' // success
+    bgColor = '#ecfdf5' // green-50
+  }
+
+  const popupContent = `
+    <div style="
+      width: 220px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    ">
+      <!-- Header с иконкой и статусом -->
+      <div style="
+        padding: 12px 16px;
+        background: ${bgColor};
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      ">
+        <div style="
+          width: 32px;
+          height: 32px;
+          background: ${severity === 'warn' ? '#fbbf24' : '#10b981'};
+          color: ${severity === 'warn' ? '#1f2937' : 'white'};
+          border-radius: 9999px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+        ">
+          <i class="${getAnimalTypeIcon(ad.animal_type)}"></i>
+        </div>
+        <span style="
+          font-weight: 500;
+          font-size: 14px;
+          color: #1f2937;
+        ">
+          ${getAdTypeLabel(ad.type)}${ad.type === 'lost' ? ' ' + getAnimalTypeLabel(ad.animal_type) : ''}
+        </span>
+      </div>
+
+      <!-- Фото (Galleria альтернатива) -->
+      <div style="
+        width: 100%;
+        height: 200px;
+        background: #f3f4f6;
+        overflow: hidden;
+      ">
+        <img 
+          src="${ad.image_url}" 
+          alt="${ad.animal_type}"
+          style="
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          "
+          onerror="this.src='https://via.placeholder.com/320x200?text=Pet'"
+        />
+      </div>
+
+      <!-- Body -->
+      <div style="padding: 16px;">
+        <!-- Название и время -->
+        <div style="
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 12px;
+        ">
+          <h3 style="
+            margin: 0;
+            font-weight: 600;
+            font-size: 16px;
+            color: #1f2937;
+          ">
+          <div style="
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+        ">
+          <img 
+            src="${ad.user_avatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'}"
+            alt="User"
+            style="
+              width: 32px;
+              height: 32px;
+              border-radius: 9999px;
+              object-fit: cover;
+            "
+          />
+          <span style="
+            font-size: 13px;
+            color: #6b7280;
+          ">
+            ${ad.user_name || 'Пользователь'}
+          </span>
+        </div>
+          </h3>
+          <span style="
+            font-size: 12px;
+            color: #6b7280;
+            white-space: nowrap;
+            margin-left: 8px;
+          ">
+            <i class="pi pi-hourglass" style="margin-right: 4px;"></i>
+            ${getSearchDuration(ad.updated_at)}
+          </span>
+        </div>
+
+        <!-- Описание -->
+        <p style="
+          margin: 0 0 12px 0;
+          font-size: 14px;
+          color: #4b5563;
+          line-height: 1.5;
+        ">
+          ${ad.description || 'Нет описания'}
+        </p>
+
+        <!-- Адрес -->
+        <div style="
+          padding: 8px;
+          background: #f9fafb;
+          border-radius: 6px;
+          font-size: 12px;
+          color: #6b7280;
+          margin-bottom: 12px;
+        ">
+          📍 ${formatAddress(ad)}
+        </div>
+
+        <!-- Avatar + описание (если есть) -->
+        
+      </div>
+
+      <!-- Footer с кнопкой -->
+      <div style="
+        padding: 12px 16px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 8px;
+      ">
+        <button style="
+          flex: 1;
+          padding: 8px 12px;
+          background: #06b6d4;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          font-size: 13px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: background 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+        "
+        onmouseover="this.style.background='#0891b2'"
+        onmouseout="this.style.background='#06b6d4'"
+        data-ad-id="${ad.id}"
+        >
+          <i class="pi pi-send" style="font-size: 13px;"></i>
+          Связаться
+        </button>
+      </div>
+    </div>
+  `
+
+  try {
+    popup.value = new maplibregl.Popup({ 
+      offset: 25,
+      closeButton: true,
+      closeOnClick: false,
+      anchor: 'top'
+    })
+      .setLngLat([ad.location.longitude, ad.location.latitude])
+      .setHTML(popupContent)
+      .addTo(map.value)
+
+    // Обработчик клика на кнопку "Связаться"
+    setTimeout(() => {
+      const contactBtn = popup.value?._content?.querySelector('button')
+      if (contactBtn) {
+        contactBtn.addEventListener('click', () => {
+          emit('contact', ad.id)
+        })
+      }
+    }, 0)
+  } catch (error) {
+    console.error('❌ Ошибка при открытии попапа:', error)
+  }
 }
 
-// Определение цвета по типу животного
-const getAnimalTypeColor = (animalType) => {
-  const colorMap = {
-    dog: '#3B82F6',
-    cat: '#A855F7',
-    rabbit: '#EC4899',
-    bird: '#F59E0B',
-    hamster: '#10B981',
-    reptile: '#14B8A6',
-  }
-  return colorMap[animalType] || '#3B82F6'
-}
-
-// ✅ Инициализация карты с безопасными координатами
+// ✅ Инициализация карты
 const initializeMap = () => {
   if (!mapContainer.value) {
     console.error('❌ Map container не найден')
@@ -175,7 +458,7 @@ const initializeMap = () => {
   })
 }
 
-// ✅ Добавление маркеров с Chip компонентами
+// ✅ Добавление маркеров
 const addMarkers = () => {
   if (!map.value) {
     console.warn('⚠️ Map не инициализирована')
@@ -187,34 +470,23 @@ const addMarkers = () => {
     return
   }
 
-  // Маппируем данные с сервера
   const mappedAds = props.ads.map(mapAdData)
   console.log(`📍 Добавляю ${mappedAds.length} маркеров`)
 
   mappedAds.forEach((ad, index) => {
-    // ✅ Валидация координат маркера
     if (!ad.location || isNaN(ad.location.longitude) || isNaN(ad.location.latitude)) {
       console.warn(`⚠️ Маркер ${index} имеет некорректные координаты:`, ad)
       return
     }
 
     try {
-      // Создаём Chip маркер
-      const el = createChipMarker(ad)
+      const el = createMarker(ad)
       
       const marker = new maplibregl.Marker({ element: el })
         .setLngLat([ad.location.longitude, ad.location.latitude])
         .addTo(map.value)
 
-      // Обработчик клика
-      el.addEventListener('click', (e) => {
-        e.stopPropagation()
-        openPopup(ad)
-      })
-
-      // Сохраняем маркер
       markersMap.value.set(ad.id, marker)
-
       console.log(`✅ Маркер ${ad.id} (${ad.name}) добавлен на карту`)
     } catch (error) {
       console.error(`❌ Ошибка при добавлении маркера ${index}:`, error)
@@ -222,47 +494,12 @@ const addMarkers = () => {
   })
 }
 
-// Открытие попапа
-const openPopup = (ad) => {
-  if (popup.value) {
-    popup.value.remove()
-  }
-
-  const popupContent = `
-    <div class="p-4 min-w-[250px]">
-      <div class="flex gap-3 mb-3">
-        <img 
-          src="${ad.image_url}" 
-          alt="${ad.animal_type}" 
-          class="w-12 h-12 rounded-full object-cover"
-          onerror="this.src='https://via.placeholder.com/50?text=Pet'"
-        />
-        <div>
-          <h3 class="font-semibold text-sm">${ad.name || 'Питомец'}</h3>
-          <p class="text-xs text-gray-600">${ad.animal_type}</p>
-        </div>
-      </div>
-      <p class="text-sm text-gray-700 mb-2">${ad.description || 'Нет описания'}</p>
-      <p class="text-xs text-gray-500">📍 ${ad.location.latitude.toFixed(4)}, ${ad.location.longitude.toFixed(4)}</p>
-    </div>
-  `
-
-  try {
-    popup.value = new maplibregl.Popup({ offset: 25 })
-      .setLngLat([ad.location.longitude, ad.location.latitude])
-      .setHTML(popupContent)
-      .addTo(map.value)
-  } catch (error) {
-    console.error('❌ Ошибка при открытии попапа:', error)
-  }
-}
-
-// Ре-центрирование карты
+// ✅ Ре-центрирование карты
 const updateMapCenter = (newCenter) => {
   if (!map.value) return
 
   const safeCoordinates = getSafeCoordinates(newCenter)
-  console.log('🎯ТЦентр карты обновлён:', safeCoordinates)
+  console.log('🎯 Центр карты обновлён:', safeCoordinates)
 
   map.value.flyTo({
     center: safeCoordinates,
@@ -271,13 +508,12 @@ const updateMapCenter = (newCenter) => {
   })
 }
 
-// ✅ Очистка и добавление маркеров
+// ✅ Обновление маркеров
 const updateMarkers = () => {
   if (!map.value) return
 
   console.log('🔄 Обновляю маркеры')
 
-  // Удаляем старые маркеры
   markersMap.value.forEach(marker => {
     marker.remove()
   })
@@ -286,13 +522,27 @@ const updateMarkers = () => {
   addMarkers()
 }
 
-// Жизненный цикл
+// ✅ Переключение на карточку по ID
+const selectAdById = (adId) => {
+  const ad = props.ads.find(a => a.id === adId)
+  if (ad && ad.location) {
+    activeMarkerId.value = adId
+    updateMapCenter(ad.location)
+    // Открываем попап
+    setTimeout(() => {
+      const mappedAd = mapAdData(ad)
+      openPopup(mappedAd)
+    }, 500)
+  }
+}
+
+// ✅ Жизненный цикл
 onMounted(() => {
   console.log('📌 Компонент AdsMap смонтирован')
   initializeMap()
 })
 
-// Следим за изменениями center
+// ✅ Следим за изменениями
 watch(
   () => props.center,
   (newCenter) => {
@@ -303,7 +553,6 @@ watch(
   { deep: true }
 )
 
-// Следим за изменениями ads
 watch(
   () => props.ads,
   () => {
@@ -311,13 +560,23 @@ watch(
   },
   { deep: true }
 )
+
+watch(
+  () => props.selectedAdId,
+  (newId) => {
+    if (newId) {
+      selectAdById(newId)
+    }
+  }
+)
 </script>
 
 <style scoped>
 :deep(.maplibregl-popup-content) {
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 :deep(.maplibregl-popup-close-button) {
@@ -326,18 +585,10 @@ watch(
   right: 8px;
   top: 8px;
   font-size: 18px;
+  color: #6b7280;
 }
 
-.custom-marker-wrapper {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
+:deep(.maplibregl-popup-close-button:hover) {
+  background-color: #f3f4f6;
 }
 </style>

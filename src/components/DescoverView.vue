@@ -5,15 +5,7 @@
         severity="danger" 
         class="fixed top-4 left-4 right-4 z-50 max-w-md"
     />
-    
-    <div class="header flex h-full z-10 items-center justify-center">
-        <span v-if="ourLocation">
-            📍 {{ ourLocation.latitude.toFixed(4) }}, {{ ourLocation.longitude.toFixed(4) }}
-        </span>
-        <span v-else class="text-gray-500">
-            Получение геопозиции...
-        </span>
-    </div>
+
     
     <Splitter class="pb-10 h-full" style="height: 100vh" layout="vertical">
         <SplitterPanel :minSize="25">
