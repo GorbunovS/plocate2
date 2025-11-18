@@ -1,6 +1,6 @@
 <template>
-    <Splitter ref="splitterRef"  gutterSize="12" layout="vertical" style="height: 100vh">
-        <SplitterPanel ref="topSplit" min-size="20" class="flex items-center justify-center" :size="25" >
+    <Splitter ref="splitterRef" gutterSize="12" layout="vertical" style="height: 100vh">
+        <SplitterPanel ref="topSplit" min-size="20" class="flex items-center justify-center" :size="25">
             <Mapbox :options="mapOptions" style="height: 100vh" @load="onMapLoad">
                 <GeoJsonSource :data="geoJsonData">
                     <FillLayer :style="fillStyle" />
@@ -9,11 +9,8 @@
 
                 <Marker v-for="ad in worldAds" :key="ad.id" :lnglat="[ad.longitude, ad.latitude]">
                     <div @click="scrollToCard(ad.id)" class="marker">
-                        <Chip 
-                            rounded 
-                            :severity="ad.type === 'lost' ? 'success' : 'warn'"
-                            :class="{ 'ring-2 ring-primary': currentCardId === ad.id }"
-                        >
+                        <Chip rounded :severity="ad.type === 'lost' ? 'success' : 'warn'"
+                            :class="{ 'ring-2 ring-primary': currentCardId === ad.id }">
                             <Tag rounded>
                                 <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
                             </Tag>
@@ -21,26 +18,22 @@
                         </Chip>
                     </div>
                 </Marker>
-           
+
             </Mapbox>
-           
+
         </SplitterPanel>
-     
+
         <SplitterPanel min-size="20" :size="70" class="flex flex-col overflow-hidden">
-            <div class="w-full h-3 justify-items-center p-1 relative"><div class="flex w-10 h-1 rounded bg-gray-50 center-0 absolute"> </div></div>
-               
+            <div class="w-full h-3 justify-items-center p-1 relative">
+                <div class="flex w-10 h-1 rounded bg-gray-50 center-0 "> </div>
+            </div>
+
             <div class="overflow-y-auto flex-1 p-4">
-             
-                <div 
-                    v-for="ad in worldAds" 
-                    :key="ad.id" 
-                    :ref="(el) => setCardRef(el, ad.id)"
-                > 
-                    <Card 
-                        class="mb-4 border border-gray-200 dark:border-gray-600 transition-all cursor-pointer"
+
+                <div v-for="ad in worldAds" :key="ad.id" :ref="(el) => setCardRef(el, ad.id)">
+                    <Card class="mb-4 border border-gray-200 dark:border-gray-600 transition-all cursor-pointer"
                         :class="{ 'bg-gray-100 dark:bg-gray-800 shadow-lg': currentCardId === ad.id }"
-                        @click="currentCardId = ad.id"
-                    >
+                        @click="currentCardId = ad.id">
                         <template #header>
                             <div class="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
                                 <div class="flex items-center gap-2">
@@ -52,35 +45,35 @@
                                     </Tag>
                                 </div>
                                 <span class="text-sm text-gray-500">{{ getSearchDuration(ad.updated_at) }}</span>
-                                 
+
                             </div>
-                        
+
 
                         </template>
 
                         <template #content>
-                            <div class="images-container flex flex-row gap-2 w-full py-2 h-24 overflow-hidden">
-                            <Image preview v-for="image in ad.images" :src="image" alt="Image" />
-                        </div>
-                            <div class="flex items-start gap-3">
-                                        
-                                            <Avatar
-                                                :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
-                                                size="normal" 
-                                                shape="circle"
-                                            />
-                                            <p class="text-sm text-left flex-1 ">{{ ad.description }}</p>
-                                            <Button icon="pi pi-send" class="w-full" />
-                                        </div>
-                          
+                            <div class="images-container items-center flex flex-row gap-2 w-full py-2 h-24 overflow-hidden">
+                                <Image v-for="image in ad.images" :key="image" :src="image" alt="Image"
+                                    class="max-w-18 h-full object-cover flex-1" />
+                            </div>
+
+                            <div class="flex items-start mt-2 gap-3">
+
+                                <Avatar
+                                    :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
+                                    size="normal" shape="circle" />
+                                <p class="text-sm text-left flex-1 ">{{ ad.description }}</p>
+                                <Button icon="pi pi-send" class="w-full" />
+                            </div>
+
                         </template>
 
                         <template #footer>
-                              
-                                <p class="flex items-center gap-2 text-sm text-gray-500">
-                                    <i class="pi pi-map"></i>
-                                    <span class="truncate">{{ ad.address }}</span>
-                                </p>
+
+                            <p class="flex items-center gap-2 text-sm text-gray-500">
+                                <i class="pi pi-map"></i>
+                                <span class="truncate">{{ ad.address }}</span>
+                            </p>
 
                         </template>
                     </Card>
@@ -110,7 +103,7 @@ import {
 } from 'vue3-maplibre-gl';
 import 'vue3-maplibre-gl/dist/style.css';
 
-const currentCardId = ref(null) 
+const currentCardId = ref(null)
 const tgStore = useTgStore();
 
 const userStore = useUserStore();
@@ -121,29 +114,29 @@ const cardRefs = ref({})
 const splitterRef = ref(null)
 
 const resetToDefaults = () => {
-  splitterRef.value?.resetState()
+    splitterRef.value?.resetState()
 }
 
 const setCardRef = (el, adId) => {
-  if (el) {
-    cardRefs.value[adId] = el
-  }
+    if (el) {
+        cardRefs.value[adId] = el
+    }
 }
 
 // Функция для скролла к карточке (БЕЗ изменения currentCardId внутри)
 const scrollToCard = (adId) => {
-  currentCardId.value = adId // Устанавливаем текущую карточку
+    currentCardId.value = adId // Устанавливаем текущую карточку
     resetToDefaults()
-  nextTick(() => {
-    const cardElement = cardRefs.value[adId]
-    if (cardElement) {
-      cardElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'nearest'
-      })
-    }
-  })
+    nextTick(() => {
+        const cardElement = cardRefs.value[adId]
+        if (cardElement) {
+            cardElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest'
+            })
+        }
+    })
 }
 
 const responsiveOptions = ref([

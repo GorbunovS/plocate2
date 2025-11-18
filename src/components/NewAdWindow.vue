@@ -150,6 +150,7 @@ const saveAd = async () => {
       description: description.value,
       detected: detected.value,
       factual: factual.value,
+      sender_avatar_url:tgStore.userAvatar
     };
     await userStore.createNewAd(ad);
 
