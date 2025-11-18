@@ -4,7 +4,7 @@
     </div>
 
   <div class="h-screen w-full h-[vh60] flex flex-col overflow-auto bg-surface-ground dark:bg-surface-800">
-    
+      <BackButton @click="back" />
     <Dialog :position="'bottom'" class="w-full h-full" :style="{ maxHeight: '100vh' }" :modal="true"
       v-model:visible="mapIsOpen" @click="handleOutsideClick">
       <MapVew class="h-full w-full" :user-location="[ourLocation.latitude, ourLocation.longitude]"
@@ -87,6 +87,7 @@ import { storeToRefs } from 'pinia'
 import MapVew from './MapVew.vue';
 import { useUserStore } from '../store';
 import { Alert } from 'vue-tg';
+import { BackButton } from 'vue-tg'
 import {
   mountLocationManager,
   isLocationManagerMounting,

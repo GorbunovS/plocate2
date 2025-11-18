@@ -1,5 +1,5 @@
 <template>
-    <Splitter ref="splitterRef" gutterSize="12" layout="vertical" style="height: 100vh">
+    <Splitter ref="splitterRef"  gutterSize="12" layout="vertical" style="height: 100vh">
         <SplitterPanel ref="topSplit" min-size="20" class="flex items-center justify-center" :size="25" >
             <Mapbox :options="mapOptions" style="height: 100vh" @load="onMapLoad">
                 <GeoJsonSource :data="geoJsonData">
