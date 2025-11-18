@@ -25,7 +25,7 @@ const pinia = createPinia()
 
 
 
-// init();
+init();
 
 locationManager.isSupported(); 
 const app = createApp(App);
