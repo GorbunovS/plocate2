@@ -37,7 +37,7 @@ onMounted(() => {
     
     
     <div v-if="route.name !== 'newAd'"  class="flex flex-col fixed bottom-0 w-full pb-4 left-0 right-0 z-20 backdrop-blur bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center  ">
-    <ProgressBar class="w-full"  mode="indeterminate" style="height: 6px"></ProgressBar>
+    <ProgressBar v-if="userStore.loading" class="w-full"  mode="indeterminate" style="height: 6px"></ProgressBar>
       <ButtonGroup class="w-full flex justify-between">
     <Button 
       icon="pi pi-home" 
