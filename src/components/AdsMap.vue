@@ -60,7 +60,7 @@
                             <div class="flex items-start mt-2 gap-3">
 
                                 <Avatar
-                                    :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
+                                    :image="ad.senderAvatar_url || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
                                     size="normal" shape="circle" />
                                 <p class="text-sm text-left flex-1 ">{{ ad.description }}</p>
                                 <Button icon="pi pi-send" class="w-full" />
@@ -187,6 +187,8 @@ onMounted(() => {
 </script>
 
 <style>
+
+
 .maplibregl-ctrl {
     display: none;
 }

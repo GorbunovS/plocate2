@@ -11,7 +11,7 @@
         @save-location="saveLocation" @close-dialog="mapIsOpen = false" @click="handleOutsideClick" />
     </Dialog>
 
-    <!-- Контент шагов: скролл внутри, без сдвига viewport -->
+   
     <div v-if="currentStep === 1" class="flex-1 flex flex-col p-4 items-start gap-4 overflow-y-auto"
       @click="handleOutsideClick">
       <Alert v-if="showAlert" :message="alertMsg" @click.stop />
