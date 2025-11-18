@@ -2,7 +2,7 @@
         <div class="header flex h-25 z-10 items-center justify-center">
         
     </div>
- <Confirm message="Закрывая эту страницу вся информация сбросится" @close="handleConfirmClose" />
+ <Confirm v-model:visible="confirmClose" message="Закрывая эту страницу вся информация сбросится" @close="handleConfirmClose" />
   <div class="h-screen w-full h-[vh60] flex flex-col overflow-auto bg-surface-ground dark:bg-surface-800">
       <BackButton @click="back" />
     <Dialog :position="'bottom'" class="w-full h-full" :style="{ maxHeight: '100vh' }" :modal="true"
@@ -103,7 +103,7 @@ import { Confirm } from 'vue-tg';
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
-
+const confirmClose = ref(false);
 const tgStore = useTgStore();
 const user_id = computed(() => tgStore.userId);
 
@@ -162,7 +162,11 @@ const back = () => {
   if (currentStep.value > 1) {
     currentStep.value--;
   }
-  else router.push('/');
+  
+  else { 
+    confirmClose.value = true;
+    router.push('/');
+}
 }
 
 const saveLocation = async ({ center }) => {
