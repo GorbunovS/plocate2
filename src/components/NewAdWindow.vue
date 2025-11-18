@@ -1,18 +1,23 @@
 <template>
-        <div class="header flex h-25 z-10 items-center justify-center">
-        
+  <div class="header flex h-18 z-10 items-center justify-center">
+
+  </div>
+   <div class="card">
+        <ProgressBar style="height: 10px" :value="currentStep===3?100:((currentStep/3)*100)"> {{ currentStep }}/3 </ProgressBar>
     </div>
- <Confirm v-if="confirm" message="Закрывая эту страницу вся информация сбросится" @close="back()" />
+  <Confirm v-if="confirm" message="Закрывая эту страницу вся информация сбросится" @close="back()" />
   <div class="h-screen w-full h-[vh60] flex flex-col overflow-auto bg-surface-ground dark:bg-surface-800">
-      <BackButton @click="confirm = true" />
+    <BackButton @click="confirm = true" />
     <Dialog :position="'bottom'" class="w-full h-full" :style="{ maxHeight: '100vh' }" :modal="true"
       v-model:visible="mapIsOpen" @click="handleOutsideClick">
       <MapVew class="h-full w-full" :user-location="[ourLocation.latitude, ourLocation.longitude]"
         @save-location="saveLocation" @close-dialog="mapIsOpen = false" @click="handleOutsideClick" />
     </Dialog>
 
-   
-    <div v-if="currentStep === 1" class="flex-1 flex flex-col p-4 items-start gap-4 overflow-y-auto"
+ <Card v-if="currentStep === 1">
+  <template  #title>Объявление</template>
+  <template #content>
+    <div class=" flex justify-center flex-col p-4  gap-4 overflow-y-auto"
       @click="handleOutsideClick">
       <Alert v-if="showAlert" :message="alertMsg" @click.stop />
       <span class="text-sm text-gray-500 italic">Тип объявления</span>
@@ -39,44 +44,55 @@
         </div>
       </div>
       <input type="file" ref="fileInput" @change="onFileSelect" accept="image/*" class="hidden" />
-      <span class="text-sm text-gray-500 italic">Место</span>
-      <Chip :label="selectedAddress || 'Адресс не выбран'" icon="pi pi-map-marker" />
+
+    </div>
+    </template>
+ </Card>
+    <Card v-if="currentStep === 2">
+       <template  #title>Место</template>
+        <template #content>
+        <div  class="text-sm flex flex-col justify-center p-4  center gap-4 overflow-y-auto"> 
+      <!-- <Chip :label="selectedAddress || 'Адресс не выбран'" icon="pi pi-map-marker" />
       <Button @click="openMap" icon="pi pi-map" label="Поделитесь местоположением" severity="success" variant="outlined"
         class="w-full" />
-      <div class="w-full text-center text-sm text-gray-500">{{ adress }}</div>
-      <FloatLabel class="w-full" variant="in">
+      <div class="w-full text-center text-sm text-gray-500">{{ adress }}</div> -->
+      <p>Укажите место где вы выделили вашего питомца</p>
+  
         <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="userStore.searchAddresses($event)"
-          optionLabel="name" class="w-full" @focus="handleInputFocus" @blur="handleInputBlur" />
-        <label for="username">Или введите адрес</label>
-      </FloatLabel>
-    </div>
+          optionLabel="name" @focus="handleInputFocus" @blur="handleInputBlur" placeholder="Введите адрес" />
+        
 
-    <div v-if="currentStep === 2" class="flex-1 flex flex-col p-4 items-start gap-4 overflow-y-auto"
+    </div>
+    </template>
+    </Card>
+    <Card v-if="currentStep === 3">
+      <template  #title>Дополнительная информация</template>
+      <template #content>
+    <div v-if="currentStep === 3" class=" flex justify-center flex-col p-4  gap-4 overflow-y-auto"
       @click="handleOutsideClick">
       <span class="text-lm">Опишите ситуацию</span>
-      <span class="text-sm text-left text-gray-300">
+      <span class="text-sm text-center text-gray-300">
         Постарайтесь как можно подробнее описать обстоятельства и животное для более качественного поиска
       </span>
       <Textarea v-model="description" rows="5" cols="30" :autoResize="true"
-        class="w-full h-24 border-1 text-xs p-2 rounded-md border-gray-400 dark:border-gray-600"
-        @focus="handleInputFocus" @blur="handleInputBlur" />
-      <span class="text-lm"> Время обнаружения пропажи</span>
-      <Calendar class="w-full" v-model="detected" showTime showOtherMonths dateFormat="dd.mm.yy" :showIcon="true"
-        @focus="handleInputFocus" @blur="handleInputBlur" />
+        class=" h-24 border-1 text-xs p-2 rounded-md border-gray-400 dark:border-gray-600" @focus="handleInputFocus"
+        @blur="handleInputBlur" />
+
       <span class="text-lm"> Фактическое(предполагаемое) время пропажи</span>
-      <Calendar class="w-full" v-model="factual" showTime showOtherMonths dateFormat="dd.mm.yy" :showIcon="true"
+      <Calendar v-model="factual" showTime showOtherMonths dateFormat="dd.mm.yy" :showIcon="true"
         @focus="handleInputFocus" @blur="handleInputBlur" />
     </div>
-
-
+</template>
+    </Card>
   </div>
   <div
     class="fixed bottom-0 left-0 pb-5 gap-4 right-0 backdrop-blur z-20 bg-surface-card dark:bg-surface-700 border-t min-h-16 border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
     <Button @click="back" icon="pi pi-angle-left" label="Назад" severity="secondary" variant="outlined"
       class="w-full sm:w-auto" />
-    <Button :label="currentStep === 2 ? 'Сохранить' : 'Далее'" severity="success"
-      @click="currentStep === 2 ? saveAd() : currentStep = 2" variant="outlined" class="w-full sm:w-auto" />
-    
+    <Button :label="currentStep >= 3 ? 'Сохранить' : 'Далее'" severity="success"
+      @click="currentStep === 3 ? saveAd() : currentStep = currentStep + 1" variant="outlined"
+      class="w-full sm:w-auto" />
+
   </div>
 </template>
 
@@ -88,6 +104,7 @@ import MapVew from './MapVew.vue';
 import { useUserStore } from '../store';
 import { Alert } from 'vue-tg';
 import { BackButton } from 'vue-tg'
+import { Card, AutoComplete,ProgressBar } from 'primevue';
 import {
   mountLocationManager,
   isLocationManagerMounting,
@@ -150,7 +167,7 @@ const saveAd = async () => {
       description: description.value,
       detected: detected.value,
       factual: factual.value,
-      sender_avatar_url:tgStore.userAvatar
+      sender_avatar_url: tgStore.userAvatar
     };
     await userStore.createNewAd(ad);
 
