@@ -5,7 +5,7 @@ import { computed, onMounted } from 'vue';
 import { useTgStore } from './store';
 import { useUserStore } from './store';
 import { useRouter, useRoute } from 'vue-router';
-
+import { ClosingConfirmation } from 'vue-tg'
 const route = useRoute();
 const currentPage = computed(() => route.name);
 const router = useRouter();
@@ -28,7 +28,7 @@ onMounted(() => {
 
 <template>
   <div>
-   
+   <ClosingConfirmation />
     <router-view></router-view>
     
     <div v-if="route.name !== 'newAd'"  class="fixed bottom-0 w-full pb-4 left-0 right-0 z-20 backdrop-blur bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">

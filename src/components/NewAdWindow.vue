@@ -4,7 +4,7 @@
     </div>
  <Confirm v-if="confirm" message="Закрывая эту страницу вся информация сбросится" @close="back()" />
   <div class="h-screen w-full h-[vh60] flex flex-col overflow-auto bg-surface-ground dark:bg-surface-800">
-      <BackButton @click="confirm.value = true" />
+      <BackButton @click="confirm = true" />
     <Dialog :position="'bottom'" class="w-full h-full" :style="{ maxHeight: '100vh' }" :modal="true"
       v-model:visible="mapIsOpen" @click="handleOutsideClick">
       <MapVew class="h-full w-full" :user-location="[ourLocation.latitude, ourLocation.longitude]"
@@ -103,7 +103,7 @@ import { Confirm } from 'vue-tg';
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
-const confirm = ref();
+const confirm = ref(false);
 const tgStore = useTgStore();
 const user_id = computed(() => tgStore.userId);
 
