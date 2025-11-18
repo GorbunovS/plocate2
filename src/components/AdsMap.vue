@@ -1,56 +1,104 @@
 <template>
-    <Splitter layout="vertical" style="height: 100vh">
-        <SplitterPanel class="flex items-center justify-center" :size="30">
+    <Splitter v-model="splitSizes" gutterSize="12" layout="vertical" style="height: 100vh">
+        <SplitterPanel min-size="20" class="flex items-center justify-center" >
             <Mapbox :options="mapOptions" style="height: 100vh" @load="onMapLoad">
                 <GeoJsonSource :data="geoJsonData">
                     <FillLayer :style="fillStyle" />
                     <CircleLayer :style="circleStyle" />
                 </GeoJsonSource>
 
-                <Marker v-for="(ad, index) in worldAds" :key="ad.id" :lnglat="[ad.longitude, ad.latitude]">
-                    <div class="marker">
-                        <Button :label="ad.id" icon="pi pi-map-marker" @click="togglePopover(index, $event)"
-                            severity="secondary" rounded />
+                <Marker v-for="ad in worldAds" :key="ad.id" :lnglat="[ad.longitude, ad.latitude]">
+                    <div @click="scrollToCard(ad.id)" class="marker">
+                        <Chip 
+                            rounded 
+                            :severity="ad.type === 'lost' ? 'success' : 'warn'"
+                            :class="{ 'ring-2 ring-primary': currentCardId === ad.id }"
+                        >
+                            <Tag rounded>
+                                <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
+                            </Tag>
+                            <span class="text-sm text-gray-500">{{ getSearchDuration(ad.updated_at) }}</span>
+                        </Chip>
                     </div>
                 </Marker>
-
+           
             </Mapbox>
+           
         </SplitterPanel>
-        <SplitterPanel :size="70" class="flex flex-col overflow-hidden">
-            <div class="w-full h-full overflow-y-auto">
-                <div v-for="(ad, id) in worldAds" :key="ad.id">
-                    <Card class="mb-4 pt-4 border border-gray-200 dark:border-gray-600">
-                        <template #header > <div class="flex pl-4 pr-4 flex-wrap  items-center justify-between gap-4">
-                             <Tag rounded :severity="ad.type === 'lost' ? 'success' : 'warn'" class="mr-2">
-                                <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
-                                </Tag>
-                                <Tag rounded severity="contrast" v-if="ad.type === 'lost'">Потерял {{ getAnimalTypeLabel(ad.animal_type) }}</Tag>
-                                <Tag rounded  severity="contrast" v-if="ad.type === 'found'">Ищет хозяина</Tag>
-                                {{ getSearchDuration(ad.updated_at) }}
+     
+        <SplitterPanel min-size="20" :size="70" class="flex flex-col overflow-hidden">
+            <div class="w-full h-3 justify-items-center p-1 relative"><div class="flex w-10 h-1 rounded bg-gray-50 center-0 absolute"> </div></div>
+               
+            <div class="overflow-y-auto flex-1 p-4">
+             
+                <div 
+                    v-for="ad in worldAds" 
+                    :key="ad.id" 
+                    :ref="(el) => setCardRef(el, ad.id)"
+                > 
+                    <Card 
+                        class="mb-4 border border-gray-200 dark:border-gray-600 transition-all cursor-pointer"
+                        :class="{ 'bg-gray-100 dark:bg-gray-800 shadow-lg': currentCardId === ad.id }"
+                        @click="currentCardId = ad.id"
+                    >
+                        <template #header>
+                            <div class="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
+                                <div class="flex items-center gap-2">
+                                    <Tag rounded :severity="ad.type === 'lost' ? 'success' : 'warn'">
+                                        <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
+                                    </Tag>
+                                    <Tag rounded severity="contrast">
+                                        {{ ad.type === 'lost' ? `Потерял ${getAnimalTypeLabel(ad.animal_type)}` : 'Ищет хозяина' }}
+                                    </Tag>
                                 </div>
-                             <Galleria :value="ad.images" :responsiveOptions="responsiveOptions" :numVisible="5" :circular="true" containerStyle="max-width: 340px"
-    :showItemNavigators="true" :showThumbnails="false">
-            <template #item="slotProps">
-                <img :src="slotProps.item" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain" />
-            </template>
-            <template #caption="slotProps">
-        <Avatar
-                :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
-                size="normal" shape="circle"> </Avatar> {{ ad.description }}
-    </template>
+                                <span class="text-sm text-gray-500">{{ getSearchDuration(ad.updated_at) }}</span>
+                            </div>
 
-        </Galleria>
-                           
+                            <!-- Галерея -->
+                            <div class="flex justify-center px-4 pb-4">
+                                <Galleria 
+                                    :value="ad.images" 
+                                    :responsiveOptions="responsiveOptions" 
+                                    :numVisible="5"
+                                    :circular="true" 
+                                    containerStyle="max-width: 340px; width: 100%"
+                                    :showItemNavigators="ad.images.length > 1"
+                                    :showThumbnails="false"
+                                >
+                                    <template #item="slotProps">
+                                        <img 
+                                            :src="slotProps.item" 
+                                            alt="Image"
+                                            class="w-full h-full object-contain rounded-xl shadow-md" 
+                                        />
+                                    </template>
+                                    <template #caption="slotProps">
+                                        <div class="flex items-start gap-3 p-3">
+                                            <Avatar
+                                                :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
+                                                size="normal" 
+                                                shape="circle"
+                                            />
+                                            <p class="text-sm">{{ ad.description }}</p>
+                                        </div>
+                                    </template>
+                                </Galleria>
+                            </div>
                         </template>
-                        <template #content> </template>
+
+                        <template #content>
+                            <!-- Адрес -->
+                            <div class="px-4 py-2">
+                                <p class="flex items-center gap-2 text-sm text-gray-500">
+                                    <i class="pi pi-map"></i>
+                                    <span class="truncate">{{ ad.address }}</span>
+                                </p>
+                            </div>
+                        </template>
+
                         <template #footer>
-                            <div class="flex flex-wrap  gap-4">
-                               
-                                <div class="w-full p-2">
-                                  
-                                    <p class="truncate text-sm text-gray-500"><i class="pi pi-map text-sm text-gray-500"></i> {{ ad.address }}</p>
-                                   
-                                </div>
+                            <div class="flex justify-center px-4 pb-4">
+                                <Button icon="pi pi-send" label="Откликнуться" class="w-full" />
                             </div>
                         </template>
                     </Card>
@@ -58,12 +106,11 @@
             </div>
         </SplitterPanel>
     </Splitter>
-
 </template>
 
 <script setup>
-import { ref, defineProps, onMounted } from 'vue';
-import { Button, Avatar, Galleria } from 'primevue';
+import { ref, onMounted, nextTick } from 'vue';
+import { Button, Avatar, Galleria, Chip } from 'primevue';
 import Card from 'primevue/card';
 import { Tag } from 'primevue';
 import Splitter from 'primevue/splitter';
@@ -72,11 +119,46 @@ import { useUserStore } from '../store';
 import { storeToRefs } from 'pinia';
 import { getAnimalTypeIcon, getAnimalTypeLabel, getSearchDuration } from '../helpers';
 import { useTgStore } from '../store';
+import {
+    Mapbox,
+    GeoJsonSource,
+    FillLayer,
+    CircleLayer,
+    Marker
+} from 'vue3-maplibre-gl';
+import 'vue3-maplibre-gl/dist/style.css';
 
+const currentCardId = ref(null) 
 const tgStore = useTgStore();
 
 const userStore = useUserStore();
 const { worldAds } = storeToRefs(useUserStore());
+
+const cardRefs = ref({})
+
+const splitSizes = ref([50, 50])
+
+const setCardRef = (el, adId) => {
+  if (el) {
+    cardRefs.value[adId] = el
+  }
+}
+
+// Функция для скролла к карточке (БЕЗ изменения currentCardId внутри)
+const scrollToCard = (adId) => {
+  currentCardId.value = adId // Устанавливаем текущую карточку
+  splitSizes.value = [20, 80]
+  nextTick(() => {
+    const cardElement = cardRefs.value[adId]
+    if (cardElement) {
+      cardElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      })
+    }
+  })
+}
 
 const responsiveOptions = ref([
     {
@@ -88,34 +170,6 @@ const responsiveOptions = ref([
         numVisible: 1
     }
 ]);
-
-const props = defineProps({
-
-    center: {
-        type: Array,
-        default: [0, 0]
-    }
-
-})
-
-
-
-
-import {
-    Mapbox,
-    GeoJsonSource,
-    FillLayer,
-    CircleLayer,
-    Marker
-} from 'vue3-maplibre-gl';
-
-import 'vue3-maplibre-gl/dist/style.css';
-
-const popoverRefs = ref([]);
-
-const togglePopover = (index, event) => {
-    popoverRefs.value[index]?.toggle(event);
-};
 
 const mapOptions = ref({
     style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=g7cM1vMR1viO2I3YInIA',
@@ -144,8 +198,6 @@ const circleStyle = ref({
     'circle-color': '#007cbf',
 });
 
-const showPopup = ref(true);
-
 function onMapLoad(map) {
     console.log('Map loaded:', map);
 }
@@ -161,8 +213,12 @@ onMounted(() => {
 }
 
 .marker {
-    font-size: 24px;
     cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.marker:hover {
+    transform: scale(1.1);
 }
 
 .popup-content {
