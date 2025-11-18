@@ -2,7 +2,7 @@
         <div class="header flex h-25 z-10 items-center justify-center">
         
     </div>
- <Confirm v-model:visible="confirm" message="Закрывая эту страницу вся информация сбросится" @close="back()" />
+ <Confirm :visible="confirm" message="Закрывая эту страницу вся информация сбросится" @close="back()" />
   <div class="h-screen w-full h-[vh60] flex flex-col overflow-auto bg-surface-ground dark:bg-surface-800">
       <BackButton @click="confirm.value = true" />
     <Dialog :position="'bottom'" class="w-full h-full" :style="{ maxHeight: '100vh' }" :modal="true"
