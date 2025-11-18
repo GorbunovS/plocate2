@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import MainView from '../components/MainView.vue';
 import NewAdWindow from '../components/NewAdWindow.vue';
-import DescoverView from '../components/DescoverView.vue';
+// import DescoverView from '../components/DescoverView.vue';
+import AdsMap from '../components/AdsMap.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +21,7 @@ const router = createRouter({
     {
       path:'/descover',
       name: 'descover',
-      component: DescoverView
+      component: AdsMap
     }
   ],
 });

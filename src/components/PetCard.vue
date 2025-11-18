@@ -58,6 +58,7 @@ import { Panel } from 'primevue';
 import { Avatar } from 'primevue';
 import Galleria from 'primevue/galleria';
 import { useTgStore } from '../store';
+import { getAnimalTypeIcon, getAnimalTypeLabel } from '../helpers';
 
 const tgStore = useTgStore();
 const menu = ref(null);
@@ -100,22 +101,8 @@ const responsiveOptions = ref([
     { breakpoint: '768px', numVisible: 3 },
     { breakpoint: '560px', numVisible: 1 }
 ]);
-const getAnimalTypeIcon = (type) => {
-    const labels = {
-        dog: 'las la-dog',
-        cat: 'las la-cat',
-        other: 'las la-paw',
-    }
-    return labels[type] || type
-}
-const getAnimalTypeLabel = (type) => {
-    const labels = {
-        dog: 'собаку',
-        cat: 'кошку',
-        other: 'петомца',
-    }
-    return labels[type] || type
-}
+
+
 
 
 const getAdTypeLabel = (type) => {
