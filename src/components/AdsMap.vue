@@ -52,54 +52,36 @@
                                     </Tag>
                                 </div>
                                 <span class="text-sm text-gray-500">{{ getSearchDuration(ad.updated_at) }}</span>
+                                 
                             </div>
+                        
 
-                            <!-- Галерея -->
-                            <div class="flex justify-center px-4 pb-4">
-                                <Galleria 
-                                    :value="ad.images" 
-                                    :responsiveOptions="responsiveOptions" 
-                                    :numVisible="5"
-                                    :circular="true" 
-                                    containerStyle="max-width: 340px; width: 100%"
-                                    :showItemNavigators="ad.images.length > 1"
-                                    :showThumbnails="false"
-                                >
-                                    <template #item="slotProps">
-                                        <img 
-                                            :src="slotProps.item" 
-                                            alt="Image"
-                                            class="w-full h-full object-contain rounded-xl shadow-md" 
-                                        />
-                                    </template>
-                                    <template #caption="slotProps">
-                                        <div class="flex items-start gap-3 p-3">
+                        </template>
+
+                        <template #content>
+                            <div class="images-container flex flex-row gap-2 w-full py-2 h-24 overflow-hidden">
+                            <Image preview v-for="image in ad.images" :src="image" alt="Image" />
+                        </div>
+                            <div class="flex items-start gap-3">
+                                        
                                             <Avatar
                                                 :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
                                                 size="normal" 
                                                 shape="circle"
                                             />
-                                            <p class="text-sm">{{ ad.description }}</p>
+                                            <p class="text-sm text-left flex-1 ">{{ ad.description }}</p>
+                                            <Button icon="pi pi-send" class="w-full" />
                                         </div>
-                                    </template>
-                                </Galleria>
-                            </div>
+                          
                         </template>
 
-                        <template #content>
-                            <!-- Адрес -->
-                            <div class="px-4 py-2">
+                        <template #footer>
+                              
                                 <p class="flex items-center gap-2 text-sm text-gray-500">
                                     <i class="pi pi-map"></i>
                                     <span class="truncate">{{ ad.address }}</span>
                                 </p>
-                            </div>
-                        </template>
 
-                        <template #footer>
-                            <div class="flex justify-center px-4 pb-4">
-                                <Button icon="pi pi-send" label="Откликнуться" class="w-full" />
-                            </div>
                         </template>
                     </Card>
                 </div>
@@ -110,7 +92,7 @@
 
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
-import { Button, Avatar, Galleria, Chip } from 'primevue';
+import { Button, Avatar, Image, Chip } from 'primevue';
 import Card from 'primevue/card';
 import { Tag } from 'primevue';
 import Splitter from 'primevue/splitter';
