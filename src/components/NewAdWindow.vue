@@ -2,9 +2,9 @@
         <div class="header flex h-25 z-10 items-center justify-center">
         
     </div>
- <Confirm v-model:visible="confirmClose" message="Закрывая эту страницу вся информация сбросится" @close="handleConfirmClose" />
+ <Confirm v-model:visible="confirm" message="Закрывая эту страницу вся информация сбросится" @close="back()" />
   <div class="h-screen w-full h-[vh60] flex flex-col overflow-auto bg-surface-ground dark:bg-surface-800">
-      <BackButton @click="back" />
+      <BackButton @click="confirm.value = true" />
     <Dialog :position="'bottom'" class="w-full h-full" :style="{ maxHeight: '100vh' }" :modal="true"
       v-model:visible="mapIsOpen" @click="handleOutsideClick">
       <MapVew class="h-full w-full" :user-location="[ourLocation.latitude, ourLocation.longitude]"
@@ -103,7 +103,7 @@ import { Confirm } from 'vue-tg';
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
-const confirmClose = ref(false);
+const confirm = ref();
 const tgStore = useTgStore();
 const user_id = computed(() => tgStore.userId);
 
@@ -126,8 +126,7 @@ const status = ref('');
 const alertMsg = ref('');
 const showAlert = ref(false);
 
-// const miniApp = useMiniApp();
-// const locationManager = useLocationManager();
+
 const adType = ref(null);
 const petType = ref(null);
 const images = ref([]);
@@ -162,11 +161,7 @@ const back = () => {
   if (currentStep.value > 1) {
     currentStep.value--;
   }
-  
-  else { 
-    confirmClose.value = true;
-    router.push('/');
-}
+  else router.push('/');
 }
 
 const saveLocation = async ({ center }) => {
