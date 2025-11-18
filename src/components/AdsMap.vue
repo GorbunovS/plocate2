@@ -1,6 +1,6 @@
 <template>
-    <Splitter v-model="splitSizes" gutterSize="12" layout="vertical" style="height: 100vh">
-        <SplitterPanel min-size="20" class="flex items-center justify-center" >
+    <Splitter ref="splitterRef" gutterSize="12" layout="vertical" style="height: 100vh">
+        <SplitterPanel ref="topSplit" min-size="20" class="flex items-center justify-center" :size="25" >
             <Mapbox :options="mapOptions" style="height: 100vh" @load="onMapLoad">
                 <GeoJsonSource :data="geoJsonData">
                     <FillLayer :style="fillStyle" />
@@ -136,7 +136,11 @@ const { worldAds } = storeToRefs(useUserStore());
 
 const cardRefs = ref({})
 
-const splitSizes = ref([50, 50])
+const splitterRef = ref(null)
+
+const resetToDefaults = () => {
+  splitterRef.value?.resetState()
+}
 
 const setCardRef = (el, adId) => {
   if (el) {
@@ -147,7 +151,7 @@ const setCardRef = (el, adId) => {
 // Функция для скролла к карточке (БЕЗ изменения currentCardId внутри)
 const scrollToCard = (adId) => {
   currentCardId.value = adId // Устанавливаем текущую карточку
-  splitSizes.value = [20, 80]
+    resetToDefaults()
   nextTick(() => {
     const cardElement = cardRefs.value[adId]
     if (cardElement) {
