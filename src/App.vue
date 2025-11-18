@@ -6,6 +6,7 @@ import { useTgStore } from './store';
 import { useUserStore } from './store';
 import { useRouter, useRoute } from 'vue-router';
 import { ClosingConfirmation } from 'vue-tg'
+import ProgressBar from 'primevue/progressbar';
 const route = useRoute();
 const currentPage = computed(() => route.name);
 const router = useRouter();
@@ -29,10 +30,15 @@ onMounted(() => {
 <template>
   <div>
    <ClosingConfirmation />
-    <router-view></router-view>
     
-    <div v-if="route.name !== 'newAd'"  class="fixed bottom-0 w-full pb-4 left-0 right-0 z-20 backdrop-blur bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center px-4 py-2">
-  <ButtonGroup class="w-full flex justify-between">
+    <router-view>
+      
+    </router-view>
+    
+    
+    <div v-if="route.name !== 'newAd'"  class="flex flex-col fixed bottom-0 w-full pb-4 left-0 right-0 z-20 backdrop-blur bg-surface-card dark:bg-surface-700 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center  ">
+    <ProgressBar class="w-full"  mode="indeterminate" style="height: 6px"></ProgressBar>
+      <ButtonGroup class="w-full flex justify-between">
     <Button 
       icon="pi pi-home" 
       :severity="currentPage === 'home' ? 'success' : 'secondary'" 
@@ -40,6 +46,7 @@ onMounted(() => {
       size="large" 
       @click="handleNavigation('/')"
     />
+
     <Button 
       icon="pi pi-plus" 
       severity="secondary" 
@@ -55,6 +62,7 @@ onMounted(() => {
       @click="handleNavigation('descover')"
     />
   </ButtonGroup>
+
 </div>
   </div>
 

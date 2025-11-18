@@ -32,8 +32,7 @@
       </div>
       </div>
     </div>  
-
- 
+    
   </div>
 </template>
 
@@ -43,6 +42,9 @@ import NewAdWindow from '../components/NewAdWindow.vue'
 import Pl_logo from '../assets/pl_logo.svg';
 import Pl_logo_dark from '../assets/pl_logo_dark.svg';
 import Jook from '/src/assets/jook.png';
+
+
+
 import '../style.css';
 import { useUserStore } from '../store';
 import { storeToRefs } from 'pinia';

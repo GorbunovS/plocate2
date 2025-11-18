@@ -37,6 +37,7 @@ export const useUserStore = defineStore("user", {
     selectedAddress: "",
     ads: [],
     worldAds: [],
+    loading: false,
   }),
 
   actions: {
@@ -58,6 +59,7 @@ export const useUserStore = defineStore("user", {
       })
     },
     async getUserAds(user_id) {
+      this.loading = true;
       const response = await fetch(
         "https://petlocate.ru/webhook/getUserAdds",
         {
@@ -72,9 +74,11 @@ export const useUserStore = defineStore("user", {
       );
        const data = await response.json();
       this.ads = Array.isArray(data) ? data : [data];
+      this.loading = false;
     },
 
       async getAllAds() {
+        this.loading = true;
       const response = await fetch(
         "https://petlocate.ru/webhook/getAllAds",
         {
@@ -87,9 +91,11 @@ export const useUserStore = defineStore("user", {
       );
        const data = await response.json();
         this.worldAds = Array.isArray(data) ? data : [data];
+        this.loading = false;
     },
 
     async createNewAd(ad) {
+      this.loading = true;
       await fetch("https://petlocate.ru/webhook/newFindAdd", {
         method: "POST",
         headers: {
@@ -101,6 +107,7 @@ export const useUserStore = defineStore("user", {
       }).then((response) => {
         if (response.ok) {
           window.location.reload();
+          this.loading = false;
           router.push({ name: "home" });
         } else {
         
