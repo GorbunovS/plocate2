@@ -1,9 +1,13 @@
 <template>
+  <Dialog :position="'bottom'" class="w-full h-full" :style="{ maxHeight: '100vh' }" :modal="true"
+    v-model:visible="showMap" @click="handleOutsideClick">
+    <GetCoordWindow :my-coord="[ourLocation.longitude, ourLocation.latitude]" />
+  </Dialog>
   <div class="header flex h-18 z-10 items-center justify-center">
 
   </div>
    <div class="card">
-        <ProgressBar style="height: 10px" :value="currentStep===3?100:((currentStep/3)*100)"> {{ currentStep }}/3 </ProgressBar>
+        <ProgressBar style="height: 15px" :value="currentStep===3?100:((currentStep/3)*100)"> {{ currentStep }}/3 </ProgressBar>
     </div>
   <Confirm v-if="confirm" message="Закрывая эту страницу вся информация сбросится" @close="back()" />
   <div class="h-screen w-full h-[vh60] flex flex-col overflow-auto bg-surface-ground dark:bg-surface-800">
@@ -14,7 +18,7 @@
         @save-location="saveLocation" @close-dialog="mapIsOpen = false" @click="handleOutsideClick" />
     </Dialog>
 
- <Card v-if="currentStep === 1">
+ <Card style="margin: 2rem;" v-if="currentStep === 1">
   <template  #title>Объявление</template>
   <template #content>
     <div class=" flex justify-center flex-col p-4  gap-4 overflow-y-auto"
@@ -48,7 +52,7 @@
     </div>
     </template>
  </Card>
-    <Card v-if="currentStep === 2">
+    <Card style="margin: 2rem;" v-if="currentStep === 2">
        <template  #title>Место</template>
         <template #content>
         <div  class="text-sm flex flex-col justify-center p-4  center gap-4 overflow-y-auto"> 
@@ -56,16 +60,17 @@
       <Button @click="openMap" icon="pi pi-map" label="Поделитесь местоположением" severity="success" variant="outlined"
         class="w-full" />
       <div class="w-full text-center text-sm text-gray-500">{{ adress }}</div> -->
-      <p>Укажите место где вы выделили вашего питомца</p>
+      <p>Поделитесь местом утери/обнаружения питомца</p>
   
         <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="userStore.searchAddresses($event)"
           optionLabel="name" @focus="handleInputFocus" @blur="handleInputBlur" placeholder="Введите адрес" />
         
 
     </div>
+    <Button @click="showMap = true" label="Или поделись геопозицией" icon="pi pi-map-marker"></Button>
     </template>
     </Card>
-    <Card v-if="currentStep === 3">
+    <Card style="margin: 2rem;" v-if="currentStep === 3">
       <template  #title>Дополнительная информация</template>
       <template #content>
     <div v-if="currentStep === 3" class=" flex justify-center flex-col p-4  gap-4 overflow-y-auto"
@@ -74,7 +79,7 @@
       <span class="text-sm text-center text-gray-300">
         Постарайтесь как можно подробнее описать обстоятельства и животное для более качественного поиска
       </span>
-      <Textarea v-model="description" rows="5" cols="30" :autoResize="true"
+      <Textarea placeholder="Начните с клички питомца" v-model="description" rows="5" cols="30" :autoResize="true"
         class=" h-24 border-1 text-xs p-2 rounded-md border-gray-400 dark:border-gray-600" @focus="handleInputFocus"
         @blur="handleInputBlur" />
 
@@ -117,12 +122,15 @@ import { Calendar } from 'primevue';
 import Textarea from 'primevue/textarea';
 import { useTgStore } from '../store';
 import { Confirm } from 'vue-tg';
+import GetCoordWindow from './GetCoordWindow.vue';
+
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const confirm = ref(false);
 const tgStore = useTgStore();
 const user_id = computed(() => tgStore.userId);
+const showMap = ref(false);
 
 
 const currentStep = ref(1);

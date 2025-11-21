@@ -52,18 +52,17 @@
                         </template>
 
                         <template #content>
-                            <div class="images-container items-center flex flex-row gap-2 w-full py-2 h-24 overflow-hidden">
-                                <Image v-for="image in ad.images" :key="image" :src="image" alt="Image"
-                                    class="max-w-18 h-full object-cover flex-1" />
-                            </div>
-
-                            <div class="flex items-start mt-2 gap-3">
+                                                        <div class="flex items-start mt-2 gap-3">
 
                                 <Avatar
                                     :image="ad.senderAvatar_url || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
                                     size="normal" shape="circle" />
                                 <p class="text-sm text-left flex-1 ">{{ ad.description }}</p>
-                                <Button icon="pi pi-send" class="w-full" />
+                                
+                            </div>
+                            <div class="images-container items-center flex flex-row gap-2 w-full py-2 h-24 overflow-hidden">
+                                <Image v-for="image in ad.images" :key="image" :src="image" alt="Image"
+                                    class="max-w-18 h-full object-cover flex-1" />
                             </div>
 
                         </template>
@@ -72,7 +71,8 @@
 
                             <p class="flex items-center gap-2 text-sm text-gray-500">
                                 <i class="pi pi-map"></i>
-                                <span class="truncate">{{ ad.address }}</span>
+                                <span class="truncate items-center flex-1">{{ ad.address }}</span>
+                                <Button icon="pi pi-send" class="w-full" />
                             </p>
 
                         </template>

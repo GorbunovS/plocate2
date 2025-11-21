@@ -16,7 +16,7 @@
       <p  class="text-sm text-gray-600 dark:text-gray-400">Мы поможем найти вашего питомца или возможного хозяина</p>
          <div class="actions p-4 flex  flex-col gap-2 sm:gap-4 w-full justify-center ">
 
-      <Button icon="pi pi-plus" label="Добавить объявление"  severity="success" variant="outlined" @click="currentPage = 'newAd'" class=" sm:w-auto" />
+      <Button icon="pi pi-plus" label="Добавить объявление"  severity="success" variant="outlined" @click="router.push('/newAd')" class=" sm:w-auto" />
 
     </div>
     </div>
@@ -49,6 +49,7 @@ import '../style.css';
 import { useUserStore } from '../store';
 import { storeToRefs } from 'pinia';
 import PetCard from './PetCard.vue';
+import router from '../router';
 
 const userStore = useUserStore();
 const { ads } = storeToRefs(userStore);
