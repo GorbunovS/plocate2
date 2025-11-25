@@ -11,7 +11,7 @@
                     <div @click="scrollToCard(ad.id)" class="marker">
                         <Chip rounded :severity="ad.type === 'lost' ? 'success' : 'warn'"
                             :class="{ 'ring-2 ring-primary': currentCardId === ad.id }">
-                            <Tag rounded>
+                            <Tag :severity="ad.type === 'lost' ? 'success' : 'warn'" rounded>
                                 <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
                             </Tag>
                             <span class="text-sm text-gray-500">{{ getSearchDuration(ad.updated_at) }}</span>
@@ -36,6 +36,14 @@
                         @click="currentCardId = ad.id">
                         <template #header>
                             <div class="flex items-center justify-between gap-3 px-4 pt-4 pb-3">
+                                                       
+
+                                <Avatar
+                                    :image="ad.senderAvatar_url || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
+                                    size="normal" shape="circle" />
+                            
+                                
+                            
                                 <div class="flex items-center gap-2">
                                     <Tag rounded :severity="ad.type === 'lost' ? 'success' : 'warn'">
                                         <i class="text-xl" :class="getAnimalTypeIcon(ad.animal_type)"></i>
@@ -52,18 +60,15 @@
                         </template>
 
                         <template #content>
-                                                        <div class="flex items-start mt-2 gap-3">
 
-                                <Avatar
-                                    :image="ad.senderAvatar_url || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
-                                    size="normal" shape="circle" />
-                                <p class="text-sm text-left flex-1 ">{{ ad.description }}</p>
-                                
-                            </div>
                             <div class="images-container items-center flex flex-row gap-2 w-full py-2 h-24 overflow-hidden">
-                                <Image v-for="image in ad.images" :key="image" :src="image" alt="Image"
+                                <Image preview v-for="image in ad.images" :key="image" :src="image" alt="Image"
                                     class="max-w-18 h-full object-cover flex-1" />
                             </div>
+                               <p class="text-sm text-left flex-1 ">
+                                <i class="pi pi-comment"></i>
+                                {{ ad.description }}
+                            </p>
 
                         </template>
 
