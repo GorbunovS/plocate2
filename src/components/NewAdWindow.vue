@@ -131,7 +131,8 @@ const confirm = ref(false);
 const tgStore = useTgStore();
 const user_id = computed(() => tgStore.userId);
 const showMap = ref(false);
-
+const rawFiles = ref([])
+const previewImages = ref([])
 
 const currentStep = ref(1);
 
@@ -167,7 +168,7 @@ const saveAd = async () => {
       adType: adType.value.value,
       petType: petType.value.value,
       images: imageUrls.value,
-      userAvatar:tgStore.userAvatar,
+      userAvatar:tgStore.userAvatar || "null",
       phoneNumber:"",
       location: {
         name: status.value.name,
@@ -179,7 +180,7 @@ const saveAd = async () => {
       factual: factual.value,
       sender_avatar_url: tgStore.userAvatar
     };
-    await userStore.createNewAd(ad);
+    await userStore.createNewAd(ad, rawFiles.value);
 
   }
 };
@@ -265,19 +266,19 @@ const uploudNewImage = async (file) => {
 }
 
 
-
 const onFileSelect = (event) => {
   const file = event.target.files[0];
   if (!file) return;
-  if (images.value.length >= 3) return; // Лимит
+  
+  // Для превью (чтобы показать юзеру сейчас)
   const reader = new FileReader();
-
-  uploudNewImage(file);
   reader.onload = (e) => {
-    images.value.push(e.target.result);
-    event.target.value = '';
+    // previewImages - это массив строк base64 чисто для отображения в <img src="...">
+    previewImages.value.push(e.target.result); 
   };
   reader.readAsDataURL(file);
+
+  rawFiles.value.push(file); 
 };
 
 const removeImage = (index) => {

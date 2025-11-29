@@ -12,11 +12,11 @@ export const useTgStore = defineStore("tg", () => {
   const initData = computed(() => miniApp.initData);
   const userId = computed(() => miniApp.initDataUnsafe?.user?.id);
   const user = computed(() => miniApp.initDataUnsafe?.user);
-  const userAvatar = computed(() =>miniApp.initDataUnsafe?.user?.photo_url )
-  const userName = computed(() =>miniApp.initDataUnsafe?.user?.username)
+  const userAvatar = computed(() => miniApp.initDataUnsafe?.user?.photo_url)
+  const userName = computed(() => miniApp.initDataUnsafe?.user?.username)
   const userLocation = computed(() => miniApp.initDataUnsafe?.user?.location);
 
-  const initializeAuth = async () => {};
+  const initializeAuth = async () => { };
 
   return {
     isAuthenticated,
@@ -54,7 +54,7 @@ export const useUserStore = defineStore("user", {
         }),
       }).then((response) => {
         if (response.ok) {
-         window.location.reload();
+          window.location.reload();
         } else {
           console.error("Failed to delete ad");
         }
@@ -70,17 +70,17 @@ export const useUserStore = defineStore("user", {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-          userId:323680895, //
+            userId: 323680895, //
           }),
         }
       );
-       const data = await response.json();
+      const data = await response.json();
       this.ads = Array.isArray(data) ? data : [data];
       this.loading = false;
     },
 
-      async getAllAds() {
-        this.loading = true;
+    async getAllAds() {
+      this.loading = true;
       const response = await fetch(
         "https://petlocate.ru/webhook/getAllAds",
         {
@@ -91,29 +91,29 @@ export const useUserStore = defineStore("user", {
 
         }
       );
-       const data = await response.json();
-        this.worldAds = Array.isArray(data) ? data : [data];
-        console.log(this.worldAds)
-        this.loading = false;
+      const data = await response.json();
+      this.worldAds = Array.isArray(data) ? data : [data];
+      console.log(this.worldAds)
+      this.loading = false;
     },
 
-    async createNewAd(ad) {
+    async createNewAd(adData, files) {
       this.loading = true;
+      const formData = new FormData();
+      formData.append('ad', JSON.stringify(adData));
+      files.forEach((file, index) => {
+        formData.append(`images`, file);
+      });
       await fetch("https://petlocate.ru/webhook/newFindAdd", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ad: ad,
-        }),
+         body: formData,
       }).then((response) => {
         if (response.ok) {
           window.location.reload();
           this.loading = false;
           router.push('/');
         } else {
-        
+
         }
       });
     },
