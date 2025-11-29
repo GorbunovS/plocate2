@@ -1,7 +1,9 @@
 import { defineStore } from "pinia";
 import { useMiniApp, usePopup } from "vue-tg";
 import { ref, computed } from "vue";
-import router from "../router";
+import { useRouter, useRoute } from 'vue-router';
+
+const router = useRouter()
 
 
 export const useTgStore = defineStore("tg", () => {
