@@ -13,6 +13,7 @@ export const useTgStore = defineStore("tg", () => {
   const userId = computed(() => miniApp.initDataUnsafe?.user?.id);
   const user = computed(() => miniApp.initDataUnsafe?.user);
   const userAvatar = computed(() =>miniApp.initDataUnsafe?.user?.photo_url )
+  const userName = computed(() =>miniApp.initDataUnsafe?.user?.username)
   const userLocation = computed(() => miniApp.initDataUnsafe?.user?.location);
 
   const initializeAuth = async () => {};
@@ -25,7 +26,8 @@ export const useTgStore = defineStore("tg", () => {
     miniApp,
     initializeAuth,
     userAvatar,
-    userLocation
+    userLocation,
+    userName
   };
 });
 export const useUserStore = defineStore("user", {
@@ -68,7 +70,7 @@ export const useUserStore = defineStore("user", {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-          userId:user_id //323680895, //
+          userId:323680895, //
           }),
         }
       );
@@ -91,6 +93,7 @@ export const useUserStore = defineStore("user", {
       );
        const data = await response.json();
         this.worldAds = Array.isArray(data) ? data : [data];
+        console.log(this.worldAds)
         this.loading = false;
     },
 

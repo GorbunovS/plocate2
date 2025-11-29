@@ -39,7 +39,7 @@
                                                        
 
                                 <Avatar
-                                    :image="ad.senderAvatar_url || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
+                                    :image="ad.avatarUrl || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
                                     size="normal" shape="circle" />
                             
                                 

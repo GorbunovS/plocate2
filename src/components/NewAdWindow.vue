@@ -164,7 +164,6 @@ const saveAd = async () => {
     const ad = {
       userId: user_id.value || 0,
       userName: tgStore.username || 'unknown',
-
       adType: adType.value.value,
       petType: petType.value.value,
       images: imageUrls.value,

@@ -3,7 +3,8 @@
         
     </div>
 <div class="body flex flex-col gap-5 overflow-hidden pb-24">
-    
+    {{ tgStore.userAvatar }}
+    {{ tgStore.userName }}
     <div v-if="currentPage === 'newAd'">
       <NewAdWindow
       @back="currentPage = 'home'"
@@ -47,10 +48,12 @@ import Jook from '/src/assets/jook.png';
 
 import '../style.css';
 import { useUserStore } from '../store';
+import { useTgStore } from '../store';
 import { storeToRefs } from 'pinia';
 import PetCard from './PetCard.vue';
 import router from '../router';
 
+const tgStore = useTgStore()
 const userStore = useUserStore();
 const { ads } = storeToRefs(userStore);
 
