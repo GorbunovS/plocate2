@@ -163,11 +163,11 @@ const saveAd = async () => {
   if (adType.value && petType.value) {
     const ad = {
       userId: user_id.value || 0,
-      userName: tgStore.username || 'unknown',
+      userName: tgStore.userName || 'unknown',
       adType: adType.value.value,
       petType: petType.value.value,
       images: imageUrls.value,
-      userAvatar:tgStore.user.photo_url,
+      userAvatar:tgStore.userAvatar,
       phoneNumber:"",
       location: {
         name: status.value.name,

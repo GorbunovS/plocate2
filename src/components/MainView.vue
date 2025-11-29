@@ -3,8 +3,11 @@
         
     </div>
 <div class="body flex flex-col gap-5 overflow-hidden pb-24">
-    {{ tgStore.userAvatar }}
-    {{ tgStore.userName }}
+    <Avatar
+     :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
+     size="normal" shape="circle" />
+
+     {{ tgStore.userName }}
     <div v-if="currentPage === 'newAd'">
       <NewAdWindow
       @back="currentPage = 'home'"
