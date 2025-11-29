@@ -10,8 +10,11 @@
 
      {{ tgStore.userName }}
      
-      <PostWidget
-        :url="PetLocateAds/10"
+      <PostWidget v-for="ad in ads" :key="ad.id"
+        :url="'PetLocateAds/'+ad.telegram_message_id"
+        :width="100"
+        dark="true"
+        color="29B127"
       />
     
     <div v-if="currentPage === 'newAd'">

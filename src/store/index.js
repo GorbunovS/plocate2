@@ -70,7 +70,7 @@ export const useUserStore = defineStore("user", {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId: 323680895, //
+            userId: user_id, //
           }),
         }
       );
