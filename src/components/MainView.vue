@@ -27,7 +27,7 @@
       <div v-else class="flex space-x-4 flex-row w-full justify-between items-center">
         
       <span  class="text-lg font-semibold"> Мои объявления</span>
-      <Button icon="pi pi-plus" size="small" severity="success" rounded @click="handleNewAdClick"/>
+      <Button icon="pi pi-plus" size="small" severity="success" rounded @click="router.push('/newAd')"/>
       </div>
       
       <div class="w-full h-[60vh] overflow-y-auto">
