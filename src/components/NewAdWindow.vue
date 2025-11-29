@@ -169,7 +169,7 @@ const saveAd = async () => {
       petType: petType.value.value,
       images: imageUrls.value,
       userAvatar:tgStore.user.photo_url,
-      phone_number:"",
+      phoneNumber:"",
       location: {
         name: status.value.name,
         coordinates: { latitude: status.value.data.geo_lat, longitude: status.value.data.geo_lon } || null
