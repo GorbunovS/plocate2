@@ -9,13 +9,14 @@
      size="normal" shape="circle" />
 
      {{ tgStore.userName }}
-     
+      <div class="grid w-full  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2" v-if="ads">
       <PostWidget v-for="ad in ads" :key="ad.id"
         :url="'PetLocateAds/'+ad.telegram_message_id"
-        :width="100"
+        :width="50"
         dark="true"
-        color="29B127"
+        color="FFFFFF"
       />
+</div>
     
     <div v-if="currentPage === 'newAd'">
       <NewAdWindow
