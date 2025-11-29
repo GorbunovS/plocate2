@@ -9,13 +9,11 @@
      size="normal" shape="circle" />
 
      {{ tgStore.userName }}
-      <div v-for="ad in ads" class="telegram-widget-container">
+     
       <PostWidget
-        :post="ad.telegram_chat_id" 
-        user-pic="true" 
-        width="100%" 
+        :url="PetLocateAds/10"
       />
-    </div>
+    
     <div v-if="currentPage === 'newAd'">
       <NewAdWindow
       @back="currentPage = 'home'"
