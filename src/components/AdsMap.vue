@@ -40,7 +40,7 @@
 
                                 <Avatar
                                     :image="ad.avatar_url || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
-                                    size="normal" shape="circle" />
+                                    size="normal" shape="circle"  @click="contactOwner(ad.name, ad.phone_number)" />
                             
                                 
                             
@@ -115,8 +115,6 @@ const userStore = useUserStore();
 const { worldAds } = storeToRefs(useUserStore());
 
 const contactOwner = (userName, phoneNumber) => {
- 
-  // Приоритет: username -> телефон -> ничего
   if (telegram_username) {
     openLink(`https://t.me/${userName}`);
   } else if (phoneNumber) {
