@@ -77,7 +77,7 @@
                             <p class="flex items-center gap-2 text-sm text-gray-500">
                                 <i class="pi pi-map"></i>
                                 <span class="truncate items-center flex-1">{{ ad.address }}</span>
-                                <Button icon="pi pi-send" class="w-full" />
+                                <Button @click="contactOwner(ad.name, ad.phone_number)" icon="pi pi-send" class="w-full" />
                             </p>
 
                         </template>
@@ -113,6 +113,19 @@ const tgStore = useTgStore();
 
 const userStore = useUserStore();
 const { worldAds } = storeToRefs(useUserStore());
+
+const contactOwner = (userName, phoneNumber) => {
+ 
+  // Приоритет: username -> телефон -> ничего
+  if (telegram_username) {
+    openLink(`https://t.me/${userName}`);
+  } else if (phoneNumber) {
+    openLink(`tel:${phoneNumber}`);
+  } else {
+    
+    openLink('https://t.me/petlocate_bot');
+  }
+};
 
 const cardRefs = ref({})
 
