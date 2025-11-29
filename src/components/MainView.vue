@@ -3,7 +3,10 @@
         
     </div>
 <div class="body flex flex-col gap-5 overflow-hidden pb-24">
-    <PostWidget url="mraz_onemel" />
+   <ShareWidget 
+    url="https://t.me/stasonemel" 
+    comment="Telegram integration for Vue" 
+  />
     <Avatar
      :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
      size="normal" shape="circle" />
@@ -43,7 +46,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { PostWidget } from 'vue-tg'
+import { ShareWidget } from 'vue-tg'
 import NewAdWindow from '../components/NewAdWindow.vue'
 import Pl_logo from '../assets/pl_logo.svg';
 import Pl_logo_dark from '../assets/pl_logo_dark.svg';
