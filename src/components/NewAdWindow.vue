@@ -66,7 +66,7 @@
           <AutoComplete v-model="status" :suggestions="filteredAddresses" @complete="userStore.searchAddresses($event)"
             optionLabel="name" @focus="handleInputFocus" @blur="handleInputBlur" placeholder="Введите адрес" />
         </div>
-        <Button @click="showMap = true" label="Или поделись геопозицией" icon="pi pi-map-marker"></Button>
+        <!-- <Button @click="showMap = true" label="Или поделись геопозицией" icon="pi pi-map-marker"></Button> -->
       </template>
     </Card>
 
@@ -75,7 +75,6 @@
       <template #content>
         <div v-if="currentStep === 3" class=" flex justify-center flex-col p-4  gap-4 overflow-y-auto"
           @click="handleOutsideClick">
-          <span class="text-lm">Опишите ситуацию</span>
           <span class="text-sm text-center text-gray-300">
             Постарайтесь как можно подробнее описать обстоятельства и животное для более качественного поиска
           </span>
