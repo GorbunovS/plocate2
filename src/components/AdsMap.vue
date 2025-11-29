@@ -112,9 +112,9 @@ import { useMiniApp } from 'vue-tg'
 const miniApp = useMiniApp()
 
 
-const openPostInChannel = () => {
+const openPostInChannel = (telegram_message_id) => {
   // Для ссылок внутри Telegram (t.me)
-  miniApp.openTelegramLink(`https://t.me/PetLocateAds/${props.ad.telegram_message_id}`)
+  miniApp.openTelegramLink(`https://t.me/PetLocateAds/${telegram_message_id}`)
   
   // Если вдруг понадобится открыть внешний сайт (google.com)
   // miniApp.openLink('https://google.com')
