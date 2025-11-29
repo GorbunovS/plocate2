@@ -107,23 +107,29 @@ import {
     Marker
 } from 'vue3-maplibre-gl';
 import 'vue3-maplibre-gl/dist/style.css';
+import { useWebApp } from 'vue-tg'
+const { openTelegramLink, openLink } = useWebApp()
 
 const currentCardId = ref(null)
 const tgStore = useTgStore();
 
+
 const userStore = useUserStore();
 const { worldAds } = storeToRefs(useUserStore());
 
-const contactOwner = (userName, phoneNumber) => {
-  if (telegram_username) {
-    openLink(`https://t.me/${userName}`);
+const contactOwner = (telegramUsername, phoneNumber) => {
+  if (telegramUsername) {
+    // Для ссылок внутри Telegram (t.me) лучше использовать openTelegramLink
+    // Это гарантированно закроет Mini App (или свернет) и откроет чат
+    openTelegramLink(`https://t.me/${telegramUsername}`)
   } else if (phoneNumber) {
-    openLink(`tel:${phoneNumber}`);
+    // Для внешних ссылок (звонки, сайты) используем openLink
+    openLink(`tel:${phoneNumber}`)
   } else {
-    
-    openLink('https://t.me/petlocate_bot');
+    // Fallback на бота
+    openTelegramLink('https://t.me/petlocate_bot')
   }
-};
+}
 
 const cardRefs = ref({})
 
