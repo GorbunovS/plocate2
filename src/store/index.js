@@ -111,7 +111,7 @@ export const useUserStore = defineStore("user", {
         if (response.ok) {
           window.location.reload();
           this.loading = false;
-          router.push({ name: "home" });
+          router.push('/');
         } else {
         
         }
