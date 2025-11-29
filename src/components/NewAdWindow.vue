@@ -164,9 +164,12 @@ const saveAd = async () => {
     const ad = {
       userId: user_id.value || 0,
       userName: tgStore.username || 'unknown',
+
       adType: adType.value.value,
       petType: petType.value.value,
       images: imageUrls.value,
+      userAvatar:tgStore.user.photo_url,
+      phone_number:"",
       location: {
         name: status.value.name,
         coordinates: { latitude: status.value.data.geo_lat, longitude: status.value.data.geo_lon } || null
