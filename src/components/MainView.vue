@@ -3,15 +3,19 @@
         
     </div>
 <div class="body flex flex-col gap-5 overflow-hidden pb-24">
-   <ShareWidget 
-    url="https://t.me/stasonemel" 
-    comment="Telegram integration for Vue" 
-  />
+
     <Avatar
      :image="tgStore.userAvatar || 'https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'"
      size="normal" shape="circle" />
 
      {{ tgStore.userName }}
+      <div v-for="ad in ads" class="telegram-widget-container">
+      <PostWidget
+        :post="ad.telegram_chat_id" 
+        user-pic="true" 
+        width="100%" 
+      />
+    </div>
     <div v-if="currentPage === 'newAd'">
       <NewAdWindow
       @back="currentPage = 'home'"
@@ -46,7 +50,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { ShareWidget } from 'vue-tg'
+import { PostWidget } from 'vue-tg';
 import NewAdWindow from '../components/NewAdWindow.vue'
 import Pl_logo from '../assets/pl_logo.svg';
 import Pl_logo_dark from '../assets/pl_logo_dark.svg';
