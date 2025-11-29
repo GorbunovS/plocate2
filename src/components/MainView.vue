@@ -9,14 +9,14 @@
      size="normal" shape="circle" />
 
      {{ tgStore.userName }}
-      <div class="grid w-full  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2" v-if="ads">
+      <!-- <div class="grid w-full  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2" v-if="ads">
       <PostWidget v-for="ad in ads" :key="ad.id"
         :url="'PetLocateAds/'+ad.telegram_message_id"
         :width="50"
         dark="true"
         color="FFFFFF"
       />
-</div>
+</div> -->
     
     <div v-if="currentPage === 'newAd'">
       <NewAdWindow
@@ -52,7 +52,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { PostWidget } from 'vue-tg';
+// import { PostWidget } from 'vue-tg';
 import NewAdWindow from '../components/NewAdWindow.vue'
 import Pl_logo from '../assets/pl_logo.svg';
 import Pl_logo_dark from '../assets/pl_logo_dark.svg';
