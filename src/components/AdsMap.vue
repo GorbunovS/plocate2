@@ -77,7 +77,7 @@
                             <p class="flex items-center gap-2 text-sm text-gray-500">
                                 <i class="pi pi-map"></i>
                                 <span class="truncate items-center flex-1">{{ ad.address }}</span>
-                                <Button @click="contactOwner(ad.name, ad.phone_number)" icon="pi pi-send" class="w-full" />
+                                <Button @click="openPostInChannel(ad.telegram_message_id)" icon="pi pi-send" class="w-full" />
                             </p>
 
                         </template>
@@ -107,9 +107,18 @@ import {
     Marker
 } from 'vue3-maplibre-gl';
 import 'vue3-maplibre-gl/dist/style.css';
-import { useWebApp } from 'vue-tg'
-const { openTelegramLink, openLink } = useWebApp()
+import { useMiniApp } from 'vue-tg'
 
+const miniApp = useMiniApp()
+
+
+const openPostInChannel = () => {
+  // Для ссылок внутри Telegram (t.me)
+  miniApp.openTelegramLink(`https://t.me/PetLocateAds/${props.ad.telegram_message_id}`)
+  
+  // Если вдруг понадобится открыть внешний сайт (google.com)
+  // miniApp.openLink('https://google.com')
+}
 const currentCardId = ref(null)
 const tgStore = useTgStore();
 
