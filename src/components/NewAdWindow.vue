@@ -215,6 +215,7 @@ const saveAd = async () => {
     };
 
     await userStore.createNewAd(ad, rawFiles.value);
+    router.push('/');
   }
 };
 
