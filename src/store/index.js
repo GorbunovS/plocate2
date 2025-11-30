@@ -18,6 +18,7 @@ export const useTgStore = defineStore("tg", () => {
   const userName = computed(() => miniApp.initDataUnsafe?.user?.username)
   const userLocation = computed(() => miniApp.initDataUnsafe?.user?.location);
 
+
   const initializeAuth = async () => { };
 
   return {
@@ -106,14 +107,14 @@ export const useUserStore = defineStore("user", {
       files.forEach((file, index) => {
         formData.append(`images`, file);
       });
-      await fetch("https://petlocate.ru/webhook-test/newFindAdd", {
+      await fetch("https://petlocate.ru/webhook/newFindAdd", {
         method: "POST",
          body: formData,
       }).then((response) => {
         if (response.ok) {
           window.location.reload();
           this.loading = false;
-          router.push('/');
+          router.push('home');
         } else {
 
         }

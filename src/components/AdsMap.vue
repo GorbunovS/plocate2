@@ -78,7 +78,7 @@
                                 <i class="pi pi-map"></i>
                                 <span class="truncate items-center flex-1">{{ ad.address }}</span>
                                 <Button @click="openPostInChannel(ad.telegram_message_id)" icon="pi pi-send" class="w-full" />
-                                <!-- <Button @click="userStore.deleteThisAd(ad.id)" label="Удалить"/> -->
+                                <Button @click="userStore.deleteThisAd(ad.id)" label="Удалить"/>
                             </p>
 
                         </template>
