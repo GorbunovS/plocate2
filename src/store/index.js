@@ -113,7 +113,6 @@ export const useUserStore = defineStore("user", {
       }).then((response) => {
         if (response.ok) {
           this.loading = false;
-          router.push('/');
         } else {
 
         }

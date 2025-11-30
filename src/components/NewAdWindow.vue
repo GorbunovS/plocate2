@@ -214,7 +214,7 @@ const saveAd = async () => {
       sender_avatar_url: tgStore.userAvatar
     };
 
-    await userStore.createNewAd(ad, rawFiles.value);
+    userStore.createNewAd(ad, rawFiles.value);
     router.push('/');
   }
 };
