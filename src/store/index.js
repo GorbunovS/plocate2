@@ -72,7 +72,7 @@ export const useUserStore = defineStore("user", {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userId:user_id,// 323680895, //user_id
+            userId:323680895,// 323680895, //user_id
           }),
         }
       );
@@ -106,7 +106,7 @@ export const useUserStore = defineStore("user", {
       files.forEach((file, index) => {
         formData.append(`images`, file);
       });
-      await fetch("https://petlocate.ru/webhook/newFindAdd", {
+      await fetch("https://petlocate.ru/webhook-test/newFindAdd", {
         method: "POST",
          body: formData,
       }).then((response) => {
