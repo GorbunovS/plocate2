@@ -112,9 +112,8 @@ export const useUserStore = defineStore("user", {
          body: formData,
       }).then((response) => {
         if (response.ok) {
-          window.location.reload();
           this.loading = false;
-          router.push('home');
+          router.push('/');
         } else {
 
         }
