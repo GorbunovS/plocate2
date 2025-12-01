@@ -31,10 +31,6 @@
                 <img :src="slotProps.item" alt="Image" class="shadow-md rounded-xl w-full h-full object-contain" />
             </template>
 
-            <!-- Кастомный индикатор (кружочки) -->
-            <template #indicator="{ index, class: indicatorClass }">
-                <button :class="indicatorClass" class="w-2 h-2 rounded-full"></button>
-            </template>
         </Galleria>
         <div class="flex flex-wrap mt-4 items-center gap-4">
             <Avatar

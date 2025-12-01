@@ -4,6 +4,7 @@ import MainView from '../components/MainView.vue';
 import NewAdWindow from '../components/NewAdWindow.vue';
 // import DescoverView from '../components/DescoverView.vue';
 import AdsMap from '../components/AdsMap.vue';
+import SuccessPage from '../components/SuccessPage.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +18,11 @@ const router = createRouter({
       path: '/newAd',
       name: 'newAd',
       component: NewAdWindow,
+    },
+        {
+      path: '/success',
+      name: 'success',
+      component: SuccessPage,
     },
     {
       path:'/descover',

@@ -24,11 +24,11 @@
         </SplitterPanel>
 
         <SplitterPanel min-size="20" :size="70" class="flex flex-col overflow-hidden">
-            <div class="w-full h-3 justify-items-center p-1 relative">
+            <!-- <div class="w-full h-3 justify-items-center p-1 relative">
                 <div class="flex w-10 h-1 rounded bg-gray-50 center-0 "> </div>
-            </div>
+            </div> -->
 
-            <div class="overflow-y-auto flex-1 p-4">
+            <div class="overflow-y-auto h-[70vh] mb-20 flex-1 p-4">
 
                 <div v-for="ad in worldAds" :key="ad.id" :ref="(el) => setCardRef(el, ad.id)">
                     <Card class="mb-4 border border-gray-200 dark:border-gray-600 transition-all cursor-pointer"

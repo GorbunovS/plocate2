@@ -5,7 +5,7 @@
   </Dialog>
 
   <div class="header flex h-18 z-10 items-center justify-center"></div>
-
+<span>Объявление</span>
   <div class="card">
     <ProgressBar style="height: 15px" :value="currentStep===3?100:((currentStep/3)*100)"> {{ currentStep }}/3 </ProgressBar>
   </div>
@@ -19,9 +19,8 @@
       <MapVew class="h-full w-full" :user-location="[ourLocation.latitude, ourLocation.longitude]"
         @save-location="saveLocation" @close-dialog="mapIsOpen = false" @click="handleOutsideClick" />
     </Dialog>
-
-    <Card style="margin: 2rem;" v-if="currentStep === 1">
-      <template #title>Объявление</template>
+    <Card  v-if="currentStep === 1">
+    
       <template #content>
         <div class=" flex justify-center flex-col p-4  gap-4 overflow-y-auto" @click="handleOutsideClick">
           <Alert v-if="showAlert" :message="alertMsg" @click.stop />
@@ -58,7 +57,7 @@
       </template>
     </Card>
 
-    <Card style="margin: 2rem;" v-if="currentStep === 2">
+    <Card  v-if="currentStep === 2">
       <template #title>Место</template>
       <template #content>
         <div class="text-sm flex flex-col justify-center p-4  center gap-4 overflow-y-auto">
@@ -70,12 +69,12 @@
       </template>
     </Card>
 
-    <Card style="margin: 2rem;" v-if="currentStep === 3">
-      <template #title>Дополнительная информация</template>
+    <Card  v-if="currentStep === 3">
+      <template #title>Информация</template>
       <template #content>
         <div v-if="currentStep === 3" class=" flex justify-center flex-col p-4  gap-4 overflow-y-auto"
           @click="handleOutsideClick">
-          <span class="text-sm text-center text-gray-300">
+          <span class="text-xs text-center text-gray-300">
             Постарайтесь как можно подробнее описать обстоятельства и животное для более качественного поиска
           </span>
           <Textarea placeholder="Начните с клички питомца" v-model="description" rows="5" cols="30" :autoResize="true"
@@ -215,7 +214,7 @@ const saveAd = async () => {
     };
 
     userStore.createNewAd(ad, rawFiles.value);
-    router.push('/');
+    router.push('/success');
   }
 };
 
